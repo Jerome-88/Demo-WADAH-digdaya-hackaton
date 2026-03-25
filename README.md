@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="digdaya/assets/bot.png" alt="WADAH Logo" width="80"/>
+<img src="digdaya/assets/logo.png" alt="WADAH Logo" width="80"/>
 
 # WADAH
 ### Work-simulation AI Driven Augmented Hiring
