@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WADAH</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/main.css"/>
+  <link rel="stylesheet" href="css/landing.css"/>
+  <link rel="stylesheet" href="css/flow.css"/>
+  <link rel="stylesheet" href="css/dashboard.css"/>
+  <link rel="stylesheet" href="css/portfolio.css"/>
+</head>
+<body>
+
+<div style="
+  background: linear-gradient(90deg, rgba(8, 31, 92, .4), #7C3AED);
+  color: #fff;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 7px 16px;
+  letter-spacing: .3px;
+  position: sticky;
+  top: 0;
+  z-index: 999;">
+  Ini adalah demo proposal WADAH untuk DIGDAYA X Hackathon 2026 Bank Indonesia.  Semua fitur masih dalam tahap prototipe, 
+  versi final akan hadir dalam bentuk aplikasi mobile & web.
+  <span style="opacity:.7;font-weight:400;margin-left:6px;">
+    (semua data hanyalah data simulasi.)
+  </span>
+</div>
+
+<!-- Navbar -->
+<nav>
+  <div class="logo" onclick="goHome()">
+    <img src="assets/logo.png" alt="WADAH" style="width:50px;height:50px;object-fit:contain;"/>
+    WADAH <span>Work-simulation AI Driven Augmented Hiring</span>
+  </div>
+  <button class="nav-back hidden" id="nav-back" onclick="goHome()">
+    Kembali ke Beranda
+  </button>
+  <div id="nav-cta" class="nav-cta">
+    <button class="btn-nav-ghost" onclick="alert('comingsoon')">Masuk</button>
+    <button class="btn-nav-primary" onclick="alert('comingsoon')">Daftar Gratis</button>
+  </div>
+</nav>
+
+<!-- landing page -->
+<div id="page-landing" class="page fade-in">
+  <div class="landing-inner">
+    <div class="landing-badge"> Demo DIGDAYA X Hackathon 2026 Bank Indonesia</div>
+    <h1 class="landing-title">7,46 juta orang ditolak<br/>bukan karena <em>tidak mampu</em>,<br/>tetapi kurangnya <em>pengalaman.</em></h1>
+        <br><p class="landing-sub">WADAH ingin membantu mengubah itu dengan membuktikan kompetensimu lewat simulasi industri nyata, bukan sekadar ijazah.<h2 class="h2"><em>Pilih peranmu:</em></h2></p><br>
+    <div class="path-cards">
+      <!-- pengguna jasa -->
+      <div class="path-card card-jasa" onclick="goPath('jasa')">
+        <div class="path-icon icon-jasa" style="text-align: center;"><img src="assets/pengguna.png" alt="WADAH" style="width:50px;height:50px;object-fit:contain;"/></div>
+        <div class="path-label label-jasa">Pengguna Jasa</div>
+        <div class="path-title">Saya butuh talenta digital</div>
+        <div class="path-pills">
+          <span class="pill pill-jasa">UMKM & Bisnis</span>
+          <span class="pill pill-jasa">Individu</span>
+          <span class="pill pill-jasa">Startup</span>
+        </div>
+        <div class="path-desc">Cukup ceritakan apa yang kamu butuhkan. AI kami yang akan mencarikan penyedia jasa terbaik yang sudah terverifikasi dan cocok untuk proyekmu.</div>
+        <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(79,70,229,.15);border:1px solid rgba(129,140,248,.4);color:#A5B4FC;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;margin-bottom:12px;letter-spacing:.3px;">▶ COBA DEMO</div>
+        <div class="path-cta cta-jasa">Cari Jasa Sekarang</div>
+      </div>
+
+      
+
+      <!-- penyedia jasa -->
+      <div class="path-card card-talenta" onclick="goPath('talenta')">
+        <div class="path-icon icon-talenta"><img src="assets/penyedia.png" alt="WADAH" style="width:50px;height:50px;object-fit:contain;"/></div>
+        <div class="path-label label-talenta">Penyedia Jasa</div>
+        <div class="path-title">Saya ingin membangun karier</div>
+        <div class="path-pills">
+          <span class="pill pill-talenta">Fresh Graduate</span>
+          <span class="pill pill-talenta">Mahasiswa</span>
+          <span class="pill pill-talenta">Freelancer</span>
+        </div>
+        <div class="path-desc">Tidak punya pengalaman dan ingin memulai karir? Tidak masalah. Selesaikan simulasi industri nyata dan buktikan kemampuanmu dengan bantuan AI</div>
+        <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(5,150,105,.15);border:1px solid rgba(52,211,153,.4);color:#6EE7B7;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;margin-bottom:12px;letter-spacing:.3px;">▶ COBA DEMO</div>
+        <div class="path-cta cta-talenta">Mulai Buktikan Kompetensimu</div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat"><div class="stat-n">7.46 jt</div><div class="stat-l">Talenta potensial Indonesia</div></div>
+      <div class="stat"><div class="stat-n">3 Langkah</div><div class="stat-l">Learn → Prove → Earn</div></div>
+      <div class="stat"><div class="stat-n">0 Bidding</div><div class="stat-l">Direct matching berbasis skor AI</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- path pengguna jasa -->
+<div id="page-jasa" class="page hidden">
+  <div class="shell fade-in">
+
+    <!-- step 1: form kebutuhan -->
+    <div id="jasa-step1">
+      <div class="steps-indicator">
+        <div class="si-item active"><div class="si-dot">1</div>Kebutuhan</div>
+        <div class="si-line"></div>
+        <div class="si-item"><div class="si-dot">2</div>Klarifikasi AI</div>
+        <div class="si-line"></div>
+        <div class="si-item"><div class="si-dot">3</div>Hasil Matching</div>
+      </div>
+      <div class="shell-title">Apa yang kamu butuhkan?</div>
+      <div class="shell-sub">Ceritakan proyekmu, AI kami akan mencarikan talenta terbaik. Tidak perlu filter manual, tidak perlu khawatir soal "pengalaman".</div>
+
+      <div class="form-group">
+        <label class="form-label">Kategori layanan</label>
+        <div class="cards-grid">
+          <div class="sel-card" onclick="selectCard(this,'jasa-cat')"><div class="sel-card-icon">📱</div><div class="sel-card-label">Social Media</div></div>
+          <div class="sel-card" onclick="selectCard(this,'jasa-cat')"><div class="sel-card-icon">🛒</div><div class="sel-card-label">E-Commerce</div></div>
+          <div class="sel-card" onclick="selectCard(this,'jasa-cat')"><div class="sel-card-icon">🎨</div><div class="sel-card-label">Desain Grafis</div></div>
+          <div class="sel-card" onclick="selectCard(this,'jasa-cat')"><div class="sel-card-icon">💻</div><div class="sel-card-label">Web Dev</div></div>
+          <div class="sel-card" onclick="selectCard(this,'jasa-cat')"><div class="sel-card-icon">🤖</div><div class="sel-card-label">AI Integration</div></div>
+          <div class="sel-card" onclick="selectCard(this,'jasa-cat')"><div class="sel-card-icon">📊</div><div class="sel-card-label">Data Analytics</div></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Ceritakan proyekmu</label>
+        <textarea class="form-textarea" id="jasa-desc" placeholder="Contoh: Saya punya warung kopi dan butuh seseorang yang bisa kelola Instagram dan TikTok — posting konten 3x seminggu, balas DM, dan buat konten promosi menu baru..."></textarea>
+      </div>
+
+      <div style="background:#EEF2FF;border-radius:12px;padding:16px 20px;font-size:13px;color:var(--indigo-dark);line-height:1.6;margin-bottom:8px;">
+        <img src="assets/bot.png" alt="AI Mentor" style="width:32px;height:32px;object-fit:contain;"/> <strong>WADAH AI akan mencarikan talenta terbaik untukmu secara otomatis</strong> — berdasarkan skor kompetensi nyata dari simulasi industri, bukan filter pengalaman manual.
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-primary" onclick="jasaNextStep(2)">Klarifikasi dengan AI</button>
+      </div>
+    </div>
+
+    <!-- step 2: ai chat klarifikasi -->
+    <div id="jasa-step2" class="hidden">
+      <div class="steps-indicator">
+        <div class="si-item done"><div class="si-dot">✓</div>Kebutuhan</div>
+        <div class="si-line done"></div>
+        <div class="si-item active"><div class="si-dot">2</div>Klarifikasi AI</div>
+        <div class="si-line"></div>
+        <div class="si-item"><div class="si-dot">3</div>Hasil Matching</div>
+      </div>
+      <div class="shell-title">AI sedang memahami proyekmu</div>
+      <div class="shell-sub">Jawab 1–2 pertanyaan singkat agar AI bisa mencocokkan talenta yang paling relevan dengan kebutuhanmu.</div>
+
+      <div class="ai-box">
+        <div class="ai-box-header">
+          <div class="ai-dot"></div>
+          <span>WADAH AI Assistant</span>
+          <small style="margin-left:auto;">Online</small>
+        </div>
+        <div class="ai-msgs" id="ai-chat-msgs">
+          <div class="ai-msg ai">
+            <div class="ai-msg-ic ai-ic"><img src="assets/bot.png" alt="AI Mentor" style="width:32px;height:32px;object-fit:contain;"/></div>
+            <div class="ai-msg-bubble">Halo! Saya sudah membaca deskripsi proyekmu. Untuk matching yang lebih akurat, satu pertanyaan: <strong>Apakah kamu punya panduan brand voice atau nada bicara khusus untuk bisnismu?</strong> (Misalnya: santai & akrab, formal & profesional, dll.)</div>
+          </div>
+        </div>
+        <div class="ai-input-row">
+          <input class="ai-input" id="ai-user-input" placeholder="Ketik jawaban kamu..." onkeydown="if(event.key==='Enter')sendAiMsg()"/>
+          <button class="ai-send" onclick="sendAiMsg()">Kirim</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Estimasi durasi proyek</label>
+        <select class="form-select">
+          <option>1 minggu</option><option>2 minggu</option><option selected>1 bulan</option><option>3 bulan</option><option>Ongoing</option>
+        </select>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-secondary" onclick="jasaNextStep(1)">Kembali</button>
+        <button class="btn-primary" onclick="jasaNextStep(3)">Temukan Talenta ✨</button>
+      </div>
+    </div>
+
+    <!-- step 3: hasil matching -->
+    <div id="jasa-step3" class="hidden">
+      <div class="steps-indicator">
+        <div class="si-item done"><div class="si-dot">✓</div>Kebutuhan</div>
+        <div class="si-line done"></div>
+        <div class="si-item done"><div class="si-dot">✓</div>Klarifikasi AI</div>
+        <div class="si-line done"></div>
+        <div class="si-item active"><div class="si-dot">3</div>Hasil Matching</div>
+      </div>
+      <div class="result-header pop">
+        <h3>✨ 3 Talenta Paling Cocok Untukmu</h3>
+        <p>Dipilih AI berdasarkan kecocokan proyekmu, bukan skor tertinggi semata.</p>
+      </div>
+      <div class="match-grid" style="grid-template-columns:repeat(auto-fill,minmax(280px,1fr));">
+
+        <!-- card 1 -->
+        <div class="match-card pop" style="animation-delay:.05s" onclick="openPortfolio('siti')">
+          <div class="match-banner b-indigo"><div class="match-avatar">SA</div></div>
+          <div class="match-body">
+            <div class="verified-chip">✓ AI Verified</div>
+            <div class="match-name">Siti Aminah</div>
+            <div class="match-skill">Social Media Specialist</div>
+            <!-- match reason - lebih penting dari skor -->
+            <div style="background:#F5F3FF;border-radius:8px;padding:8px 10px;margin-bottom:10px;">
+              <div style="font-size:10px;font-weight:700;color:#7C3AED;letter-spacing:.4px;margin-bottom:3px;">COCOK KARENA</div>
+              <div style="font-size:12px;color:#4C1D95;line-height:1.5;">Spesialisasi UMKM kuliner lokal · 3 simulasi F&B selesai</div>
+            </div>
+            <div class="match-meta">
+              <span style="font-size:11px;color:var(--g400);">Skor: 9.2/10</span>
+              <span class="match-pct">97% cocok</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- card 2 -->
+        <div class="match-card pop" style="animation-delay:.1s" onclick="openPortfolio('rizky')">
+          <div class="match-banner b-purple"><div class="match-avatar">RA</div></div>
+          <div class="match-body">
+            <div class="verified-chip">✓ AI Verified</div>
+            <div class="match-name">Rizky Aulia</div>
+            <div class="match-skill">Content Creator UMKM</div>
+            <div style="background:#F5F3FF;border-radius:8px;padding:8px 10px;margin-bottom:10px;">
+              <div style="font-size:10px;font-weight:700;color:#7C3AED;letter-spacing:.4px;margin-bottom:3px;">COCOK KARENA</div>
+              <div style="font-size:12px;color:#4C1D95;line-height:1.5;">Pengalaman TikTok & Reels · target audience usia 18–25</div>
+            </div>
+            <div class="match-meta">
+              <span style="font-size:11px;color:var(--g400);">Skor: 8.8/10</span>
+              <span class="match-pct">91% cocok</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- card 3 -->
+        <div class="match-card pop" style="animation-delay:.15s" onclick="openPortfolio('dewi')">
+          <div class="match-banner b-teal"><div class="match-avatar">DW</div></div>
+          <div class="match-body">
+            <div class="verified-chip">✓ AI Verified</div>
+            <div class="match-name">Dewi Wulandari</div>
+            <div class="match-skill">Digital Marketing Ops</div>
+            <div style="background:#F5F3FF;border-radius:8px;padding:8px 10px;margin-bottom:10px;">
+              <div style="font-size:10px;font-weight:700;color:#7C3AED;letter-spacing:.4px;margin-bottom:3px;">COCOK KARENA</div>
+              <div style="font-size:12px;color:#4C1D95;line-height:1.5;">Budget-friendly · response time cepat · tersedia mulai besok</div>
+            </div>
+            <div class="match-meta">
+              <span style="font-size:11px;color:var(--g400);">Skor: 8.5/10</span>
+              <span class="match-pct">88% cocok</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div style="margin-top:20px;padding:16px 20px;background:var(--white);border:1px solid var(--g200);border-radius:12px;font-size:13px;color:var(--g600);line-height:1.6;">
+        WADAH memilihkan penyedia jasa yang paling cocok dengan proyekmu secara otomatis, kamu tinggal hubungi yang paling sesuai.
+      </div>
+
+      <div style="margin-top:16px;text-align:center;">
+        <button onclick="goPath('talenta')" style="background:none;border:none;font-size:13px;color:var(--g400);cursor:pointer;text-decoration:underline;font-family:'Inter',sans-serif;">Lihat pengalaman dari sisi Penyedia Jasa</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- path penyedia jasa -->
+<div id="page-talenta" class="page hidden">
+  <div class="shell fade-in">
+
+    <!-- step 1: pilih skill -->
+    <div id="tal-step1">
+      <div class="steps-indicator">
+        <div class="si-item active"><div class="si-dot">1</div>Skill</div>
+        <div class="si-line"></div>
+        <div class="si-item"><div class="si-dot">2</div>Pengalaman</div>
+        <div class="si-line"></div>
+        <div class="si-item"><div class="si-dot">3</div>Preview Tugas</div>
+      </div>
+      <div class="shell-title">Pilih minat & skill-mu</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:8px;">
+        <div class="shell-sub" style="margin:0;">Pilih <strong>1–3 skill</strong> yang ingin kamu buktikan. AI Mentor akan menyesuaikan simulasi dengan pilihanmu.</div>
+        <div id="skill-counter" style="font-size:13px;font-weight:600;color:var(--g400);background:var(--g100);padding:6px 14px;border-radius:20px;white-space:nowrap;">0 / 3 dipilih</div>
+      </div>
+      <div class="cards-grid" style="margin-bottom:28px;">
+        <div class="sel-card skill-card" onclick="toggleSkill(this,'Social Media')">
+          <div style="position:relative;">
+            <div class="sel-card-icon">📱</div>
+            <div class="skill-check">✓</div>
+          </div>
+          <div class="sel-card-label">Social Media</div>
+          <div class="sel-card-sub">Instagram, TikTok, Reels</div>
+        </div>
+        <div class="sel-card skill-card" onclick="toggleSkill(this,'Copywriting')">
+          <div style="position:relative;">
+            <div class="sel-card-icon">✍️</div>
+            <div class="skill-check">✓</div>
+          </div>
+          <div class="sel-card-label">Copywriting</div>
+          <div class="sel-card-sub">Caption, Ad copy, Blog</div>
+        </div>
+        <div class="sel-card skill-card" onclick="toggleSkill(this,'Desain Grafis')">
+          <div style="position:relative;">
+            <div class="sel-card-icon">🎨</div>
+            <div class="skill-check">✓</div>
+          </div>
+          <div class="sel-card-label">Desain Grafis</div>
+          <div class="sel-card-sub">Canva, Figma, Poster</div>
+        </div>
+        <div class="sel-card skill-card" onclick="toggleSkill(this,'E-Commerce')">
+          <div style="position:relative;">
+            <div class="sel-card-icon">🛒</div>
+            <div class="skill-check">✓</div>
+          </div>
+          <div class="sel-card-label">E-Commerce</div>
+          <div class="sel-card-sub">Shopee, Tokopedia</div>
+        </div>
+        <div class="sel-card skill-card" onclick="toggleSkill(this,'Web Dev')">
+          <div style="position:relative;">
+            <div class="sel-card-icon">💻</div>
+            <div class="skill-check">✓</div>
+          </div>
+          <div class="sel-card-label">Web Dev</div>
+          <div class="sel-card-sub">HTML, React, Next.js</div>
+        </div>
+        <div class="sel-card skill-card" onclick="toggleSkill(this,'Data Analytics')">
+          <div style="position:relative;">
+            <div class="sel-card-icon">📊</div>
+            <div class="skill-check">✓</div>
+          </div>
+          <div class="sel-card-label">Data Analytics</div>
+          <div class="sel-card-sub">Excel, SQL, Looker</div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-primary green" onclick="talNextStep(2)">Lanjut</button>
+      </div>
+    </div>
+
+    <!-- step 2: upload pengalaman -->
+    <div id="tal-step2" class="hidden">
+      <div class="steps-indicator">
+        <div class="si-item done"><div class="si-dot">✓</div>Skill</div>
+        <div class="si-line done"></div>
+        <div class="si-item active"><div class="si-dot">2</div>Pengalaman</div>
+        <div class="si-line"></div>
+        <div class="si-item"><div class="si-dot">3</div>Preview Tugas</div>
+      </div>
+      <div class="shell-title">Upload pengalamanmu</div>
+      <div class="shell-sub">Tidak punya banyak pengalaman? Tidak masalah, upload apa yang kamu punya. AI kami akan mendeteksi skill dan merekomendasikan simulasi yang paling sesuai.</div>
+
+      <!-- upload area -->
+      <div id="upload-area" style="display:flex;flex-direction:column;gap:14px;margin-bottom:28px;">
+
+        <!-- cv upload -->
+        <div id="cv-upload-box" onclick="triggerUpload('cv-input')" style="border:2px dashed var(--g200);border-radius:14px;padding:28px;text-align:center;cursor:pointer;transition:all .2s;background:var(--white);" onmouseover="this.style.borderColor='var(--indigo)';this.style.background='#F5F3FF'" onmouseout="this.style.borderColor='var(--g200)';this.style.background='var(--white)'">
+          <div style="font-size:32px;margin-bottom:10px;">📄</div>
+          <div style="font-size:14px;font-weight:600;color:var(--deep);margin-bottom:4px;">Upload CV / Resume</div>
+          <div style="font-size:12px;color:var(--g400);">PDF, DOCX — maks. 5MB</div>
+          <input type="file" id="cv-input" accept=".pdf,.doc,.docx" style="display:none" onchange="handleUpload(this,'cv')"/>
+        </div>
+
+        <!-- portofolio upload -->
+        <div id="portfolio-upload-box" onclick="triggerUpload('portfolio-input')" style="border:2px dashed var(--g200);border-radius:14px;padding:28px;text-align:center;cursor:pointer;transition:all .2s;background:var(--white);" onmouseover="this.style.borderColor='var(--green)';this.style.background='#F0FDF4'" onmouseout="this.style.borderColor='var(--g200)';this.style.background='var(--white)'">
+          <div style="font-size:32px;margin-bottom:10px;">🗂️</div>
+          <div style="font-size:14px;font-weight:600;color:var(--deep);margin-bottom:4px;">Upload Portofolio / Karya</div>
+          <div style="font-size:12px;color:var(--g400);">PDF, PNG, JPG — maks. 10MB</div>
+          <input type="file" id="portfolio-input" accept=".pdf,.png,.jpg,.jpeg" style="display:none" onchange="handleUpload(this,'portfolio')"/>
+        </div>
+
+        <div style="text-align:center;font-size:12px;color:var(--g400);">atau</div>
+
+        <!-- skip option -->
+        <button onclick="simulateAnalysis(true)" style="background:var(--g100);border:1px solid var(--g200);border-radius:10px;padding:14px;font-size:13px;color:var(--g500);cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;" onmouseover="this.style.background='var(--g200)'" onmouseout="this.style.background='var(--g100)'">
+          Saya belum punya CV/portofolio — lewati langkah ini
+        </button>
+      </div>
+
+      <!-- ai analyzing state (hidden initially) -->
+      <div id="analyzing-state" style="display:none;">
+        <div style="background:var(--white);border:1.5px solid var(--g200);border-radius:16px;padding:28px;text-align:center;margin-bottom:20px;">
+          <div id="analyze-spinner" style="width:48px;height:48px;border:3px solid var(--g200);border-top-color:var(--indigo);border-radius:50%;margin:0 auto 16px;animation:spin .8s linear infinite;"></div>
+          <div style="font-size:15px;font-weight:600;color:var(--deep);margin-bottom:6px;" id="analyze-label">AI sedang membaca dokumenmu...</div>
+          <div style="font-size:13px;color:var(--g400);" id="analyze-sub">Mendeteksi skill dan pengalaman</div>
+        </div>
+      </div>
+
+      <!-- skill detected state (hidden initially) -->
+      <div id="detected-state" style="display:none;">
+        <div style="background:var(--white);border:1.5px solid var(--g200);border-radius:16px;padding:24px;margin-bottom:20px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+            <div style="width:32px;height:32px;border-radius:50%;background:#ECFDF5;display:flex;align-items:center;justify-content:center;font-size:16px;">✅</div>
+            <div>
+              <div style="font-size:14px;font-weight:600;color:var(--deep);">Analisis selesai!</div>
+              <div style="font-size:12px;color:var(--g400);">AI mendeteksi skill berikut dari dokumenmu</div>
+            </div>
+          </div>
+          <div id="detected-skills" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;"></div>
+          <div style="background:#EEF2FF;border-radius:10px;padding:12px 14px;font-size:13px;color:var(--indigo-dark);line-height:1.6;">
+            💡 Berdasarkan skill ini, kami sudah menyiapkan <strong>simulasi yang paling relevan</strong> untukmu di langkah berikutnya.
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn-secondary" onclick="resetUpload()">Upload Ulang</button>
+          <button class="btn-primary green" onclick="talNextStep(3)">Lihat Rekomendasi Tugas</button>
+        </div>
+      </div>
+
+      <div id="upload-btn-row" class="btn-row">
+        <button class="btn-secondary" onclick="talNextStep(1)">Kembali</button>
+      </div>
+    </div>
+
+    <!-- preview tugas -->
+    <div id="tal-step3" class="hidden">
+      <div class="steps-indicator">
+        <div class="si-item done"><div class="si-dot">✓</div>Skill</div>
+        <div class="si-line done"></div>
+        <div class="si-item done"><div class="si-dot">✓</div>Pengalaman</div>
+        <div class="si-line done"></div>
+        <div class="si-item active"><div class="si-dot">3</div>Preview Tugas</div>
+      </div>
+      <div class="shell-title">Tugasmu sudah siap!</div>
+      <div class="shell-sub">AI kami memilihkan simulasi yang paling sesuai dengan profilmu. Lihat dulu sebelum mulai.</div>
+
+      <div class="task-preview pop">
+        <div class="task-header">
+          <div>
+            <div class="task-tag">📱 SOCIAL MEDIA</div>
+            <div style="height:10px;"></div>
+            <div class="task-title">Admin Media Sosial — Toko Kopi Abadi</div>
+            <div class="task-company">🏢 UMKM Kuliner · Bandung</div>
+          </div>
+        </div>
+        <div class="task-desc">
+          Kamu akan berperan sebagai Admin Media Sosial untuk Toko Kopi Abadi, sebuah UMKM kopi lokal di Bandung. SOP mereka: nada bicara hangat, lokal, dan autentik. Tugasmu mencakup membuat caption promosi, merespons situasi media sosial, dan merancang strategi konten mingguan.
+        </div>
+        <div class="task-metas">
+          <span class="task-meta-item">⏱ Estimasi: 30–45 menit</span>
+          <span class="task-meta-item">📋 2 Tugas utama</span>
+          <span class="task-meta-item">🎯 Skill: Copywriting + Social Media</span>
+        </div>
+      </div>
+
+      <div style="background:#ECFDF5;border:1px solid #A7F3D0;border-radius:12px;padding:16px 20px;font-size:13px;color:var(--teal);line-height:1.6;margin-bottom:24px;">
+        ✅ <strong>Selesai simulasi ini?</strong> Kamu akan mendapatkan Verified Portfolio Badge yang langsung terlihat oleh pengguna jasa yang mencari talenta Social Media.
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-secondary" onclick="talNextStep(2)">Kembali</button>
+        <button class="btn-primary green" onclick="goDashboard()">Masuk Dashboard Karier 🚀</button>
+      </div>
+    </div>
+
+    <!-- cepatkan bayar -->
+    <div id="tal-step4" class="hidden"></div>
+
+  </div>
+</div>
+
+<!-- dashboard penyedia jasa -->
+<div id="page-dashboard" class="page hidden" style="min-height:100vh;display:none;flex-direction:row;padding-top:0;">
+
+  <!-- sidebar -->
+  <aside style="width:240px;background:var(--deep);flex-shrink:0;display:flex;flex-direction:column;position:fixed;top:56px;left:0;bottom:0;overflow-y:auto;z-index:50;">
+    <!-- user profile -->
+    <div style="padding:28px 20px 20px;border-bottom:1px solid rgba(255,255,255,.08);">
+      <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,rgba(8, 31, 92, .4),rgba(112, 150, 229, .3));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;color:#fff;font-family:'Sora',sans-serif;margin-bottom:14px;" class="dash-avatar-initial">J</div>
+      <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:15px;color:#fff;margin-bottom:2px;" class="dash-user-name">Jerome M.</div>
+      <div style="font-size:12px;color:rgba(255,255,255,.45);">Social Media Specialist</div>
+      <div style="margin-top:16px;background:rgba(255,255,255,.07);border-radius:10px;padding:12px 14px;">
+        <div style="font-size:10px;color:rgba(255,255,255,.4);letter-spacing:.6px;margin-bottom:6px;font-weight:600;">SKOR KOMPETENSI</div>
+        <div id="sidebar-score" style="font-family:'Sora',sans-serif;font-size:26px;font-weight:800;color:rgba(255,255,255,.3);line-height:1;">—<span style="font-size:14px;font-weight:400;opacity:.55;">/100</span></div>
+        <div style="margin-top:10px;background:rgba(255,255,255,.1);border-radius:100px;height:5px;">
+          <div id="sidebar-score-bar" style="width:0%;height:5px;background:linear-gradient(90deg,#34D399,#059669);border-radius:100px;transition:width 1s ease;"></div>
+        </div>
+        <div id="sidebar-score-hint" style="font-size:10px;color:rgba(255,255,255,.25);margin-top:6px;">Selesaikan simulasi untuk skor</div>
+      </div>
+    </div>
+
+    <!-- nav menu -->
+    <nav style="padding:16px 14px;flex:1;display:flex;flex-direction:column;gap:10px;">
+      <p style="font-size:10px;font-weight:700;color:rgba(255,255,255,.3);letter-spacing:.8px;padding:0 4px;margin-bottom:2px;">MENU UTAMA</p>
+
+      <!-- ai mentor card -->
+      <div id="nav-mentor" onclick="switchDash('mentor')" style="
+  flex:1;
+  background:rgba(49,46,129,.9);
+  border:1.5px solid #6366F1;
+  border-radius:12px;padding:13px;
+  cursor:pointer;transition:all .2s;">
+        <!-- row 1: icon + label + status dot -->
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px;">
+          <div style="width:32px;height:32px;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;"><img src="assets/bot.png" alt="AI Mentor" style="width:32px;height:32px;object-fit:contain;"/></div>
+          <div style="flex:1;">
+            <div style="font-size:14px;font-weight:700;color:#fff;">AI Mentor</div>
+            <div style="font-size:11px;color:#fff;margin-top:2px;">Bimbing simulasi karier</div>
+          </div>
+          <div style="width:8px;height:8px;border-radius:50%;background:#34D399;box-shadow:0 0 8px #34D399;flex-shrink:0;"></div>
+        </div>
+        <!-- row 2: info box -->
+        <div style="background:rgba(0,0,0,.25);border-radius:8px;padding:9px 11px;">
+          <div style="font-size:10px;font-weight:700;color:#A5B4FC;letter-spacing:.5px;margin-bottom:5px;">SIMULASI AKTIF</div>
+          <div style="font-size:12px;font-weight:700;color:#fff;">Admin Sosial Media</div>
+          <div style="font-size:11px;color:#A5B4FC;margin-top:2px;">Toko Kopi Abadi · Bandung</div>
+        </div>
+      </div>
+
+      <!-- List Kerjaan Card -->
+      <div id="nav-tasks" onclick="switchDash('tasks')" style="
+  flex:1;
+  background:rgba(6,78,59,.9);
+  border:1.5px solid #10B981;
+  border-radius:12px;padding:13px;
+  cursor:pointer;transition:all .2s;">
+        <!-- Row 1: icon + label + badge -->
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px;">
+          <div style="width:32px;height:32px;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;">📋</div>
+          <div style="flex:1;">
+            <div style="font-size:14px;font-weight:700;color:#fff;">Task</div>
+            <div style="font-size:11px;color:#fff;margin-top:2px;">Matching AI</div>
+          </div>
+          <span style="background:#EF4444;color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;flex-shrink:0;white-space:nowrap;">2 baru</span>
+        </div>
+        <!-- Row 2: task list -->
+        <div style="background:rgba(0,0,0,.25);border-radius:8px;padding:9px 11px;display:flex;flex-direction:column;gap:7px;">
+          <div style="display:flex;align-items:center;gap:7px;">
+            <div style="width:6px;height:6px;border-radius:50%;background:#F59E0B;flex-shrink:0;"></div>
+            <div style="font-size:12px;font-weight:700;color:#fff;">Toko Kopi Abadi</div>
+            <div style="font-size:11px;color:#6EE7B7;margin-left:auto;">dikerjakan</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:7px;">
+            <div style="width:6px;height:6px;border-radius:50%;background:#34D399;flex-shrink:0;"></div>
+            <div style="font-size:12px;font-weight:700;color:#fff;">Warung Bu Sari</div>
+            <div style="font-size:11px;color:#6EE7B7;margin-left:auto;">baru</div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div style="padding:20px;border-top:1px solid rgba(255,255,255,.08);">
+      <button onclick="goHome()" style="background:rgba(220, 2, 2, 0.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.55);font-size:12px;cursor:pointer;font-family:'Inter',sans-serif;padding:8px 14px;border-radius:8px;width:100%;text-align:left;transition:all .2s;" onmouseover="this.style.background='rgba(255,255,255,.1)'" onmouseout="this.style.background='rgba(255,255,255,.06)'" text-align="center">Keluar Dashboard</button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main style="flex:1;min-width:0;background:var(--bg);margin-left:240px;">
+
+    <!-- HEADER -->
+    <div style="background:var(--white);border-bottom:1px solid var(--g200);padding:16px 32px;display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <div id="dash-header-title" style="font-family:'Sora',sans-serif;font-weight:700;font-size:18px;color:var(--deep);">AI Mentor</div>
+        <div id="dash-header-sub" style="font-size:12px;color:var(--g400);margin-top:2px;">Simulasi aktif: Admin Sosial Media — Toko Kopi Abadi</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="width:8px;height:8px;border-radius:50%;background:#34D399;"></div>
+        <span style="font-size:12px;color:var(--g500);">Online</span>
+      </div>
+    </div>
+
+    <!-- PANEL: AI MENTOR -->
+    <div id="dash-mentor" style="display:flex;flex-direction:column;height:calc(100vh - 113px);">
+      <!-- SOP Context Bar -->
+      <div style="background:#EEF2FF;border-bottom:1px solid #C7D2FE;padding:12px 32px;display:flex;align-items:center;gap:12px;">
+        <span style="font-size:13px;font-weight:600;color:var(--indigo);">📄 SOP Aktif:</span>
+        <span style="font-size:13px;color:var(--indigo-dark);">Toko Kopi Abadi — Nada bicara: hangat, lokal, autentik. Platform: Instagram & TikTok.</span>
+      </div>
+
+      <!-- Chat Messages -->
+      <div id="mentor-msgs" style="flex:1;overflow-y:auto;padding:24px 32px;display:flex;flex-direction:column;gap:16px;">
+        <!-- Initial message -->
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div style="width:32px;height:32px;border-radius:50%;background:#EEF2FF;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;"><img src="assets/bot.png" alt="AI Mentor" style="width:32px;height:32px;object-fit:contain;"/></div>
+          <div style="max-width:75%;">
+            <div style="font-size:10px;font-weight:700;color:#818CF8;letter-spacing:.4px;margin-bottom:5px;">AI MENTOR</div>
+            <div style="background:var(--white);border:1px solid var(--g200);border-radius:4px 14px 14px 14px;padding:14px 16px;font-size:14px;color:var(--g800);line-height:1.7;">
+              Halo <span class="dash-greeting-name">Jerome</span>! 👋 Selamat datang di sesi simulasi <strong>Admin Sosial Media — Toko Kopi Abadi</strong>.<br><br>
+              SOP mereka sudah saya pelajari: nada bicara hangat, lokal, dan autentik. Konten harus terasa personal dan mengundang.<br><br>
+              Siap mulai? Ketik <strong>"siap"</strong> atau langsung tanya kalau ada yang perlu diklarifikasi dari SOP-nya!
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Input Area -->
+      <div style="background:var(--white);border-top:1px solid var(--g200);padding:16px 32px;display:flex;gap:12px;align-items:flex-end;">
+        <textarea id="mentor-input" placeholder="Ketik jawaban atau pertanyaan kamu..." style="flex:1;padding:12px 16px;border:1.5px solid var(--g200);border-radius:12px;font-size:14px;font-family:'Inter',sans-serif;resize:none;height:52px;line-height:1.5;outline:none;transition:border-color .2s;" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMentorMsg();}" onfocus="this.style.borderColor='var(--indigo)'" onblur="this.style.borderColor='var(--g200)'"></textarea>
+        <button onclick="sendMentorMsg()" style="background:var(--indigo);color:#fff;border:none;width:48px;height:48px;border-radius:12px;cursor:pointer;font-size:18px;flex-shrink:0;transition:background .2s;" onmouseover="this.style.background='var(--indigo-dark)'" onmouseout="this.style.background='var(--indigo)'">↑</button>
+      </div>
+    </div>
+
+    <!-- PANEL: LIST KERJAAN -->
+    <div id="dash-tasks" style="display:none;padding:32px;">
+      <div style="margin-bottom:24px;">
+        <div style="font-family:'Sora',sans-serif;font-size:18px;font-weight:700;color:var(--deep);margin-bottom:4px;">Task</div>
+        <div style="font-size:13px;color:var(--g500);">Tugas yang dialokasikan sistem berdasarkan skor kompetensi kamu.</div>
+      </div>
+
+      <!-- Task Cards -->
+      <div style="display:flex;flex-direction:column;gap:14px;">
+
+        <div class="task-job-card" onclick="openTask(this,'Toko Kopi Abadi','Admin Sosial Media','Buat konten promosi menu baru dan kelola komentar Instagram selama 2 minggu.','Sedang Dikerjakan','#FEF3C7','#D97706','Social Media · Copywriting')">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;">
+            <div style="flex:1;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                <span style="font-size:11px;font-weight:700;background:#FEF3C7;color:#D97706;padding:2px 10px;border-radius:20px;">Sedang Dikerjakan</span>
+                <span style="font-size:11px;color:var(--g400);">Dimulai 2 hari lalu</span>
+              </div>
+              <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;color:var(--deep);margin-bottom:4px;">Admin Sosial Media</div>
+              <div style="font-size:13px;color:var(--g500);margin-bottom:10px;">🏢 Toko Kopi Abadi · Bandung</div>
+              <div style="font-size:13px;color:var(--g600);line-height:1.6;">Buat konten promosi menu baru dan kelola komentar Instagram selama 2 minggu.</div>
+            </div>
+            <div style="text-align:right;flex-shrink:0;">
+              <div style="font-size:11px;color:var(--g400);margin-bottom:4px;">Match score</div>
+              <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:20px;color:var(--indigo);">97%</div>
+            </div>
+          </div>
+          <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--g200);display:flex;gap:8px;">
+            <span style="font-size:11px;background:var(--g100);color:var(--g600);padding:3px 10px;border-radius:20px;">Social Media</span>
+            <span style="font-size:11px;background:var(--g100);color:var(--g600);padding:3px 10px;border-radius:20px;">Copywriting</span>
+            <button onclick="event.stopPropagation();switchDash('mentor')" style="margin-left:auto;background:var(--indigo);color:#fff;border:none;padding:6px 16px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;">Buka AI Mentor</button>
+          </div>
+        </div>
+
+        <div class="task-job-card" onclick="openTask(this,'Warung Makan Bu Sari','Desain Feed Instagram','Rancang template feed Instagram untuk 12 post — tema: tradisional, hangat, warna earth tone.','Baru','#DCFCE7','#16A34A','Desain Grafis · Canva')">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;">
+            <div style="flex:1;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                <span style="font-size:11px;font-weight:700;background:#DCFCE7;color:#16A34A;padding:2px 10px;border-radius:20px;">Baru</span>
+                <span style="font-size:11px;color:var(--g400);">Masuk hari ini</span>
+              </div>
+              <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;color:var(--deep);margin-bottom:4px;">Desain Feed Instagram</div>
+              <div style="font-size:13px;color:var(--g500);margin-bottom:10px;">🏢 Warung Makan Bu Sari · Jakarta</div>
+              <div style="font-size:13px;color:var(--g600);line-height:1.6;">Rancang template feed Instagram untuk 12 post — tema: tradisional, hangat, warna earth tone.</div>
+            </div>
+            <div style="text-align:right;flex-shrink:0;">
+              <div style="font-size:11px;color:var(--g400);margin-bottom:4px;">Match score</div>
+              <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:20px;color:var(--indigo);">84%</div>
+            </div>
+          </div>
+          <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--g200);display:flex;gap:8px;">
+            <span style="font-size:11px;background:var(--g100);color:var(--g600);padding:3px 10px;border-radius:20px;">Desain Grafis</span>
+            <span style="font-size:11px;background:var(--g100);color:var(--g600);padding:3px 10px;border-radius:20px;">Canva</span>
+            <button onclick="event.stopPropagation();" style="margin-left:auto;background:var(--green);color:#fff;border:none;padding:6px 16px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;">Terima Tugas</button>
+          </div>
+        </div>
+
+        <div class="task-job-card" style="opacity:.55;">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;">
+            <div style="flex:1;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                <span style="font-size:11px;font-weight:700;background:#F3F4F6;color:#6B7280;padding:2px 10px;border-radius:20px;">Selesai</span>
+                <span style="font-size:11px;color:var(--g400);">3 hari lalu</span>
+              </div>
+              <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;color:var(--deep);margin-bottom:4px;">Caption Promosi Ramadan</div>
+              <div style="font-size:13px;color:var(--g500);">🏢 Toko Batik Nusantara · Yogyakarta</div>
+            </div>
+            <div style="text-align:right;flex-shrink:0;">
+              <div style="font-size:11px;color:var(--g400);margin-bottom:4px;">Skor akhir</div>
+              <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:20px;color:var(--green);">92/100</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- verified portofolio page -->
+<div id="page-portfolio" class="page hidden">
+
+  <!-- hero -->
+  <div class="portfolio-hero" id="portfolio-hero">
+    <div class="portfolio-avatar" id="portfolio-avatar">SA</div>
+    <div class="portfolio-verified-badge">
+      ✓ AI Verified — WADAH Career Sandbox
+    </div>
+    <div class="portfolio-name" id="portfolio-name">Budi Jauharto</div>
+    <div class="portfolio-role" id="portfolio-role">Social Media Specialist</div>
+    <div class="portfolio-stats">
+      <div class="portfolio-stat">
+        <div class="portfolio-stat-num" id="portfolio-overall">9.2</div>
+        <div class="portfolio-stat-lbl">Skor keseluruhan</div>
+      </div>
+      <div class="portfolio-stat">
+        <div class="portfolio-stat-num" id="portfolio-sims">3</div>
+        <div class="portfolio-stat-lbl">Simulasi selesai</div>
+      </div>
+      <div class="portfolio-stat">
+        <div class="portfolio-stat-num" id="portfolio-match">97%</div>
+        <div class="portfolio-stat-lbl">Match proyekmu</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="portfolio-body">
+
+    <!-- Score Breakdown -->
+    <div class="portfolio-section">
+      <div class="portfolio-section-title">📊 Breakdown Skor Kompetensi</div>
+      <div id="portfolio-scores"></div>
+    </div>
+
+    <!-- Simulation History -->
+    <div class="portfolio-section">
+      <div class="portfolio-section-title">🏆 Riwayat Simulasi</div>
+      <div id="portfolio-sims-list"></div>
+    </div>
+
+    <!-- Skills -->
+    <div class="portfolio-section">
+      <div class="portfolio-section-title">⚡ Skill Terverifikasi</div>
+      <div id="portfolio-skills" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+    </div>
+
+    <!-- CTA -->
+    <div class="portfolio-cta">
+      <button class="btn-primary" onclick="contactTalent()">
+        Hubungi Penyedia Jasa Ini
+      </button>
+      <button class="btn-secondary" onclick="backToMatching()">
+        Kembali ke Hasil Matching
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- anu -->
+<div id="how-it-works" style="background:rgba(250, 249, 240, .4);padding:72px 24px;">
+    <div style="max-width:960px;margin:0 auto;">
+  
+      <!-- Section header -->
+      <div style="text-align:center;margin-bottom:48px;">
+        <div style="display:inline-flex;align-items:center;gap:6px;background:#EEF2FF;color:var(--indigo);font-size:12px;font-weight:700;padding:5px 14px;border-radius:20px;margin-bottom:16px;letter-spacing:.3px;">CARA KERJA WADAH</div>
+        <h2 style="font-family:'Sora',sans-serif;font-size:clamp(22px,3vw,32px);font-weight:800;color:var(--deep);margin-bottom:10px;">Dua sisi, satu ekosistem</h2>
+        <p style="font-size:15px;color:var(--g500);max-width:480px;margin:0 auto;line-height:1.7;">WADAH menghubungkan talenta muda dengan pengguna jasa secara adil, transparan, dan berbasis bukti nyata.</p>
+      </div>
+  
+      <!-- Split: Pengguna Jasa | Penyedia Jasa -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;">
+  
+        <!-- pengguna jasa -->
+        <div style="background:var(--bg);border-radius:20px;padding:32px;border:1px solid var(--g200);">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px;">
+            <div style="width:40px;height:40px;background:rgba(79,70,229,.1);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;"><img src="assets/pengguna.png" alt="WADAH" style="width:50px;height:50px;object-fit:contain;"/></div>
+            <div>
+              <div style="font-family:'Sora',sans-serif;font-size:15px;font-weight:700;color:var(--deep);">Pengguna Jasa</div>
+              <div style="font-size:12px;color:var(--g400);">UMKM · Bisnis · Individu</div>
+            </div>
+          </div>
+  
+          <!-- Step 1 -->
+          <div style="display:flex;gap:14px;margin-bottom:20px;">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--indigo);color:#fff;font-family:'Sora',sans-serif;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">1</div>
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--deep);margin-bottom:3px;">Ceritakan kebutuhan</div>
+              <div style="font-size:12px;color:var(--g500);line-height:1.6;">Isi deskripsi proyek dan AI kami akan mengklarifikasi detail yang diperlukan.</div>
+            </div>
+          </div>
+  
+          <!-- Step 2 -->
+          <div style="display:flex;gap:14px;margin-bottom:20px;">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--indigo);color:#fff;font-family:'Sora',sans-serif;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">2</div>
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--deep);margin-bottom:3px;">Terima rekomendasi AI</div>
+              <div style="font-size:12px;color:var(--g500);line-height:1.6;">Penyedia jasa paling cocok akan dipilihkan otomatis dan lengkap dengan alasan matching yang spesifik.</div>
+            </div>
+          </div>
+  
+          <!-- Step 3 -->
+          <div style="display:flex;gap:14px;margin-bottom:24px;">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--indigo);color:#fff;font-family:'Sora',sans-serif;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">3</div>
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--deep);margin-bottom:3px;">Mulai kolaborasi</div>
+              <div style="font-size:12px;color:var(--g500);line-height:1.6;">Hubungi talenta pilihan, lihat portfolio terverifikasi, dan sepakati detail proyek</div>
+            </div>
+          </div>
+
+        </div>
+  
+        <!-- penyedia jasa -->
+        <div style="background:var(--bg);border-radius:20px;padding:32px;border:1px solid var(--g200);">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px;">
+            <div style="width:40px;height:40px;background:rgba(5,150,105,.1);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;"><img src="assets/penyedia.png" alt="WADAH" style="width:50px;height:50px;object-fit:contain;"/></div>
+            <div>
+              <div style="font-family:'Sora',sans-serif;font-size:15px;font-weight:700;color:var(--deep);">Penyedia Jasa</div>
+              <div style="font-size:12px;color:var(--g400);">Fresh Graduate · Mahasiswa · Freelancer</div>
+            </div>
+          </div>
+  
+          <!-- Step 1 -->
+          <div style="display:flex;gap:14px;margin-bottom:20px;">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--green);color:#fff;font-family:'Sora',sans-serif;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">1</div>
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--deep);margin-bottom:3px;">Pilih skill & upload pengalaman</div>
+              <div style="font-size:12px;color:var(--g500);line-height:1.6;">Pilih 1–3 skill dan upload CV atau portofolio. AI mendeteksi kompetensimu secara otomatis.</div>
+            </div>
+          </div>
+  
+          <!-- Step 2 -->
+          <div style="display:flex;gap:14px;margin-bottom:20px;">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--green);color:#fff;font-family:'Sora',sans-serif;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">2</div>
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--deep);margin-bottom:3px;">Kerjakan simulasi industri nyata</div>
+              <div style="font-size:12px;color:var(--g500);line-height:1.6;">Dibimbing AI Mentor, selesaikan tugas berstandar industri dan dapatkan skor kompetensi objektif.</div>
+            </div>
+          </div>
+  
+          <!-- Step 3 -->
+          <div style="display:flex;gap:14px;margin-bottom:24px;">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--green);color:#fff;font-family:'Sora',sans-serif;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">3</div>
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--deep);margin-bottom:3px;">Dapat proyek berbayar pertama setelah berhasil mencapai performa tertentu</div>
+              <div style="font-size:12px;color:var(--g500);line-height:1.6;">Smart Matching menghubungkanmu dengan pengguna jasa yang cocok secara otomatis</div>
+            </div>
+          </div>
+  
+        </div>
+  
+      </div>
+  
+      <!-- Social proof bar -->
+      <div style="margin-top:32px;background:var(--deep);border-radius:14px;padding:20px 28px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:24px;">
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(255,255,255,.6);">
+          Data BPS 2024, 7.46 juta pengangguran terdidik
+        </div>
+        <div style="width:1px;height:16px;background:rgba(255,255,255,.15);"></div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(255,255,255,.6);">
+          Validasi dari 58 responden kuesioner
+        </div>
+        <div style="width:1px;height:16px;background:rgba(255,255,255,.15);"></div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(255,255,255,.6);">
+          Konfirmasi dari Pakar UGM
+        </div>
+      </div>
+  
+    </div>
+  </div>
+  <!-- END HOW IT WORKS  -->
+
+</script>
+<footer style="background:var(--deep);padding:40px 24px 28px;">
+  <div style="max-width:900px;margin:0 auto;">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:24px;margin-bottom:28px;">
+      <div>
+        <div style="font-family:'Sora',sans-serif;font-size:18px;font-weight:800;color:#fff;display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          WADAH
+        </div>
+        <div style="font-size:12px;color:rgba(255,255,255,.45);line-height:1.6;max-width:260px;">Work-simulation AI Driven Augmented Hiring</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.3);letter-spacing:.6px;margin-bottom:4px;">TAUTAN</div>
+        <a href="https://github.com/Jerome-88" target="_blank" style="font-size:13px;color:rgba(255,255,255,.6);text-decoration:none;">GitHub Repo</a>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,.08);padding-top:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+      <div style="font-size:11px;color:rgba(255,255,255,.3);">© 2026 WADAH · Tim Waduh ·  BINUS University</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.3);">DIGDAYA X Hackathon 2026 Bank Indonesia</div>
+    </div>
+  </div>
+</footer>
+
+  <!-- Scripts — order matters: data first, then logic, then navigation -->
+  <script src="js/data.js"></script>
+  <script src="js/talent-flow.js"></script>
+  <script src="js/jasa-flow.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/portfolio.js"></script>
+  <script src="js/navigation.js"></script>
+
+</body>
+</html>
