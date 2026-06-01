@@ -115,29 +115,6 @@ Demo prototipe dapat diakses langsung di browser tanpa perlu instalasi apapun.
 
 ---
 
-## Struktur Repositori
-
-```
-wadah-demo/
-├── index.html              # Entry point
-├── assets/
-│   └── bot.png             # Aset visual
-├── css/
-│   ├── main.css            # Variables, reset, navbar, buttons
-│   ├── landing.css         # Hero, path cards, stats
-│   ├── flow.css            # Form, skill cards, matching
-│   ├── dashboard.css       # Sidebar, AI mentor, task cards
-│   └── portfolio.css       # Halaman portofolio terverifikasi
-└── js/
-    ├── data.js             # Mock data dan konstanta
-    ├── navigation.js       # Routing antar halaman
-    ├── jasa-flow.js        # Alur pengguna jasa
-    ├── talent-flow.js      # Alur penyedia jasa
-    ├── dashboard.js        # AI Mentor chat dan animasi skor
-    └── portfolio.js        # Logika halaman portofolio
-```
-
----
 
 ## Tim Waduh
 
