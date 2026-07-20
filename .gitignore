@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Docs kept out of git (Drive/Notion instead)
+*.docx

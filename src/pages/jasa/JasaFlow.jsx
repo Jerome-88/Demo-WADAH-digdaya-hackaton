@@ -1,425 +1,316 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ArrowRight, ArrowLeft, Bot, Send, X, Star, MapPin, Clock, Briefcase, CheckCircle } from 'lucide-react';
-import StepIndicator from '../../components/StepIndicator';
-import { JASA_AI_RESPONSES, PORTFOLIO_DATA } from '../../data/mockData';
+import { useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useApp } from '../../context/AppContext';
+import { SKILLS, getSkillMeta } from '../../data/skillMaps';
+import { SCOPE_TEMPLATES, CURATED_TALENTS_DISPLAY } from '../../data/jasaData';
 
-const CATEGORIES = [
-  { id: 'desain', label: 'Desain Grafis', emoji: '🎨', desc: 'Konten visual, branding, logo' },
-  { id: 'social', label: 'Social Media', emoji: '📱', desc: 'Manajemen akun, konten, strategi' },
-  { id: 'copy',   label: 'Copywriting',  emoji: '✍️', desc: 'Caption, artikel, copy iklan' },
-  { id: 'video',  label: 'Videografi',   emoji: '🎬', desc: 'Edit video, motion graphic' },
-  { id: 'photo',  label: 'Fotografi',    emoji: '📸', desc: 'Product photo, lifestyle shoot' },
-  { id: 'web',    label: 'Web Dev',      emoji: '💻', desc: 'Landing page, website toko' },
+const STEP_LABELS = ['Step 1', 'Step 2', 'Step 3'];
+
+const MATCH_LINES = [
+  '⚡ Membaca deskripsi proyekmu...',
+  '🎯 Mencocokkan dengan 867 talent terverifikasi...',
+  '✓ Menemukan 3 talent terbaik untukmu!',
 ];
-
-const MATCH_COLORS = { 97: 'text-green border-green/30 bg-green/5', 91: 'text-indigo border-indigo/30 bg-indigo/5', 88: 'text-amber border-amber/30 bg-amber/5' };
 
 export default function JasaFlow() {
   const navigate = useNavigate();
-  const [step, setStep] = useState(0);
-  const [selectedCat, setSelectedCat] = useState(null);
+  const location = useLocation();
+  const { setActiveProject } = useApp();
+
+  const [step, setStep] = useState(location.state?.resumeStep ?? 0);
+
+  // ── Step 1 state ──
+  const [selectedSkills, setSelectedSkills] = useState(new Set());
+  const [umkmName, setUmkmName] = useState('');
   const [description, setDescription] = useState('');
-  const [chatMessages, setChatMessages] = useState([]);
-  const [chatPhase, setChatPhase] = useState(0); // 0=initial, 1=q1, 2=replied1, 3=q2, 4=replied2, 5=done
-  const [isTyping, setIsTyping] = useState(false);
-  const [selectedTalent, setSelectedTalent] = useState(null);
+  const [scopeStatus, setScopeStatus] = useState('idle'); // idle | loading | done
+  const [scopeItems, setScopeItems] = useState([]);
+  const [budgetValue, setBudgetValue] = useState('');
 
-  const steps = ['Deskripsi Proyek', 'Klarifikasi AI', 'Pilih Talenta'];
-  const doneSet = new Set(Array.from({ length: step }, (_, i) => i));
+  // ── Step 2 state (matching animation) ──
+  const [animLines, setAnimLines] = useState(0); // how many MATCH_LINES revealed
 
-  // Step 1: send to AI
-  function handleClarify() {
-    if (!selectedCat || !description.trim()) return;
-    setStep(1);
-    setIsTyping(true);
+  const firstSkillId = [...selectedSkills][0] || null;
+
+  function toggleSkill(id) {
+    setSelectedSkills(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) { next.delete(id); } else { next.add(id); }
+      return next;
+    });
+  }
+
+  // AI "scope analysis" — a breakdown of likely deliverables, not a price
+  // estimate. Triggered once the UMKM blurs the description textarea (or
+  // instantly via the demo quick-fill).
+  function analyzeScope(skillId, desc) {
+    if (!skillId || !desc.trim()) { setScopeStatus('idle'); setScopeItems([]); return; }
+    setScopeStatus('loading');
     setTimeout(() => {
-      setChatMessages([{ role: 'ai', text: JASA_AI_RESPONSES[0].question }]);
-      setChatPhase(1);
-      setIsTyping(false);
-    }, 1200);
+      setScopeItems(SCOPE_TEMPLATES[skillId] || []);
+      setScopeStatus('done');
+    }, 1000);
   }
 
-  // Step 2: user replies in chat
-  function handleChatReply(replyText) {
-    const newMsgs = [...chatMessages, { role: 'user', text: replyText }];
-    setChatMessages(newMsgs);
-    setIsTyping(true);
-
-    if (chatPhase === 1) {
-      setTimeout(() => {
-        setChatMessages([...newMsgs, { role: 'ai', text: JASA_AI_RESPONSES[1].question }]);
-        setChatPhase(3);
-        setIsTyping(false);
-      }, 1000);
-    } else if (chatPhase === 3) {
-      setTimeout(() => {
-        setChatMessages([...newMsgs, {
-          role: 'ai',
-          text: '✅ Sempurna! Saya sudah memiliki semua informasi yang diperlukan.\n\n**Ringkasan proyek Anda:**\n- Kategori: Desain Grafis (Instagram Feed)\n- Frekuensi: 3 post/minggu\n- Brand: Logo + warna merah-kuning, gaya bersih & hangat\n\nSistem WADAH sekarang akan mencarikan talenta terbaik yang sesuai dengan kebutuhan Anda. Klik **Temukan Talenta** untuk melihat hasilnya! 🎯',
-        }]);
-        setChatPhase(5);
-        setIsTyping(false);
-      }, 1000);
-    }
+  function handleDescriptionBlur() {
+    analyzeScope(firstSkillId, description);
   }
 
-  const [inputVal, setInputVal] = useState('');
-
-  function handleSend() {
-    if (!inputVal.trim() || chatPhase === 5) return;
-    handleChatReply(inputVal);
-    setInputVal('');
+  function fillDemo() {
+    const skillId = 'desain';
+    const desc = 'Saya punya toko sepatu kecil di Pasar Baru, Bandung. Mau bikin desain poster untuk promosi sneakers edisi spesial Lebaran. Talentnya bisa dari mana saja, asalkan hasil kerjanya rapi dan sesuai dengan gaya anak muda zaman sekarang.';
+    setSelectedSkills(new Set([skillId]));
+    setUmkmName('SepatuKu');
+    setDescription(desc);
+    setBudgetValue('500000');
+    analyzeScope(skillId, desc);
   }
 
-  function usePreset(text) {
-    handleChatReply(text);
+  const step1Valid = selectedSkills.size > 0 && description.trim() && umkmName.trim() && budgetValue.trim();
+
+  function goToStep2() {
+    setStep(1);
+    setAnimLines(0);
   }
+
+  function goToStep3() {
+    const skillMeta = getSkillMeta(firstSkillId);
+    setActiveProject({
+      id: `${firstSkillId}-${umkmName.toLowerCase().replace(/\s+/g, '-')}`,
+      umkm: umkmName,
+      location: 'Indonesia',
+      skillId: firstSkillId,
+      skill: skillMeta.label,
+      budget: Number(budgetValue) || 0,
+      budgetNegotiated: null,
+      durasi: 'Fleksibel', // negotiated later in chat, not chosen in Step 1
+      desc: description,
+      scope: scopeItems,
+      status: 'open',
+    });
+    setStep(2);
+  }
+
+  // Reveal MATCH_LINES one by one, then auto-advance to the results step —
+  // this animation stands in for the old AI clarification chat.
+  useEffect(() => {
+    if (step !== 1) return;
+    const timers = MATCH_LINES.map((_, i) => setTimeout(() => setAnimLines(i + 1), 700 + i * 900));
+    const done = setTimeout(goToStep3, 700 + MATCH_LINES.length * 900 + 700);
+    return () => { timers.forEach(clearTimeout); clearTimeout(done); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step]);
 
   return (
-    <div className="animate-fade-in max-w-4xl mx-auto px-4 py-10">
-      {/* Header */}
-      <div className="text-center mb-8">
-        <h1 className="font-sora font-bold text-deep text-3xl mb-2">Cari Talenta untuk Proyekmu</h1>
-        <p className="text-gray-500 font-inter">AI akan membantu mencocokkan talenta terbaik sesuai kebutuhanmu</p>
+    <div className="min-h-screen bg-[#0F0F1A] flex flex-col">
+      <header className="sticky top-0 z-30 h-14 flex items-center px-4 md:px-6 bg-[#1A1A2E]/95 backdrop-blur border-b border-white/5 flex-shrink-0">
+        <button
+          onClick={() => navigate('/')}
+          className="flex items-center gap-2 text-white/60 hover:text-white text-sm font-inter transition-colors bg-transparent border-0 cursor-pointer"
+        >
+          <i className="fa-solid fa-arrow-left"></i>
+          <span>Beranda</span>
+        </button>
+        <h1 className="text-white text-xs sm:text-sm font-bold font-sora truncate absolute left-1/2 -translate-x-1/2 max-w-[55%] text-center">
+          Cari Talenta untuk Proyekmu
+        </h1>
+      </header>
+
+      {/* Step chips */}
+      <div className="flex items-center justify-center gap-2 py-4 px-4 flex-shrink-0">
+        {STEP_LABELS.map((label, i) => (
+          <div key={label} className="flex items-center gap-2">
+            <span className={`flex items-center gap-1.5 text-[11px] font-bold font-inter px-2.5 py-1 rounded-full border ${i < step ? 'bg-green-500/10 text-green-400 border-green-500/20'
+                : i === step ? 'bg-purple/15 text-purple border-purple/30'
+                  : 'bg-white/[0.02] text-white/30 border-white/10'
+              }`}>
+              {i < step ? '✓' : i === step ? '●' : '○'} {label}
+            </span>
+            {i < STEP_LABELS.length - 1 && <span className="text-white/15 text-xs">—</span>}
+          </div>
+        ))}
       </div>
 
-      {/* Step Indicator */}
-      <div className="flex justify-center mb-10">
-        <StepIndicator steps={steps} current={step} done={doneSet} />
-      </div>
-
-      {/* ── STEP 0: Deskripsi ── */}
-      {step === 0 && (
-        <div className="animate-fade-in space-y-6">
-          <div>
-            <h2 className="font-sora font-bold text-deep text-xl mb-4">Pilih Kategori Jasa</h2>
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
-              {CATEGORIES.map(cat => (
-                <button
-                  key={cat.id}
-                  onClick={() => setSelectedCat(cat.id)}
-                  className={`p-4 rounded-xl border-2 text-left transition-all ${
-                    selectedCat === cat.id
-                      ? 'border-indigo bg-indigo/5 shadow-sm'
-                      : 'border-gray-200 bg-white hover:border-indigo/40'
-                  }`}
-                >
-                  <div className="text-2xl mb-2">{cat.emoji}</div>
-                  <div className="font-semibold text-gray-800 font-inter text-sm">{cat.label}</div>
-                  <div className="text-gray-400 text-xs font-inter mt-0.5">{cat.desc}</div>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <h2 className="font-sora font-bold text-deep text-xl mb-3">Deskripsikan Proyek</h2>
-            <textarea
-              value={description}
-              onChange={e => setDescription(e.target.value)}
-              placeholder="Contoh: Saya punya warung makan dan butuh konten Instagram yang menarik untuk promosi menu spesial. Saya ingin gaya yang hangat dan tradisional..."
-              className="w-full h-36 border-2 border-gray-200 rounded-xl p-4 font-inter text-sm text-gray-700 focus:outline-none focus:border-indigo resize-none transition-colors"
-            />
-            <div className="text-right text-xs text-gray-400 font-inter mt-1">{description.length}/500</div>
-          </div>
-
-          {/* Quick fill */}
-          <button
-            onClick={() => {
-              setSelectedCat('desain');
-              setDescription('Saya punya warung makan Pak Budi dan butuh 3 konten Instagram per minggu untuk promosi menu spesial. Gaya hangat dan keluarga, warna merah dan kuning sesuai brand.');
-            }}
-            className="text-xs text-indigo font-inter underline"
-          >
-            💡 Isi contoh cepat (demo)
-          </button>
-
-          <div className="flex justify-end">
-            <button
-              onClick={handleClarify}
-              disabled={!selectedCat || !description.trim()}
-              className="flex items-center gap-2 bg-indigo text-white font-bold px-7 py-3 rounded-xl hover:bg-indigo-dark transition-all disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 font-inter"
-            >
-              <Bot size={17} />
-              Klarifikasi dengan AI
-              <ArrowRight size={16} />
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* ── STEP 1: Chat ── */}
-      {step === 1 && (
-        <div className="animate-fade-in">
-          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-            {/* Chat header */}
-            <div className="bg-gradient-to-r from-indigo to-purple px-5 py-4 flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center">
-                <Bot size={18} className="text-white" />
-              </div>
-              <div>
-                <div className="text-white font-semibold font-inter text-sm">WADAH AI Assistant</div>
-                <div className="flex items-center gap-1.5">
-                  <div className="w-1.5 h-1.5 rounded-full bg-green animate-pulse-dot" />
-                  <span className="text-white/70 text-xs font-inter">Online</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Messages */}
-            <div className="h-80 overflow-y-auto p-5 space-y-4 bg-gray-50">
-              {chatMessages.map((msg, i) => (
-                <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  {msg.role === 'ai' && (
-                    <div className="w-7 h-7 rounded-full bg-indigo/10 flex items-center justify-center mr-2 flex-shrink-0 mt-1">
-                      <Bot size={13} className="text-indigo" />
-                    </div>
-                  )}
-                  <div
-                    className={`max-w-xs sm:max-w-sm rounded-2xl px-4 py-3 text-sm font-inter leading-relaxed whitespace-pre-line ${
-                      msg.role === 'user'
-                        ? 'bg-indigo text-white rounded-tr-sm'
-                        : 'bg-white text-gray-700 rounded-tl-sm shadow-sm border border-gray-100'
-                    }`}
-                    dangerouslySetInnerHTML={{ __html: msg.text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }}
-                  />
-                </div>
-              ))}
-              {isTyping && (
-                <div className="flex justify-start">
-                  <div className="w-7 h-7 rounded-full bg-indigo/10 flex items-center justify-center mr-2 flex-shrink-0">
-                    <Bot size={13} className="text-indigo" />
-                  </div>
-                  <div className="bg-white rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm border border-gray-100">
-                    <div className="flex gap-1">
-                      {[0,1,2].map(i => (
-                        <div key={i} className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: `${i*0.15}s` }} />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Quick reply presets */}
-            {chatPhase === 1 && !isTyping && (
-              <div className="px-5 pt-3 pb-1 flex gap-2 flex-wrap border-t border-gray-100 bg-white">
-                <button
-                  onClick={() => usePreset(JASA_AI_RESPONSES[0].userReply)}
-                  className="text-xs bg-indigo/10 text-indigo px-3 py-1.5 rounded-full font-inter hover:bg-indigo/20 transition-colors"
-                >
-                  💬 {JASA_AI_RESPONSES[0].userReply}
-                </button>
-              </div>
-            )}
-            {chatPhase === 3 && !isTyping && (
-              <div className="px-5 pt-3 pb-1 flex gap-2 flex-wrap border-t border-gray-100 bg-white">
-                <button
-                  onClick={() => usePreset(JASA_AI_RESPONSES[1].userReply)}
-                  className="text-xs bg-indigo/10 text-indigo px-3 py-1.5 rounded-full font-inter hover:bg-indigo/20 transition-colors"
-                >
-                  💬 {JASA_AI_RESPONSES[1].userReply}
-                </button>
-              </div>
-            )}
-
-            {/* Input */}
-            <div className="p-4 bg-white border-t border-gray-100">
-              <div className="flex gap-2">
-                <input
-                  value={inputVal}
-                  onChange={e => setInputVal(e.target.value)}
-                  onKeyDown={e => e.key === 'Enter' && handleSend()}
-                  placeholder={chatPhase === 5 ? 'Klarifikasi selesai...' : 'Ketik jawaban...'}
-                  disabled={chatPhase === 5 || isTyping}
-                  className="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-inter focus:outline-none focus:border-indigo disabled:bg-gray-50 disabled:text-gray-400"
-                />
-                <button
-                  onClick={handleSend}
-                  disabled={!inputVal.trim() || chatPhase === 5 || isTyping}
-                  className="w-10 h-10 bg-indigo rounded-xl flex items-center justify-center hover:bg-indigo-dark transition-colors disabled:opacity-40"
-                >
-                  <Send size={15} className="text-white" />
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex justify-between mt-6">
-            <button onClick={() => setStep(0)} className="flex items-center gap-2 text-gray-500 hover:text-gray-700 font-inter text-sm">
-              <ArrowLeft size={16} /> Kembali
-            </button>
-            <button
-              onClick={() => setStep(2)}
-              disabled={chatPhase < 5}
-              className="flex items-center gap-2 bg-green text-white font-bold px-6 py-3 rounded-xl hover:bg-green-600 transition-all disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 font-inter"
-            >
-              Temukan Talenta ✨
-              <ArrowRight size={16} />
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* ── STEP 2: Talent Matching ── */}
-      {step === 2 && (
-        <div className="animate-fade-in space-y-5">
-          <div className="bg-green/10 border border-green/30 rounded-xl p-4 flex items-center gap-3">
-            <CheckCircle size={20} className="text-green" />
+      <main className="flex-1 w-full max-w-[680px] mx-auto px-4 pb-16">
+        {/* ── STEP 1 ── */}
+        {step === 0 && (
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-6">
             <div>
-              <div className="font-semibold text-green font-inter text-sm">3 Talenta Cocok Ditemukan!</div>
-              <div className="text-gray-600 text-xs font-inter">Berdasarkan brief + preferensi yang Anda berikan ke AI</div>
+              <h2 className="text-white font-sora font-bold text-xl mb-1">Apa yang kamu butuhkan?</h2>
+              <p className="text-white/50 text-sm font-inter">Ceritakan proyekmu — tidak perlu formal, pakai bahasa sehari-hari</p>
             </div>
-          </div>
 
-          <div className="space-y-4">
-            {PORTFOLIO_DATA.map(talent => (
-              <div
-                key={talent.id}
-                onClick={() => setSelectedTalent(talent)}
-                className="bg-white rounded-2xl border border-gray-200 p-5 hover:shadow-md hover:border-indigo/30 transition-all cursor-pointer"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo to-purple flex items-center justify-center flex-shrink-0">
-                      <span className="text-white font-sora font-bold">{talent.initials}</span>
-                    </div>
+            <div>
+              <h3 className="text-white/70 font-sora font-bold text-xs uppercase tracking-wide mb-3">Pilih Kategori Skill</h3>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
+                {SKILLS.map(cat => {
+                  const active = selectedSkills.has(cat.id);
+                  return (
+                    <button
+                      key={cat.id}
+                      onClick={() => toggleSkill(cat.id)}
+                      className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer ${active ? 'border-purple bg-purple/10' : 'border-white/10 bg-[#1A1A2E] hover:border-purple/40'
+                        }`}
+                    >
+                      <div className="text-xl mb-1.5">{cat.emoji}</div>
+                      <div className="font-semibold text-white text-xs font-inter">{cat.label}</div>
+                      <div className="text-white/40 text-[10px] font-inter mt-0.5">{cat.tagline}</div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-white/70 font-sora font-bold text-xs uppercase tracking-wide mb-2">Nama Bisnis/UMKM</h3>
+              <input
+                value={umkmName}
+                onChange={e => setUmkmName(e.target.value)}
+                placeholder="Contoh: Warung Kopi Abadi"
+                className="w-full bg-[#1A1A2E] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder:text-white/25 font-inter focus:outline-none focus:border-purple/50"
+              />
+            </div>
+
+            <div>
+              <h3 className="text-white/70 font-sora font-bold text-xs uppercase tracking-wide mb-2">Deskripsi Proyek</h3>
+              <textarea
+                value={description}
+                onChange={e => setDescription(e.target.value)}
+                onBlur={handleDescriptionBlur}
+                placeholder="Contoh: Gw punya warung kopi di Bandung, butuh yang bisa kelola Instagram dan bikin konten promosi mingguan. Nada bicaranya mau yang hangat dan lokal banget..."
+                className="w-full bg-[#1A1A2E] border border-white/10 rounded-xl p-4 text-sm text-white placeholder:text-white/25 font-inter resize-none focus:outline-none focus:border-purple/50"
+                style={{ minHeight: 120 }}
+              />
+            </div>
+
+            {/* Budget Proyek */}
+            <div>
+              <h3 className="text-white/70 font-sora font-bold text-xs uppercase tracking-wide mb-2">Budget Proyek</h3>
+              <div className="flex items-center gap-2">
+                <span className="bg-[#1A1A2E] border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white/50 font-inter">Rp</span>
+                <input
+                  type="number"
+                  value={budgetValue}
+                  onChange={e => setBudgetValue(e.target.value)}
+                  placeholder="Contoh: 800000"
+                  className="flex-1 bg-[#1A1A2E] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder:text-white/25 font-inter focus:outline-none focus:border-purple/50"
+                />
+              </div>
+              <p className="text-white/40 text-xs font-inter leading-relaxed mt-2">
+                💡 Tidak perlu pasti — ini hanya gambaran awal untuk membantu kami mencarikan talent yang sesuai. Harga final disepakati saat negosiasi dengan talent.
+              </p>
+            </div>
+
+            <button onClick={fillDemo} className="self-start text-xs text-purple font-inter underline bg-transparent border-0 cursor-pointer">
+              ⚡ Isi contoh cepat (demo)
+            </button>
+
+            <button
+              onClick={goToStep2}
+              disabled={!step1Valid}
+              className="w-full bg-purple hover:brightness-110 text-white font-bold py-3.5 rounded-xl transition-all text-sm cursor-pointer border-0 disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              Lanjut
+            </button>
+          </motion.div>
+        )}
+
+        {/* ── STEP 2 (matching animation) ── */}
+        {step === 1 && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center gap-6 py-24">
+            {animLines < MATCH_LINES.length && (
+              <div className="flex gap-1.5">
+                {[0, 1, 2].map(i => (
+                  <div key={i} className="w-2.5 h-2.5 rounded-full bg-purple animate-bounce" style={{ animationDelay: `${i * 0.15}s` }} />
+                ))}
+              </div>
+            )}
+            <div className="flex flex-col gap-3 items-center">
+              <AnimatePresence>
+                {MATCH_LINES.slice(0, animLines).map((line, i) => (
+                  <motion.p
+                    key={line}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className={`text-sm font-inter text-center ${
+                      i === MATCH_LINES.length - 1 ? 'text-green-400 font-semibold' : 'text-white/60'
+                    }`}
+                  >
+                    {line}
+                  </motion.p>
+                ))}
+              </AnimatePresence>
+            </div>
+          </motion.div>
+        )}
+
+        {/* ── STEP 3 ── */}
+        {step === 2 && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col gap-5">
+            <div className="text-center">
+              <h2 className="text-white font-sora font-bold text-xl mb-1">3 Talent Paling Cocok Untukmu</h2>
+              <p className="text-white/50 text-sm font-inter">Dipilih berdasarkan kecocokan proyekmu — bukan skor tertinggi semata</p>
+            </div>
+
+            <div className="flex flex-col gap-4">
+              {CURATED_TALENTS_DISPLAY.map((talent, i) => (
+                <motion.div
+                  key={talent.slug}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.15, duration: 0.35 }}
+                  onClick={() => navigate(`/portfolio/${talent.slug}`)}
+                  className="relative bg-[#1A1A2E] border border-white/10 rounded-2xl p-5 cursor-pointer hover:border-purple/40 transition-all"
+                >
+                  <span className="absolute top-4 right-4 text-[10px] font-bold text-green-400 bg-green-500/10 border border-green-500/25 px-2 py-1 rounded-full font-inter">
+                    ✓ AI Verified
+                  </span>
+
+                  <div className="bg-[#1E1A3A] border border-purple/40 rounded-xl p-4 mb-4">
+                    <div className="text-purple text-[10px] font-bold font-inter uppercase tracking-wide mb-1.5">Cocok Karena</div>
+                    <p className="text-white/80 text-sm font-inter leading-relaxed">{talent.matchReason}</p>
+                  </div>
+
+                  <div className="flex items-center gap-3 mb-2">
+                    {talent.avatarImg ? (
+                      <img src={talent.avatarImg} alt={talent.name} className="w-10 h-10 rounded-full object-cover border border-white/10 shrink-0" />
+                    ) : (
+                      <div
+                        className="w-10 h-10 rounded-full flex items-center justify-center text-white font-sora font-bold text-xs shrink-0"
+                        style={{ background: talent.avatarBg }}
+                      >
+                        {talent.initials}
+                      </div>
+                    )}
                     <div>
-                      <div className="font-sora font-bold text-deep">{talent.name}</div>
-                      <div className="text-xs text-gray-400 font-inter">{talent.level}</div>
-                      <div className="flex items-center gap-3 mt-1 text-xs text-gray-500 font-inter">
-                        <span className="flex items-center gap-1"><MapPin size={11} />{talent.location}</span>
-                        <span className="flex items-center gap-1"><Clock size={11} />{talent.responseTime}</span>
-                      </div>
+                      <div className="text-white font-sora font-bold text-sm">{talent.name}</div>
+                      <div className="text-white/50 text-xs font-inter">{talent.role}</div>
                     </div>
                   </div>
-                  <div className={`text-center px-3 py-2 rounded-xl border font-bold font-sora text-xl ${MATCH_COLORS[talent.match] || 'text-gray-600 border-gray-200'}`}>
-                    {talent.match}%
-                    <div className="text-xs font-inter font-normal">match</div>
+
+                  <div className="text-white/30 text-xs font-inter mb-4">
+                    Skor: {talent.score}/10 · {talent.matchPct}% cocok
                   </div>
-                </div>
 
-                <div className="mt-4 pt-4 border-t border-gray-100">
-                  <div className="text-xs font-semibold text-gray-400 font-inter uppercase tracking-wide mb-2">COCOK KARENA</div>
-                  <div className="flex items-center gap-2 text-sm text-gray-600 font-inter">
-                    <CheckCircle size={13} className="text-green flex-shrink-0" />
-                    {talent.matchReason}
-                  </div>
-                </div>
-
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {talent.skills.slice(0,3).map(s => (
-                    <span key={s} className="text-xs bg-indigo/10 text-indigo px-2.5 py-1 rounded-full font-inter">{s}</span>
-                  ))}
-                </div>
-
-                <div className="mt-4 flex gap-2">
                   <button
-                    onClick={e => { e.stopPropagation(); setSelectedTalent(talent); }}
-                    className="flex-1 border border-indigo/40 text-indigo text-sm font-semibold py-2 rounded-xl hover:bg-indigo/5 transition-colors font-inter"
+                    onClick={e => { e.stopPropagation(); navigate(`/portfolio/${talent.slug}`); }}
+                    className="w-full border border-purple/40 text-purple text-sm font-semibold py-2.5 rounded-xl hover:bg-purple/10 transition-colors font-inter bg-transparent cursor-pointer"
                   >
-                    Lihat Portofolio
+                    Lihat Portfolio Lengkap
                   </button>
-                  <button
-                    onClick={e => e.stopPropagation()}
-                    className="flex-1 bg-green text-white text-sm font-semibold py-2 rounded-xl hover:bg-green-600 transition-colors font-inter"
-                  >
-                    Hubungi
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <button
-            onClick={() => navigate('/')}
-            className="w-full border border-gray-200 text-gray-500 py-3 rounded-xl hover:bg-gray-50 font-inter text-sm transition-colors"
-          >
-            ← Kembali ke Beranda
-          </button>
-        </div>
-      )}
-
-      {/* ── Talent Modal ── */}
-      {selectedTalent && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center p-4" onClick={() => setSelectedTalent(null)}>
-          <div
-            className="bg-white rounded-2xl w-full max-w-md max-h-[85vh] overflow-y-auto animate-pop"
-            onClick={e => e.stopPropagation()}
-          >
-            {/* Modal header */}
-            <div className="sticky top-0 bg-white border-b border-gray-100 px-5 py-4 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo to-purple flex items-center justify-center">
-                  <span className="text-white font-sora font-bold text-sm">{selectedTalent.initials}</span>
-                </div>
-                <div>
-                  <div className="font-sora font-bold text-deep">{selectedTalent.name}</div>
-                  <div className="text-xs text-gray-400 font-inter">{selectedTalent.level}</div>
-                </div>
-              </div>
-              <button onClick={() => setSelectedTalent(null)} className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors">
-                <X size={15} />
-              </button>
+                </motion.div>
+              ))}
             </div>
 
-            <div className="p-5 space-y-5">
-              <p className="text-gray-600 font-inter text-sm leading-relaxed">{selectedTalent.bio}</p>
-
-              {/* Stats */}
-              <div className="grid grid-cols-3 gap-3">
-                <div className="text-center bg-indigo/5 rounded-xl p-3">
-                  <div className="font-sora font-bold text-indigo text-lg">{selectedTalent.avgScore}%</div>
-                  <div className="text-xs text-gray-400 font-inter">Skor Avg</div>
-                </div>
-                <div className="text-center bg-green/5 rounded-xl p-3">
-                  <div className="font-sora font-bold text-green text-lg">{selectedTalent.completedProjects}</div>
-                  <div className="text-xs text-gray-400 font-inter">Proyek</div>
-                </div>
-                <div className="text-center bg-amber/5 rounded-xl p-3">
-                  <div className="font-sora font-bold text-amber text-lg">{selectedTalent.responseTime}</div>
-                  <div className="text-xs text-gray-400 font-inter">Respons</div>
-                </div>
-              </div>
-
-              {/* Portfolio */}
-              <div>
-                <div className="text-xs font-semibold text-gray-400 font-inter uppercase tracking-wide mb-3">Portofolio Terverifikasi</div>
-                <div className="space-y-2">
-                  {selectedTalent.portfolio.map(p => (
-                    <div key={p.title} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                      <div>
-                        <div className="text-sm font-semibold text-gray-700 font-inter">{p.title}</div>
-                        <div className="text-xs text-gray-400 font-inter">{p.category}</div>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Star size={12} className="text-amber fill-amber" />
-                        <span className="text-sm font-bold text-gray-700 font-inter">{p.score}%</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Skills */}
-              <div>
-                <div className="text-xs font-semibold text-gray-400 font-inter uppercase tracking-wide mb-2">Skills</div>
-                <div className="flex flex-wrap gap-2">
-                  {selectedTalent.skills.map(s => (
-                    <span key={s} className="text-xs bg-indigo/10 text-indigo px-3 py-1 rounded-full font-inter">{s}</span>
-                  ))}
-                </div>
-              </div>
-
-              {/* CTA */}
-              <button className="w-full bg-green text-white font-bold py-3.5 rounded-xl hover:bg-green-600 transition-all active:scale-95 font-inter">
-                Hubungi {selectedTalent.name.split(' ')[0]}
-              </button>
+            <div className="bg-white/[0.03] border border-white/10 rounded-xl p-4">
+              <p className="text-white/50 text-xs font-inter leading-relaxed">
+                💡 Tidak ada sistem bidding, tidak ada perang harga. WADAH memilihkan 3 talent yang paling cocok dengan proyekmu — kamu tinggal hubungi yang paling sesuai.
+              </p>
             </div>
-          </div>
-        </div>
-      )}
+          </motion.div>
+        )}
+      </main>
     </div>
   );
 }

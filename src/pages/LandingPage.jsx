@@ -95,7 +95,7 @@ export default function LandingPage() {
               Talenta muda yang ingin membangun karier. Buktikan kemampuan lewat simulasi kerja nyata, bangun portofolio terverifikasi.
             </p>
             <ul className="space-y-2 mb-6">
-              {['Simulasi kerja nyata UMKM', 'Evaluasi AI otomatis', 'Verified Portfolio'].map(item => (
+              {['Simulasi kerja nyata UMKM', 'Direview human reviewer', 'Verified Portfolio'].map(item => (
                 <li key={item} className="flex items-center gap-2 text-sm text-gray-600 font-inter">
                   <CheckCircle size={15} className="text-green flex-shrink-0" />
                   {item}
@@ -155,7 +155,7 @@ export default function LandingPage() {
                 {[
                   { step: '01', title: 'Daftar & Upload CV', desc: 'Daftarkan skill, upload CV/portofolio, AI menentukan level awalmu' },
                   { step: '02', title: 'Kerjakan Simulasi', desc: 'Terima tugas simulasi berdasarkan tugas nyata, kerjakan dengan bantuan AI Tutor' },
-                  { step: '03', title: 'Bangun Track Record', desc: 'Hasil dinilai AI + verifikasi manusia, masuk portofolio publik terverifikasi' },
+                  { step: '03', title: 'Bangun Track Record', desc: 'Hasil direview human reviewer, masuk portofolio publik terverifikasi' },
                 ].map(({ step, title, desc }) => (
                   <div key={step} className="flex gap-4">
                     <div className="w-10 h-10 rounded-xl bg-green/10 flex items-center justify-center flex-shrink-0">

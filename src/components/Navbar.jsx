@@ -8,6 +8,15 @@ export default function Navbar() {
   const navigate = useNavigate();
   const isHome = location.pathname === '/';
 
+  // The Skill Map, Profile, Unit, Submit, Talenta onboarding, and Jasa (UMKM
+  // matching/contract) pages own their own full-screen dark header — this
+  // light navbar would show up as a jarring light strip above them.
+  const hasOwnHeader = location.pathname === '/rina/task' || location.pathname === '/rina/profile'
+    || location.pathname === '/rina/submit' || location.pathname.startsWith('/unit/')
+    || location.pathname === '/jasa' || location.pathname.startsWith('/portfolio/')
+    || location.pathname.startsWith('/jasa/') || location.pathname === '/talenta';
+  if (hasOwnHeader) return null;
+
   return (
     <nav className="sticky top-0 z-40 bg-white border-b border-gray-100 shadow-sm">
       <div className="px-4 sm:px-6 flex items-center h-16 justify-between">

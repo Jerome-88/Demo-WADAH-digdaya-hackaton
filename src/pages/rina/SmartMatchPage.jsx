@@ -1,39 +1,41 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CheckCircle, ArrowLeft, MapPin, Clock, Briefcase } from 'lucide-react';
+import { CheckCircle, ArrowLeft, MapPin, Briefcase } from 'lucide-react';
 import ScoreBar from '../../components/ScoreBar';
-
-const MATCH_REASONS = [
-  'Skill Desain Grafis sesuai kebutuhan konten Instagram batik',
-  'Skor performa 79% melampaui threshold minimum 75%',
-  '3 karya terverifikasi UMKM F&B menunjukkan track record relevan',
-];
-
-const REQUIREMENTS = [
-  'Mampu membuat konten feed Instagram yang estetis',
-  'Paham identitas visual batik tradisional',
-  'Pengalaman desain untuk UMKM',
-  'Waktu respons di bawah 4 jam',
-];
+import { useApp } from '../../context/AppContext';
+import { SKILL_MAPS, DEFAULT_SKILL, getSkillMeta } from '../../data/skillMaps';
 
 const PARAMS = [
-  { label: 'Skor Performa',   value: 79,  weight: '40%', color: 'indigo' },
+  { label: 'Skor Performa',   value: 82,  weight: '40%', color: 'indigo' },
   { label: 'Relevansi Skill', value: 95,  weight: '35%', color: 'green' },
   { label: 'Kecepatan',       value: 88,  weight: '25%', color: 'amber' },
 ];
 
-const PROJECT_DETAILS = [
-  ['Klien',     'Toko Batik Nusantara'],
-  ['Kategori',  'UMKM Batik, Jakarta Selatan'],
-  ['Output',    '5 konten Instagram Feed'],
-  ['Budget',    'Rp 500.000'],
-  ['Deadline',  '2 minggu'],
-  ['Reward',    'Dibayar setelah verifikasi WADAH'],
-];
-
 export default function SmartMatchPage() {
   const navigate = useNavigate();
+  const { activeProject, setProjectAccepted } = useApp();
   const [accepted, setAccepted] = useState(false);
+
+  const skillId = activeProject?.skillId || DEFAULT_SKILL;
+  const skillMeta = getSkillMeta(skillId);
+  const skillMap = SKILL_MAPS[skillId] || SKILL_MAPS[DEFAULT_SKILL];
+  const umkmName = activeProject?.umkm || 'Toko Batik Nusantara';
+  const description = activeProject?.desc || 'Butuh talenta terverifikasi untuk kebutuhan konten UMKM kami.';
+
+  const matchReasons = [
+    `Skill ${skillMeta.label} sesuai dengan kebutuhan ${umkmName}: "${description}"`,
+    'Skor performa 82% melampaui threshold minimum 75%',
+    'Checkpoint skill map terverifikasi menunjukkan track record relevan',
+  ];
+
+  const projectDetails = [
+    ['Klien',     umkmName],
+    ['Kategori',  `UMKM ${skillMeta.label}`],
+    ['Output',    skillMap.nodes.find(n => n.type === 'checkpoint')?.title || 'Deliverable sesuai brief'],
+    ['Budget',    'Rp 500.000'],
+    ['Deadline',  '2 minggu'],
+    ['Reward',    'Dibayar setelah verifikasi WADAH'],
+  ];
 
   return (
     <div className="animate-fade-in max-w-2xl mx-auto px-4 py-10">
@@ -41,11 +43,11 @@ export default function SmartMatchPage() {
         <>
           {/* Header */}
           <button
-            onClick={() => navigate('/rina/portfolio')}
+            onClick={() => navigate('/rina/profile')}
             className="flex items-center gap-2 text-gray-500 hover:text-gray-700 font-inter text-sm mb-6"
           >
             <ArrowLeft size={16} />
-            Kembali ke Portofolio
+            Kembali ke Profil
           </button>
 
           {/* Dark header card */}
@@ -88,13 +90,13 @@ export default function SmartMatchPage() {
           <div className="bg-white rounded-2xl border border-gray-200 p-5 mb-5">
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber/30 to-orange-400/30 flex items-center justify-center text-2xl flex-shrink-0">
-                🧣
+                {skillMeta.emoji}
               </div>
               <div className="flex-1">
-                <div className="font-sora font-bold text-deep text-base">Toko Batik Nusantara</div>
+                <div className="font-sora font-bold text-deep text-base">{umkmName}</div>
                 <div className="flex items-center gap-3 text-xs text-gray-500 font-inter mt-1">
-                  <span className="flex items-center gap-1"><Briefcase size={11} />UMKM Batik</span>
-                  <span className="flex items-center gap-1"><MapPin size={11} />Jakarta Selatan</span>
+                  <span className="flex items-center gap-1"><Briefcase size={11} />UMKM {skillMeta.label}</span>
+                  <span className="flex items-center gap-1"><MapPin size={11} />Indonesia</span>
                 </div>
               </div>
             </div>
@@ -103,7 +105,7 @@ export default function SmartMatchPage() {
             <div className="mt-4 pt-4 border-t border-gray-100">
               <div className="text-xs font-semibold text-green font-inter uppercase tracking-wide mb-2">ALASAN MATCHING</div>
               <div className="bg-green/5 border border-green/20 rounded-xl p-4 space-y-2">
-                {MATCH_REASONS.map((r, i) => (
+                {matchReasons.map((r, i) => (
                   <div key={i} className="flex items-start gap-2 text-sm text-gray-700 font-inter">
                     <CheckCircle size={14} className="text-green mt-0.5 flex-shrink-0" />
                     {r}
@@ -136,7 +138,7 @@ export default function SmartMatchPage() {
           <div className="bg-white rounded-2xl border border-gray-200 p-5 mb-5">
             <div className="text-xs font-semibold text-gray-400 font-inter uppercase tracking-wide mb-3">DETAIL PROYEK</div>
             <div className="space-y-2">
-              {PROJECT_DETAILS.map(([k, v]) => (
+              {projectDetails.map(([k, v]) => (
                 <div key={k} className="flex justify-between text-sm font-inter">
                   <span className="text-gray-500">{k}</span>
                   <span className="font-semibold text-gray-800 text-right">{v}</span>
@@ -147,7 +149,7 @@ export default function SmartMatchPage() {
             <div className="mt-4 pt-4 border-t border-gray-100">
               <div className="text-xs font-semibold text-gray-400 font-inter uppercase tracking-wide mb-2">KETENTUAN</div>
               <ul className="space-y-1.5">
-                {REQUIREMENTS.map(r => (
+                {skillMap.checklist.map(r => (
                   <li key={r} className="flex items-start gap-2 text-sm text-gray-600 font-inter">
                     <div className="w-1.5 h-1.5 rounded-full bg-indigo mt-2 flex-shrink-0" />
                     {r}
@@ -160,13 +162,13 @@ export default function SmartMatchPage() {
           {/* Action buttons */}
           <div className="flex gap-3">
             <button
-              onClick={() => navigate('/rina/portfolio')}
+              onClick={() => navigate('/rina/profile')}
               className="flex-1 border-2 border-gray-200 text-gray-600 font-semibold py-3.5 rounded-xl hover:bg-gray-50 transition-colors font-inter"
             >
               Lewati
             </button>
             <button
-              onClick={() => setAccepted(true)}
+              onClick={() => { setAccepted(true); setProjectAccepted(true); }}
               className="flex-1 bg-green text-white font-bold py-3.5 rounded-xl hover:bg-green-600 transition-all active:scale-95 font-inter text-sm"
             >
               🎉 Terima Proyek!
@@ -195,8 +197,8 @@ export default function SmartMatchPage() {
             <div className="text-xs font-semibold text-gray-400 font-inter uppercase tracking-wide mb-3">Ringkasan Proyek</div>
             <div className="space-y-2.5">
               {[
-                ['Klien',   'Toko Batik Nusantara'],
-                ['Proyek',  '5 Konten Instagram Feed'],
+                ['Klien',   umkmName],
+                ['Proyek',  skillMap.nodes.find(n => n.type === 'checkpoint')?.title || 'Deliverable sesuai brief'],
                 ['Budget',  'Rp 500.000'],
                 ['Deadline','2 minggu'],
                 ['Match',   '87% compatibility'],
@@ -220,10 +222,10 @@ export default function SmartMatchPage() {
               Buka Pesan Klien 💬
             </button>
             <button
-              onClick={() => navigate('/rina/portfolio')}
+              onClick={() => navigate('/rina/profile')}
               className="flex-1 border-2 border-gray-200 text-gray-700 font-semibold py-3.5 rounded-xl hover:bg-gray-50 transition-colors font-inter"
             >
-              ← Portofolio Saya
+              ← Profil Saya
             </button>
           </div>
         </div>

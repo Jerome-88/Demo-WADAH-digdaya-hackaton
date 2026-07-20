@@ -30,3 +30,14 @@ body {
 
 /* Score bar transition */
 .score-bar { transition: width 1.1s cubic-bezier(.4,0,.2,1); }
+
+/* Frosted card used on dark, game-map style screens (e.g. RinaTask) — tinted with
+   the brand's deep indigo (#1E1B4B) so it reads as part of the same product as
+   the light dashboard, not a separate dark theme. */
+.glass-panel {
+  background: rgba(30, 27, 75, 0.35);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(148, 130, 255, 0.14);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
