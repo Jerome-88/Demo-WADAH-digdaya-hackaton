@@ -1,72 +1,176 @@
+<div align="center">
+
 # WADAH
+### Work-simulation AI Driven Augmented Hiring
 
-Demo app for **WADAH** — Digdaya x Hackathon 2026 Bank Indonesia. A dark-themed React SPA that showcases two sides of one platform: UMKM (businesses) looking for talent, and talent (gig workers) building verified skills through a gamified "Skill Map."
+**Memutus paradoks pengalaman kerja yang membelenggu talenta muda Indonesia.**
 
-Built with React 19 + Vite + Tailwind CSS + Framer Motion. All data is local/session state (`AppContext`) — there is no backend; every flow is scripted for live demo purposes.
+[![Demo](https://img.shields.io/badge/Live_Demo-Coba_Sekarang-4F46E5?style=for-the-badge)](https://jerome-88.github.io/wadah-demo)
+[![DIGDAYA X](https://img.shields.io/badge/DIGDAYA_X-Hackathon_2026-F59E0B?style=for-the-badge)](https://github.com/Jerome-88)
+[![Bank Indonesia](https://img.shields.io/badge/Sponsor-Bank_Indonesia-DC2626?style=for-the-badge)](#)
 
-## Getting started
+</div>
 
-```bash
-npm install
-npm run dev      # start dev server (http://localhost:5173)
-npm run build    # production build
-npm run lint      # eslint
-```
+---
 
-## The two sides of the app
+## Tentang WADAH
 
-### 1. Pengguna Jasa (UMKM) — hiring flow
+WADAH adalah platform pengembangan karir digital di mana talenta muda berlatih melalui simulasi kerja bergamifikasi, membangun portofolio terverifikasi, dan terhubung langsung dengan pelaku usaha yang membutuhkan — semua dalam satu tempat.
 
-Entry point: `/jasa` ([JasaFlow.jsx](src/pages/jasa/JasaFlow.jsx))
-
-WADAH is framed as a **recommendation engine**, not a bidding marketplace — there's no price filter/sort, and rejection from a talent is never shown to the UMKM as such.
-
-1. **Step 1 — Ceritakan proyekmu**: pick a skill category, business name, free-text project description, and a rough budget (single Rp input, not a filter). Blurring the description triggers an "AI Scope Analysis" card — a checklist of likely deliverables per skill.
-2. **Step 2 — Matching animation**: a short scripted animation (`⚡ Membaca deskripsi proyekmu...` → `🎯 Mencocokkan dengan 867 talent terverifikasi...` → `✓ Menemukan 3 talent terbaik untukmu!`) that auto-advances — no chat/questions step anymore.
-3. **Step 3 — 3 Talent Paling Cocok**: three curated talent cards (`CURATED_TALENTS_DISPLAY` in [jasaData.js](src/data/jasaData.js)), headlined by a "Cocok Karena" reason box rather than a bare score. Rina Kusumawati is always the top card — she's the same persona used on the talent side, closing the demo loop live.
-4. **Portfolio** (`/portfolio/:talentSlug`) → **Draft Kontrak** (`/jasa/kontrak/:talentSlug`, editable budget/durasi) → talent responds **accept**, **nego**, or (if rejected) offers the next talent in line (`TALENT_RESPONSE` / `NEXT_TALENT` maps).
-5. **Chat & Nego** (`/jasa/nego/:talentSlug`) for talents whose response is `'nego'` (currently Rina and Siti) — scripted opening offer, Setuju/Counter/Tolak, live contract card that highlights on update.
-6. **Kontrak Final** (`/jasa/kontrak-final/:talentSlug`) — sign → confetti celebration → contract active. This flips `activeProject.status` to `'matched'`.
-
-### 2. Talenta (talent) — onboarding + Skill Map
-
-Entry point: `/talenta` ([TalentaFlow.jsx](src/pages/talenta/TalentaFlow.jsx))
-
-Onboarding order: **Data Diri** (nama, no HP, foto opsional) → **Verifikasi OTP** (6 digit) → **Pilih Skill** → activation animation auto-plays and drops straight into the Skill Map. Onboarding only ever needs to be completed once per session (`onboardingComplete` in `AppContext`) — revisiting `/talenta` after that redirects straight to `/rina/task`.
-
-- `/rina/task` ([RinaTask.jsx](src/pages/rina/RinaTask.jsx)) — the Skill Map itself (Materi/Quiz/Tantangan nodes per unit).
-- `/unit/:unitParam` ([UnitPage.jsx](src/pages/rina/UnitPage.jsx)) — full-page node content.
-- `/rina/submit` ([RinaSubmit.jsx](src/pages/rina/RinaSubmit.jsx)) — checkpoint submission + revision cycle.
-- `/rina/profile` ([ProfilePage.jsx](src/pages/rina/ProfilePage.jsx)) — level, XP, track record.
-- `/rina/match` ([SmartMatchPage.jsx](src/pages/rina/SmartMatchPage.jsx)) — project detail/accept screen, reached from the cross-side banner below.
-
-New talents start at **Level 1 / 0 XP**.
-
-### The cross-side connection
-
-`AppContext.activeProject` is the one piece of state both sides read and write — it's the "aha moment" for demos. When a UMKM posts a project in `/jasa` (status becomes `'open'`), and that project's skill matches the talent's Skill Map, a green banner appears at the top of `/rina/task` linking to `/rina/match`. The banner (and the "proyek cocok" toast when starting a matching Tantangan) stays hidden on a fresh session until a project has actually been posted.
-
-## Project structure
+Platform ini hadir untuk menjawab dua masalah yang saling terhubung: talenta muda yang punya kemampuan tapi tidak bisa membuktikannya, dan UMKM yang butuh tenaga kerja digital tapi tidak punya waktu untuk proses rekrutmen panjang.
 
 ```
-src/
-  context/AppContext.jsx   — global state: selectedSkill, exp/level, activeProject, onboardingComplete, streak, hearts...
-  data/
-    skillMaps.js           — skill categories + per-skill map/unit/node content
-    jasaData.js            — curated talents, scope templates, nego scripts, match-response tables
-    mockData.js            — misc demo data
-  pages/
-    LandingPage.jsx        — entry point, links to /jasa and /talenta
-    jasa/                  — UMKM hiring flow (see above)
-    talenta/TalentaFlow.jsx — talent onboarding
-    rina/                  — Skill Map, unit pages, profile, submission, smart match
-  components/               — Navbar, TopBar, StepIndicator, ScoreBar, AIMentorWidget
+Learn → Prove → Earn
 ```
 
-## Design system
+| Pengguna | Masalah | Solusi WADAH |
+|---|---|---|
+| Fresh Graduate & Mahasiswa | Ditolak karena tidak punya pengalaman tercatat | Career Sandbox AI + Verified Portfolio |
+| UMKM & Pelaku Usaha | Sulit memverifikasi kompetensi kandidat secara objektif | Smart Matching berbasis skor performa |
 
-Dark theme throughout: `#0F0F1A` background, `#1A1A2E` surfaces, `#7C3AED` (`purple`) accent, `#2D2D3D` muted borders. Sticky `h-14` headers (`bg-[#1A1A2E]/95 backdrop-blur`). `Navbar`'s shared chrome is hidden on pages that render their own header (`hasOwnHeader` in [Navbar.jsx](src/components/Navbar.jsx)).
+---
 
-## Demo philosophy
+## Fitur Utama
 
-Outcomes are deterministic and scripted rather than computed — the same 3 talents are recommended regardless of category, nego scripts always resolve the same way, and every step has an "Isi contoh cepat (demo)" quick-fill button for fast live traversal.
+### Untuk Penyedia Jasa (Talenta)
+
+- **AI Career Sandbox** — Simulasi tugas berstandar industri yang dibimbing AI Mentor secara real-time. Pengguna bisa bertanya langsung tentang kekurangan hasil kerjanya dan mendapatkan feedback yang spesifik.
+- **Sistem Gamifikasi** — Pengguna berkembang level demi level berdasarkan skor performa. Semakin tinggi level, semakin kompleks proyek yang bisa diambil.
+- **Verified Portfolio** — Setiap hasil kerja yang lolos evaluasi AI dan human verification tersimpan otomatis sebagai portofolio publik yang dapat diverifikasi siapapun.
+- **Smart Matching** — Setelah mencapai level tertentu, pengguna terhubung otomatis dengan klien yang membutuhkan jasa sesuai bidang dan skor performanya.
+
+### Untuk Pengguna Jasa (UMKM & Pelaku Usaha)
+
+- **AI Scope Analysis** — Ceritakan kebutuhan proyek dalam bahasa sehari-hari, AI langsung memecahnya jadi checklist deliverable yang jelas.
+- **Talenta Terkurasi** — Sistem merekomendasikan talenta yang paling sesuai berdasarkan skor performa, spesialisasi, dan kecepatan penyelesaian task — bukan harga terendah.
+- **Transparent Portfolio** — Lihat riwayat simulasi, breakdown skor per kriteria, dan rekam jejak proyek sebelumnya sebelum memilih talenta.
+
+---
+
+## Arsitektur Sistem
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│                       WADAH PLATFORM                         │
+├──────────────────────┬───────────────────────────────────────┤
+│    PENYEDIA JASA     │          PENGGUNA JASA                │
+│                      │                                       │
+│  Data Diri + OTP     │    Ceritakan Kebutuhan Proyek         │
+│         ↓            │              ↓                        │
+│    Pilih Skill       │    AI Scope Analysis + Budget          │
+│         ↓            │              ↓                        │
+│   Skill Map (AI      │    AI Matching (animasi)              │
+│   Career Sandbox)    │              ↓                        │
+│         ↓            │    3 Talenta Terkurasi                │
+│  Checkpoint + Skor   │              ↓                        │
+│         ↓            │    Verified Portfolio                 │
+│  Verified Portfolio  │              ↓                        │
+│         ↓            │    Draft Kontrak → Nego               │
+│  Smart Match banner  │              ↓                        │
+│  (proyek cocok)      │    Kontrak Final (Escrow)             │
+└──────────────────────┴───────────────────────────────────────┘
+```
+
+### Tech Stack
+
+**Prototipe (repo ini)** — semua yang sudah berjalan di demo saat ini:
+
+```
+Frontend             →  React 19 + Vite + Tailwind CSS + Framer Motion
+Routing              →  React Router v7
+State                →  React Context, session-only, tanpa backend
+Data                 →  Skenario terskrip/deterministik untuk keperluan demo
+```
+
+**Rencana Produksi** — target arsitektur setelah lepas dari prototipe demo:
+
+```
+Backend              →  FastAPI (Python)
+AI Tutor             →  Gemini API + RAG Pipeline
+Database             →  PostgreSQL + Vertex AI Vector Search
+Infrastructure       →  Google Cloud Platform
+```
+
+### Algoritma Inti
+
+*Target implementasi produksi — pada prototipe demo saat ini, hasil scoring dan matching bersifat terskrip/deterministik (bukan live inference) supaya alur presentasi konsisten.*
+
+**Semantic Scoring (RAG-based)** — Cosine Similarity untuk mengevaluasi hasil kerja pengguna terhadap standar task yang sudah ditentukan, menghasilkan penilaian yang objektif dan konsisten.
+
+**Weighted Matching Engine (MCDM)** — Multi-Criteria Decision Making dengan tiga parameter: skor performa AI, kecepatan penyelesaian task, dan relevansi bidang keahlian.
+
+**Adaptive Assessment** — Sistem mengukur level awal pengguna secara otomatis berdasarkan profil yang diisi saat onboarding, sehingga task yang diberikan selalu sesuai kemampuan sejak hari pertama.
+
+---
+
+## Demo Interaktif
+
+Demo prototipe dapat diakses langsung di browser tanpa perlu instalasi apapun.
+
+**[Buka Demo WADAH](https://jerome-88.github.io/wadah-demo)**
+
+### Cara Mencoba Demo
+
+**Jalur 1 — Sebagai Penyedia Jasa (Talenta)**
+
+1. Klik **"Daftar sebagai Talenta"** di landing page
+2. Isi Data Diri (nama, no. HP, foto opsional) → **Kirim OTP**
+3. Verifikasi OTP 6 digit
+4. Pilih skill utama — memilih skill langsung memicu animasi aktivasi akun
+5. Masuk ke Skill Map, kerjakan node Materi/Quiz/Tantangan per unit
+6. Selesaikan checkpoint, submit, dan lalui siklus revisi jika ada catatan
+7. Lihat level, XP, dan portofolio di halaman Profil — kalau ada proyek UMKM yang cocok dengan skill-mu, banner hijau muncul di Skill Map
+
+**Jalur 2 — Sebagai Pengguna Jasa (UMKM)**
+
+1. Klik **"Cari Talenta"** di landing page
+2. Ceritakan kebutuhan proyek: pilih kategori skill, nama bisnis, deskripsi, dan budget kasar (bukan filter harga)
+3. Lihat AI Scope Analysis — checklist deliverable otomatis dari deskripsi proyekmu
+4. Lewati animasi matching singkat, lalu lihat 3 talent paling cocok lengkap dengan alasan "Cocok Karena"
+5. Buka Portfolio talent → kirim Draft Kontrak (budget/durasi bisa diedit)
+6. Talent merespons: terima langsung, atau ajukan nego lewat Chat & Nego
+7. Setujui kesepakatan → tanda tangani Kontrak Final → kontrak aktif dengan proteksi escrow
+
+---
+
+
+## Tim Waduh
+
+| Nama | Peran | Tanggung Jawab |
+|------|-------|----------------|
+| Jerome Maxcellino Budianto | CTO — AI/ML & Software Engineer | Sistem matching, LLM orchestration, RAG pipeline, demo platform |
+| Kenneth Owen Gozali | AI/ML Engineer | Engine evaluasi kompetensi berbasis rubrik, integrity system |
+| Kristanto Winata | Backend Engineer | Arsitektur backend cloud-native, manajemen database, infrastruktur API |
+| Jollyn Audrey Lee | CPO — UI/UX & Product Strategy | Pengalaman pengguna end-to-end, strategi produk, validasi pasar |
+
+**Institusi:** BINUS University  
+**Kompetisi:** DIGDAYA X Hackathon 2026 — Bank Indonesia, OJK, ASPI, Fintech Indonesia, APUVINDO, LPPI
+
+---
+
+## Target Dampak
+
+| Metrik | Target Tahun 1 |
+|--------|----------------|
+| Total Pengguna Aktif | 1.000 talenta |
+| Pengguna dengan Portofolio Terverifikasi | 250 talenta |
+| Talenta yang Mendapat Proyek Pertama | 125 talenta |
+| Rata-rata Waktu Dapat Proyek Pertama | Kurang dari 30 hari |
+
+---
+
+## Kontak
+
+**Jerome Maxcellino Budianto**  
+jeromebudianto@gmail.com  
+[github.com/Jerome-88](https://github.com/Jerome-88)
+
+---
+
+<div align="center">
+
+DIGDAYA X Hackathon 2026 · Bank Indonesia · BINUS University
+
+*Berinovasi untuk masa depan, memberdayakan talenta digital Indonesia.*
+
+</div>
