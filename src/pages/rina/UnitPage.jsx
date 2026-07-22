@@ -5,7 +5,7 @@ import AIMentorWidget from '../../components/AIMentorWidget';
 import useGameAudio from '../../hooks/useGameAudio';
 import { showToast } from '../../utils/toast';
 import { useApp, getExpLevel } from '../../context/AppContext';
-import { SKILL_MAPS, DEFAULT_SKILL, getSkillMeta, parseUnitParam } from '../../data/skillMaps';
+import { SKILL_MAPS, DEFAULT_SKILL, getSkillMeta, parseUnitParam, getNodeUnit } from '../../data/skillMaps';
 
 const NODE_XP = 40;
 const PERFECT_BONUS_XP = 10;
@@ -41,13 +41,14 @@ export default function UnitPage() {
   const isCheckpoint = node?.type === 'checkpoint';
 
   // Checkpoint's quiz stage is a composed review pulling one question from
-  // each of the unit's regular nodes — tests cumulative mastery without
-  // needing separate checkpoint-only quiz content authored.
+  // each of THIS UNIT's regular nodes only — tests cumulative mastery of
+  // the unit just finished, not the whole skill map.
   const quizQuestions = useMemo(() => {
     if (!node) return [];
     if (!isCheckpoint) return node.questions;
+    const unitNumber = getNodeUnit(node.id);
     return skillMap.nodes
-      .filter(n => n.type === 'quiz')
+      .filter(n => n.type === 'quiz' && getNodeUnit(n.id) === unitNumber)
       .map(n => ({ ...n.questions[0], question: `[Review ${n.id}] ${n.questions[0].question}` }));
   }, [node, isCheckpoint, skillMap]);
 
@@ -123,9 +124,9 @@ export default function UnitPage() {
 
     if (activeProject && activeProject.status === 'open' && activeProject.skillId === skillId) {
       showToast(`🎉 Ada proyek yang cocok untukmu: ${activeProject.umkm} membutuhkan ${skillMeta.label}!`, 'fa-briefcase');
-      setTimeout(() => navigate('/rina/submit'), 1400);
+      setTimeout(() => navigate(`/rina/submit/${node.id}`), 1400);
     } else {
-      setTimeout(() => navigate('/rina/submit'), 600);
+      setTimeout(() => navigate(`/rina/submit/${node.id}`), 600);
     }
   };
 

@@ -3,6 +3,7 @@ import { AppProvider } from './context/AppContext';
 import Navbar from './components/Navbar';
 
 import LandingPage         from './pages/LandingPage';
+import VerificationPage    from './pages/VerificationPage';
 import JasaFlow            from './pages/jasa/JasaFlow';
 import TalentPortfolioPage from './pages/jasa/TalentPortfolioPage';
 import DraftKontrakPage    from './pages/jasa/DraftKontrakPage';
@@ -14,6 +15,7 @@ import UnitPage         from './pages/rina/UnitPage';
 import RinaSubmit       from './pages/rina/RinaSubmit';
 import ProfilePage      from './pages/rina/ProfilePage';
 import SmartMatchPage   from './pages/rina/SmartMatchPage';
+import CertificatePage  from './pages/rina/CertificatePage';
 
 function AppShell() {
   return (
@@ -21,6 +23,7 @@ function AppShell() {
       <Navbar />
       <Routes>
         <Route path="/"                  element={<LandingPage />} />
+        <Route path="/verifikasi/:certId" element={<VerificationPage />} />
         <Route path="/jasa"              element={<JasaFlow />} />
         <Route path="/portfolio/:talentSlug" element={<TalentPortfolioPage />} />
         <Route path="/jasa/kontrak/:talentSlug" element={<DraftKontrakPage />} />
@@ -29,9 +32,10 @@ function AppShell() {
         <Route path="/talenta"           element={<TalentaFlow />} />
         <Route path="/rina/task"         element={<RinaTask />} />
         <Route path="/unit/:unitParam"   element={<UnitPage />} />
-        <Route path="/rina/submit"       element={<RinaSubmit />} />
+        <Route path="/rina/submit/:checkpointId" element={<RinaSubmit />} />
         <Route path="/rina/profile"      element={<ProfilePage />} />
         <Route path="/rina/match"        element={<SmartMatchPage />} />
+        <Route path="/rina/sertifikat/:skillId" element={<CertificatePage />} />
       </Routes>
     </div>
   );
