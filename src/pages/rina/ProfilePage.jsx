@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, CheckCircle, Star, Upload, Link as LinkIcon, Eye, EyeOff } from 'lucide-react';
+import { ArrowLeft, CheckCircle, Star, Upload, Link as LinkIcon, Eye, EyeOff, GraduationCap } from 'lucide-react';
 import { useApp, XP_PER_LEVEL } from '../../context/AppContext';
 import { SKILL_MAPS, DEFAULT_SKILL, getSkillMeta } from '../../data/skillMaps';
+import { getCertificateBySkill } from '../../data/certificates';
 
 const PORTFOLIO_WORKS = [
   { emoji: '🏮', title: 'Banner Promosi Toko Mode', client: 'Toko Busana Ibu Sari', score: 76.5, date: 'April 2026' },
@@ -15,6 +16,7 @@ export default function ProfilePage() {
   const {
     level, levelName, xpInLevel, xpToNextLevel, exp,
     selectedSkill, completedNodeIds, verificationSubmitted, projectAccepted, activeProject,
+    certificateEarnedAt,
   } = useApp();
 
   const [visibility, setVisibility] = useState('public');
@@ -27,6 +29,7 @@ export default function ProfilePage() {
   const completedCount = completedNodeIds.filter(id => id.startsWith(`${skillId}:`)).length;
   const totalNodes = skillMap.nodes.length;
   const xpProgressPct = Math.round((xpInLevel / XP_PER_LEVEL) * 100);
+  const certificate = certificateEarnedAt[skillId] ? getCertificateBySkill(skillId) : null;
 
   return (
     <div className="min-h-screen bg-[#0F0F1A]">
@@ -116,6 +119,27 @@ export default function ProfilePage() {
             </button>
           </div>
         </div>
+
+        {/* Sertifikat Kompetensi — only after the skill's final project is approved */}
+        {certificate && (
+          <div className="rounded-2xl p-[1.5px]" style={{ background: 'linear-gradient(135deg, #7C3AED 0%, #4F46E9 50%, #D97706 100%)' }}>
+            <div className="bg-[#1A1A2E] rounded-2xl p-5 flex items-center gap-4">
+              <div className="w-11 h-11 rounded-xl bg-purple/15 border border-purple/30 flex items-center justify-center shrink-0">
+                <GraduationCap size={20} className="text-purple" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-white font-sora font-bold text-sm">Sertifikat Kompetensi {certificate.skillLabel}</div>
+                <div className="text-white/40 text-[11px] font-inter mt-0.5 font-mono">{certificate.certId}</div>
+              </div>
+              <button
+                onClick={() => navigate(`/rina/sertifikat/${skillId}`)}
+                className="text-xs font-bold font-inter px-3.5 py-2 rounded-lg bg-purple/15 text-purple border border-purple/30 cursor-pointer hover:bg-purple/25 transition-colors shrink-0"
+              >
+                Lihat
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Verified Portfolio — only after first checkpoint approved */}
         {verificationSubmitted && (

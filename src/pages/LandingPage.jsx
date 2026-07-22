@@ -1,8 +1,16 @@
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Users, Briefcase, CheckCircle, Star, Zap, Shield, TrendingUp, ArrowBigLeft, ArrowRightIcon } from 'lucide-react';
+import { useApp } from '../context/AppContext';
 
 export default function LandingPage() {
   const navigate = useNavigate();
+  const { resetDemo } = useApp();
+
+  function handleResetDemo() {
+    if (window.confirm('Reset progres demo (level, XP, sertifikat, dll) dan mulai dari awal?')) {
+      resetDemo();
+    }
+  }
 
   return (
     <div className="animate-fade-in">
@@ -209,6 +217,12 @@ export default function LandingPage() {
         <p className="text-white/30 text-xs font-inter mt-1">
           Semua data adalah simulasi untuk keperluan demo
         </p>
+        <button
+          onClick={handleResetDemo}
+          className="text-white/20 hover:text-white/50 text-[11px] font-inter underline bg-transparent border-0 cursor-pointer mt-3 transition-colors"
+        >
+          🔄 Reset progres demo
+        </button>
       </footer>
     </div>
   );
