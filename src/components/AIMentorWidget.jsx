@@ -5,6 +5,22 @@ const DAILY_LIMIT = 10;
 const QUIZ_REFUSAL = 'Gw bisa bantu jelasin konsepnya, tapi jawaban quiz harus kamu temuin sendiri ya 😊';
 const GREETING = 'Halo! Saya AI Mentor-mu. Tanya apapun soal materi, atau minta saran arah kalau lagi ngerjain checkpoint 😊';
 
+// Shown when the widget is opened from the Skill Map itself (node === null)
+// instead of from a specific unit — general "tentang WADAH" questions rather
+// than materi-specific ones.
+const MAP_SUGGESTS = [
+  {
+    id: 'faq-map-premium',
+    text: 'Apa bedanya WADAH Free & Premium?',
+    answer: 'Di Free kamu dapat 5 lives/hari. Di Premium, lives naik jadi 15/hari, limit chat sama gw nambah, kamu bisa review draft task ke gw dulu sebelum submit ke reviewer, plus analytics skill yang lebih detail dan badge "Premium Talent" yang keliatan ke UMKM dan masih banyak lagi. Worth it kalau kamu mau ngebut selesain journey 🚀',
+  },
+  {
+    id: 'faq-map-sertifikasi',
+    text: 'Sertifikasi WADAH itu apa?',
+    answer: 'Setelah semua unit selesai, kamu bisa ambil ujian live 60 menit bareng examiner praktisi industri. Jika lulus, kamu akan mendapatkan sertifikasi yang bisa kalian masukan di CV atau LinkedIn. Tapi ini opsional ya — bukan syarat buat dapat proyek di WADAH 😊',
+  },
+];
+
 export default function AIMentorWidget({ node, stage, skillLabel }) {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -17,6 +33,7 @@ export default function AIMentorWidget({ node, stage, skillLabel }) {
     : `Konteks: Peta Misi ${skillLabel || ''}`;
 
   const limitReached = messageCount >= DAILY_LIMIT;
+  const chips = node ? (node.suggests || []) : MAP_SUGGESTS;
 
   function ensureGreeting() {
     setMessages(prev => (prev.length === 0 ? [{ role: 'ai', text: GREETING }] : prev));
@@ -114,9 +131,9 @@ export default function AIMentorWidget({ node, stage, skillLabel }) {
             </div>
 
             {/* Suggested chips */}
-            {node?.suggests?.length > 0 && !limitReached && (
+            {chips.length > 0 && !limitReached && (
               <div className="flex flex-wrap gap-1.5 px-3 pb-2 border-t border-white/10 pt-2">
-                {node.suggests.map(chip => (
+                {chips.map(chip => (
                   <button
                     key={chip.id}
                     onClick={() => handleChip(chip)}

@@ -35,6 +35,7 @@ export default function TalentaFlow() {
   function useDemoProfile() {
     setName('Rina Kusumawati');
     setPhone('812-3456-7890');
+    setPhotoUploaded(true);
   }
 
   function simUploadPhoto() {
@@ -177,7 +178,7 @@ export default function TalentaFlow() {
 
               <div>
                 <h3 className="text-white/70 font-sora font-bold text-xs uppercase tracking-wide mb-2">
-                  Foto Profil <span className="text-white/30 normal-case font-normal">(opsional, bisa skip)</span>
+                  Foto Profil
                 </h3>
 
                 {!photoUploading && !photoUploaded && (
