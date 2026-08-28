@@ -25,3 +25,6 @@ dist-ssr
 
 # Docs kept out of git (Drive/Notion instead)
 *.docx
+
+# Claude Code local session state
+.claude/

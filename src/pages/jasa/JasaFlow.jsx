@@ -5,13 +5,17 @@ import { useApp } from '../../context/AppContext';
 import { SKILLS, getSkillMeta } from '../../data/skillMaps';
 import { SCOPE_TEMPLATES, CURATED_TALENTS_DISPLAY } from '../../data/jasaData';
 
-const STEP_LABELS = ['Step 1', 'Step 2', 'Step 3'];
+const BLUE = '#2b6fff';
+const GREEN = '#00c897';
+const ORANGE = '#f37219';
 
 const MATCH_LINES = [
   '⚡ Membaca deskripsi proyekmu...',
   '🎯 Mencocokkan dengan 867 talent terverifikasi...',
   '✓ Menemukan 3 talent terbaik untukmu!',
 ];
+
+const NAV_LINKS = ['For Business', 'For Talent', 'Cara Kerja', 'About'];
 
 export default function JasaFlow() {
   const navigate = useNavigate();
@@ -24,7 +28,7 @@ export default function JasaFlow() {
   const [selectedSkills, setSelectedSkills] = useState(new Set());
   const [umkmName, setUmkmName] = useState('');
   const [description, setDescription] = useState('');
-  const [scopeStatus, setScopeStatus] = useState('idle'); // idle | loading | done
+  const [, setScopeStatus] = useState('idle'); // idle | loading | done
   const [scopeItems, setScopeItems] = useState([]);
   const [budgetValue, setBudgetValue] = useState('');
 
@@ -103,213 +107,254 @@ export default function JasaFlow() {
   }, [step]);
 
   return (
-    <div className="min-h-screen bg-[#0F0F1A] flex flex-col">
-      <header className="sticky top-0 z-30 h-14 flex items-center px-4 md:px-6 bg-[#1A1A2E]/95 backdrop-blur border-b border-white/5 flex-shrink-0">
-        <button
-          onClick={() => navigate('/')}
-          className="flex items-center gap-2 text-white/60 hover:text-white text-sm font-inter transition-colors bg-transparent border-0 cursor-pointer"
-        >
-          <i className="fa-solid fa-arrow-left"></i>
-          <span>Beranda</span>
-        </button>
-        <h1 className="text-white text-xs sm:text-sm font-bold font-sora truncate absolute left-1/2 -translate-x-1/2 max-w-[55%] text-center">
-          Cari Talenta untuk Proyekmu
-        </h1>
+    <div className="min-h-screen bg-white flex flex-col">
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between gap-4">
+          <button onClick={() => navigate('/')} className="flex items-center gap-2.5 flex-shrink-0">
+            <img src="/logo.png" alt="WADAH" className="w-9 h-9 object-contain" />
+            <div className="leading-tight text-left hidden sm:block">
+              <div className="font-sora font-extrabold text-[#1a1a1a] text-sm">WADAH</div>
+              <div className="text-[9px] text-gray-400 font-inter leading-tight">Work-Simulation AI Driven<br />Augmented Hiring</div>
+            </div>
+          </button>
+
+          <nav className="hidden md:flex items-center gap-6">
+            {NAV_LINKS.map(label => (
+              <button
+                key={label}
+                onClick={() => navigate(label === 'For Talent' ? '/talenta' : '/jasa')}
+                className="flex flex-col items-center gap-1 font-inter font-bold text-[#1a1a1a] text-sm hover:opacity-70 transition-opacity"
+              >
+                {label}
+                <span className="w-5 h-0.5 rounded-full" style={{ background: ORANGE }} />
+              </button>
+            ))}
+          </nav>
+
+          <button
+            onClick={() => navigate('/')}
+            className="text-white font-bold px-5 py-2 rounded-full text-sm font-inter flex-shrink-0"
+            style={{ background: ORANGE }}
+          >
+            Login
+          </button>
+        </div>
       </header>
 
-      {/* Step chips */}
-      <div className="flex items-center justify-center gap-2 py-4 px-4 flex-shrink-0">
-        {STEP_LABELS.map((label, i) => (
-          <div key={label} className="flex items-center gap-2">
-            <span className={`flex items-center gap-1.5 text-[11px] font-bold font-inter px-2.5 py-1 rounded-full border ${i < step ? 'bg-green-500/10 text-green-400 border-green-500/20'
-                : i === step ? 'bg-purple/15 text-purple border-purple/30'
-                  : 'bg-white/[0.02] text-white/30 border-white/10'
-              }`}>
-              {i < step ? '✓' : i === step ? '●' : '○'} {label}
-            </span>
-            {i < STEP_LABELS.length - 1 && <span className="text-white/15 text-xs">—</span>}
-          </div>
-        ))}
-      </div>
+      <main className="flex-1 w-full max-w-[720px] mx-auto px-4 py-8">
+        <h1 className="font-sora font-extrabold text-3xl sm:text-4xl text-center mb-2" style={{ color: BLUE }}>Search Talent</h1>
+        <p className="text-sm font-inter font-semibold text-center mb-8" style={{ color: BLUE }}>
+          Apa yang kamu butuhkan? Ceritakan proyekmu — tidak perlu formal, pakai bahasa sehari-hari
+        </p>
 
-      <main className="flex-1 w-full max-w-[680px] mx-auto px-4 pb-16">
-        {/* ── STEP 1 ── */}
-        {step === 0 && (
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-6">
-            <div>
-              <h2 className="text-white font-sora font-bold text-xl mb-1">Apa yang kamu butuhkan?</h2>
-              <p className="text-white/50 text-sm font-inter">Ceritakan proyekmu — tidak perlu formal, pakai bahasa sehari-hari</p>
-            </div>
-
-            <div>
-              <h3 className="text-white/70 font-sora font-bold text-xs uppercase tracking-wide mb-3">Pilih Kategori Skill</h3>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
-                {SKILLS.map(cat => {
-                  const active = selectedSkills.has(cat.id);
-                  return (
-                    <button
-                      key={cat.id}
-                      onClick={() => toggleSkill(cat.id)}
-                      className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer ${active ? 'border-purple bg-purple/10' : 'border-white/10 bg-[#1A1A2E] hover:border-purple/40'
-                        }`}
-                    >
-                      <div className="text-xl mb-1.5">{cat.emoji}</div>
-                      <div className="font-semibold text-white text-xs font-inter">{cat.label}</div>
-                      <div className="text-white/40 text-[10px] font-inter mt-0.5">{cat.tagline}</div>
-                    </button>
-                  );
-                })}
+        {/* Step circles */}
+        <div className="flex items-start justify-center gap-1 sm:gap-3 mb-8">
+          {[0, 1, 2].map(i => (
+            <div key={i} className="flex items-start">
+              <div
+                className="w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center font-sora font-bold text-base sm:text-lg flex-shrink-0"
+                style={i <= step ? { background: GREEN, color: '#fff' } : { background: '#c9f0e1', color: 'rgba(0,0,0,0.35)' }}
+              >
+                {i < step ? <i className="fa-solid fa-check text-sm"></i> : i + 1}
               </div>
+              {i < 2 && (
+                <div className="h-0.5 w-10 sm:w-16 mt-5" style={{ background: i < step ? GREEN : '#c9f0e1' }} />
+              )}
             </div>
+          ))}
+        </div>
 
-            <div>
-              <h3 className="text-white/70 font-sora font-bold text-xs uppercase tracking-wide mb-2">Nama Bisnis/UMKM</h3>
-              <input
-                value={umkmName}
-                onChange={e => setUmkmName(e.target.value)}
-                placeholder="Contoh: Warung Kopi Abadi"
-                className="w-full bg-[#1A1A2E] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder:text-white/25 font-inter focus:outline-none focus:border-purple/50"
-              />
-            </div>
+        <div className="rounded-3xl p-5 sm:p-8" style={{ background: '#f5f8fb' }}>
+          {/* ── STEP 1 ── */}
+          {step === 0 && (
+            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-6">
+              <div>
+                <h3 className="font-sora font-bold text-lg mb-3" style={{ color: BLUE }}>Pilih Skill Utamamu</h3>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
+                  {SKILLS.map(cat => {
+                    const active = selectedSkills.has(cat.id);
+                    return (
+                      <button
+                        key={cat.id}
+                        onClick={() => toggleSkill(cat.id)}
+                        className="p-3.5 rounded-2xl border-2 text-left transition-all cursor-pointer"
+                        style={active ? { borderColor: BLUE, background: '#eef2fe' } : { borderColor: BLUE, background: '#fff' }}
+                      >
+                        <div className="text-xl mb-1.5">{cat.emoji}</div>
+                        <div className="font-semibold text-xs font-inter" style={{ color: BLUE }}>{cat.label}</div>
+                        <div className="text-[10px] font-inter mt-0.5" style={{ color: BLUE, opacity: 0.7 }}>{cat.tagline}</div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
 
-            <div>
-              <h3 className="text-white/70 font-sora font-bold text-xs uppercase tracking-wide mb-2">Deskripsi Proyek</h3>
-              <textarea
-                value={description}
-                onChange={e => setDescription(e.target.value)}
-                onBlur={handleDescriptionBlur}
-                placeholder="Contoh: Gw punya warung kopi di Bandung, butuh yang bisa kelola Instagram dan bikin konten promosi mingguan. Nada bicaranya mau yang hangat dan lokal banget..."
-                className="w-full bg-[#1A1A2E] border border-white/10 rounded-xl p-4 text-sm text-white placeholder:text-white/25 font-inter resize-none focus:outline-none focus:border-purple/50"
-                style={{ minHeight: 120 }}
-              />
-            </div>
-
-            {/* Budget Proyek */}
-            <div>
-              <h3 className="text-white/70 font-sora font-bold text-xs uppercase tracking-wide mb-2">Budget Proyek</h3>
-              <div className="flex items-center gap-2">
-                <span className="bg-[#1A1A2E] border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white/50 font-inter">Rp</span>
+              <div>
+                <h3 className="font-sora font-bold text-lg mb-2" style={{ color: BLUE }}>Nama Bisnis/UMKM</h3>
                 <input
-                  type="number"
-                  value={budgetValue}
-                  onChange={e => setBudgetValue(e.target.value)}
-                  placeholder="Contoh: 800000"
-                  className="flex-1 bg-[#1A1A2E] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder:text-white/25 font-inter focus:outline-none focus:border-purple/50"
+                  value={umkmName}
+                  onChange={e => setUmkmName(e.target.value)}
+                  placeholder="Contoh : Warung Kopi Abadi"
+                  className="w-full rounded-2xl px-5 py-3.5 text-sm text-[#1a1a1a] placeholder:text-gray-400 font-inter border-2 bg-white focus:outline-none"
+                  style={{ borderColor: BLUE }}
                 />
               </div>
-              <p className="text-white/40 text-xs font-inter leading-relaxed mt-2">
-                💡 Tidak perlu pasti — ini hanya gambaran awal untuk membantu kami mencarikan talent yang sesuai. Harga final disepakati saat negosiasi dengan talent.
-              </p>
-            </div>
 
-            <button onClick={fillDemo} className="self-start text-xs text-purple font-inter underline bg-transparent border-0 cursor-pointer">
-              ⚡ Isi contoh cepat (demo)
-            </button>
+              <div>
+                <h3 className="font-sora font-bold text-lg mb-2" style={{ color: BLUE }}>Deskripsikan Proyek</h3>
+                <textarea
+                  value={description}
+                  onChange={e => setDescription(e.target.value)}
+                  onBlur={handleDescriptionBlur}
+                  placeholder="Contoh : Gw punya warung kopi di Bandung, butuh yang bisa kelola Instagram dan bikin konten promosi mingguan. Nada bicaranya mau yang hangat dan lokal banget..."
+                  className="w-full rounded-2xl p-4 text-sm text-[#1a1a1a] placeholder:text-gray-400 font-inter resize-none border-2 bg-white focus:outline-none"
+                  style={{ borderColor: BLUE, minHeight: 120 }}
+                />
+              </div>
 
-            <button
-              onClick={goToStep2}
-              disabled={!step1Valid}
-              className="w-full bg-purple hover:brightness-110 text-white font-bold py-3.5 rounded-xl transition-all text-sm cursor-pointer border-0 disabled:opacity-40 disabled:cursor-not-allowed"
-            >
-              Lanjut
-            </button>
-          </motion.div>
-        )}
+              {/* Budget Proyek */}
+              <div>
+                <h3 className="font-sora font-bold text-lg mb-2" style={{ color: BLUE }}>Budget Proyek</h3>
+                <div className="flex items-center gap-2">
+                  <span
+                    className="rounded-2xl px-4 py-3.5 text-sm font-bold font-inter border-2 bg-white"
+                    style={{ borderColor: BLUE, color: '#797d85' }}
+                  >
+                    Rp
+                  </span>
+                  <input
+                    type="number"
+                    value={budgetValue}
+                    onChange={e => setBudgetValue(e.target.value)}
+                    placeholder="Contoh : 800000"
+                    className="flex-1 rounded-2xl px-5 py-3.5 text-sm text-[#1a1a1a] placeholder:text-gray-400 font-inter border-2 bg-white focus:outline-none"
+                    style={{ borderColor: BLUE }}
+                  />
+                </div>
+                <p className="text-xs font-inter leading-relaxed mt-2" style={{ color: ORANGE }}>
+                  💡 Tidak perlu pasti — ini hanya gambaran awal untuk membantu kami mencarikan talent yang sesuai. Harga final disepakati saat negosiasi dengan talent.
+                </p>
+              </div>
 
-        {/* ── STEP 2 (matching animation) ── */}
-        {step === 1 && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center gap-6 py-24">
-            {animLines < MATCH_LINES.length && (
-              <div className="flex gap-1.5">
-                {[0, 1, 2].map(i => (
-                  <div key={i} className="w-2.5 h-2.5 rounded-full bg-purple animate-bounce" style={{ animationDelay: `${i * 0.15}s` }} />
+              <button onClick={fillDemo} className="self-start text-sm font-inter underline bg-transparent border-0 cursor-pointer" style={{ color: ORANGE }}>
+                ⚡ Isi contoh cepat (demo)
+              </button>
+
+              <div className="flex items-center justify-between pt-2">
+                <button onClick={() => navigate('/')} className="flex items-center gap-2 font-inter font-semibold text-sm bg-transparent border-0 cursor-pointer" style={{ color: BLUE }}>
+                  <i className="fa-solid fa-arrow-left"></i> Back
+                </button>
+                <button
+                  onClick={goToStep2}
+                  disabled={!step1Valid}
+                  className="text-white font-bold py-3 px-10 rounded-full transition-all text-sm cursor-pointer border-0 disabled:opacity-40 disabled:cursor-not-allowed hover:brightness-110"
+                  style={{ background: BLUE }}
+                >
+                  Next
+                </button>
+              </div>
+            </motion.div>
+          )}
+
+          {/* ── STEP 2 (matching animation) ── */}
+          {step === 1 && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center gap-6 py-24">
+              {animLines < MATCH_LINES.length && (
+                <div className="flex gap-1.5">
+                  {[0, 1, 2].map(i => (
+                    <div key={i} className="w-2.5 h-2.5 rounded-full animate-bounce" style={{ background: BLUE, animationDelay: `${i * 0.15}s` }} />
+                  ))}
+                </div>
+              )}
+              <div className="flex flex-col gap-3 items-center">
+                <AnimatePresence>
+                  {MATCH_LINES.slice(0, animLines).map((line, i) => (
+                    <motion.p
+                      key={line}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-sm font-inter text-center font-semibold"
+                      style={{ color: i === MATCH_LINES.length - 1 ? GREEN : BLUE }}
+                    >
+                      {line}
+                    </motion.p>
+                  ))}
+                </AnimatePresence>
+              </div>
+            </motion.div>
+          )}
+
+          {/* ── STEP 3 ── */}
+          {step === 2 && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col gap-5">
+              <div className="text-center">
+                <h2 className="font-sora font-bold text-xl mb-1" style={{ color: BLUE }}>3 Talent Paling Cocok Untukmu</h2>
+                <p className="text-sm font-inter font-medium" style={{ color: BLUE }}>Dipilih berdasarkan kecocokan proyekmu — bukan skor tertinggi semata</p>
+              </div>
+
+              <div className="flex flex-col gap-4">
+                {CURATED_TALENTS_DISPLAY.map((talent, i) => (
+                  <motion.div
+                    key={talent.slug}
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.15, duration: 0.35 }}
+                    onClick={() => navigate(`/portfolio/${talent.slug}`)}
+                    className="relative bg-white border-2 rounded-2xl p-5 cursor-pointer transition-all hover:shadow-md"
+                    style={{ borderColor: BLUE }}
+                  >
+                    <span
+                      className="absolute top-4 right-4 text-[10px] font-bold px-2 py-1 rounded-full font-inter border"
+                      style={{ color: GREEN, borderColor: GREEN, background: '#e3faf0' }}
+                    >
+                      ✓ AI Verified
+                    </span>
+
+                    <div className="rounded-xl p-4 mb-4 border-2" style={{ background: '#eef2fe', borderColor: BLUE }}>
+                      <div className="text-[10px] font-bold font-inter uppercase tracking-wide mb-1.5" style={{ color: BLUE }}>Cocok Karena</div>
+                      <p className="text-sm font-inter leading-relaxed" style={{ color: '#1a1a1a' }}>{talent.matchReason}</p>
+                    </div>
+
+                    <div className="flex items-center gap-3 mb-2">
+                      {talent.avatarImg ? (
+                        <img src={talent.avatarImg} alt={talent.name} className="w-10 h-10 rounded-full object-cover shrink-0" />
+                      ) : (
+                        <div
+                          className="w-10 h-10 rounded-full flex items-center justify-center text-white font-sora font-bold text-xs shrink-0"
+                          style={{ background: talent.avatarBg }}
+                        >
+                          {talent.initials}
+                        </div>
+                      )}
+                      <div>
+                        <div className="font-sora font-bold text-sm" style={{ color: '#1a1a1a' }}>{talent.name}</div>
+                        <div className="text-xs font-inter text-gray-500">{talent.role}</div>
+                      </div>
+                    </div>
+
+                    <div className="text-xs font-inter mb-4" style={{ color: ORANGE }}>
+                      Skor: {talent.score}/10 · {talent.matchPct}% cocok
+                    </div>
+
+                    <button
+                      onClick={e => { e.stopPropagation(); navigate(`/portfolio/${talent.slug}`); }}
+                      className="w-full text-sm font-semibold py-2.5 rounded-full transition-colors font-inter bg-transparent cursor-pointer border-2"
+                      style={{ borderColor: BLUE, color: BLUE }}
+                    >
+                      Lihat Portfolio Lengkap
+                    </button>
+                  </motion.div>
                 ))}
               </div>
-            )}
-            <div className="flex flex-col gap-3 items-center">
-              <AnimatePresence>
-                {MATCH_LINES.slice(0, animLines).map((line, i) => (
-                  <motion.p
-                    key={line}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className={`text-sm font-inter text-center ${
-                      i === MATCH_LINES.length - 1 ? 'text-green-400 font-semibold' : 'text-white/60'
-                    }`}
-                  >
-                    {line}
-                  </motion.p>
-                ))}
-              </AnimatePresence>
-            </div>
-          </motion.div>
-        )}
 
-        {/* ── STEP 3 ── */}
-        {step === 2 && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col gap-5">
-            <div className="text-center">
-              <h2 className="text-white font-sora font-bold text-xl mb-1">3 Talent Paling Cocok Untukmu</h2>
-              <p className="text-white/50 text-sm font-inter">Dipilih berdasarkan kecocokan proyekmu — bukan skor tertinggi semata</p>
-            </div>
-
-            <div className="flex flex-col gap-4">
-              {CURATED_TALENTS_DISPLAY.map((talent, i) => (
-                <motion.div
-                  key={talent.slug}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.15, duration: 0.35 }}
-                  onClick={() => navigate(`/portfolio/${talent.slug}`)}
-                  className="relative bg-[#1A1A2E] border border-white/10 rounded-2xl p-5 cursor-pointer hover:border-purple/40 transition-all"
-                >
-                  <span className="absolute top-4 right-4 text-[10px] font-bold text-green-400 bg-green-500/10 border border-green-500/25 px-2 py-1 rounded-full font-inter">
-                    ✓ AI Verified
-                  </span>
-
-                  <div className="bg-[#1E1A3A] border border-purple/40 rounded-xl p-4 mb-4">
-                    <div className="text-purple text-[10px] font-bold font-inter uppercase tracking-wide mb-1.5">Cocok Karena</div>
-                    <p className="text-white/80 text-sm font-inter leading-relaxed">{talent.matchReason}</p>
-                  </div>
-
-                  <div className="flex items-center gap-3 mb-2">
-                    {talent.avatarImg ? (
-                      <img src={talent.avatarImg} alt={talent.name} className="w-10 h-10 rounded-full object-cover border border-white/10 shrink-0" />
-                    ) : (
-                      <div
-                        className="w-10 h-10 rounded-full flex items-center justify-center text-white font-sora font-bold text-xs shrink-0"
-                        style={{ background: talent.avatarBg }}
-                      >
-                        {talent.initials}
-                      </div>
-                    )}
-                    <div>
-                      <div className="text-white font-sora font-bold text-sm">{talent.name}</div>
-                      <div className="text-white/50 text-xs font-inter">{talent.role}</div>
-                    </div>
-                  </div>
-
-                  <div className="text-white/30 text-xs font-inter mb-4">
-                    Skor: {talent.score}/10 · {talent.matchPct}% cocok
-                  </div>
-
-                  <button
-                    onClick={e => { e.stopPropagation(); navigate(`/portfolio/${talent.slug}`); }}
-                    className="w-full border border-purple/40 text-purple text-sm font-semibold py-2.5 rounded-xl hover:bg-purple/10 transition-colors font-inter bg-transparent cursor-pointer"
-                  >
-                    Lihat Portfolio Lengkap
-                  </button>
-                </motion.div>
-              ))}
-            </div>
-
-            <div className="bg-white/[0.03] border border-white/10 rounded-xl p-4">
-              <p className="text-white/50 text-xs font-inter leading-relaxed">
-                💡 Tidak ada sistem bidding, tidak ada perang harga. WADAH memilihkan 3 talent yang paling cocok dengan proyekmu — kamu tinggal hubungi yang paling sesuai.
-              </p>
-            </div>
-          </motion.div>
-        )}
+              <div className="rounded-xl p-4" style={{ background: '#eef2fe' }}>
+                <p className="text-xs font-inter leading-relaxed" style={{ color: BLUE }}>
+                  💡 Tidak ada sistem bidding, tidak ada perang harga. WADAH memilihkan 3 talent yang paling cocok dengan proyekmu — kamu tinggal hubungi yang paling sesuai.
+                </p>
+              </div>
+            </motion.div>
+          )}
+        </div>
       </main>
     </div>
   );

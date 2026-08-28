@@ -10,6 +10,17 @@ import { SKILL_MAPS, DEFAULT_SKILL, getSkillMeta, parseUnitParam, getNodeUnit } 
 const NODE_XP = 40;
 const PERFECT_BONUS_XP = 10;
 
+const BLUE = '#2b6fff';
+const GREEN = '#00c897';
+const ORANGE = '#f37219';
+const RED = '#e5484d';
+
+function stepPillStyle(state) {
+  if (state === 'done') return { color: GREEN, borderColor: GREEN };
+  if (state === 'active') return { color: ORANGE, borderColor: ORANGE };
+  return { color: '#9ca3af', borderColor: '#d1d5db' };
+}
+
 export default function UnitPage() {
   const navigate = useNavigate();
   const { unitParam } = useParams();
@@ -138,192 +149,204 @@ export default function UnitPage() {
   if (isCheckpoint) steps.push({ key: 'tantangan', label: 'Tantangan', state: stage === 'tantangan' ? 'active' : 'upcoming' });
 
   const heartRow = [...Array(5)].map((_, i) => (
-    <i key={i} className={`fa-solid fa-heart text-xs ${i < hearts ? 'text-rose-500' : 'text-white/15'}`}></i>
+    <i key={i} className="fa-solid fa-heart text-xs" style={{ color: i < hearts ? '#f43f5e' : '#e5e7eb' }}></i>
   ));
 
   return (
-    <div className="min-h-screen bg-[#0F0F1A] flex flex-col">
+    <div className="min-h-screen bg-white flex flex-col">
       {/* ── TOP BAR ── */}
-      <header className="sticky top-0 z-30 h-14 flex items-center justify-between gap-3 px-4 md:px-6 bg-[#1A1A2E]/95 backdrop-blur border-b border-white/5 flex-shrink-0">
+      <header className="sticky top-0 z-30 h-14 flex items-center justify-between gap-3 px-4 md:px-6 flex-shrink-0" style={{ background: BLUE }}>
         <button
           onClick={() => navigate('/rina/task')}
-          className="flex items-center gap-2 text-white/60 hover:text-white text-sm font-inter transition-colors bg-transparent border-0 cursor-pointer shrink-0"
+          className="flex items-center gap-2 text-white hover:text-white/80 text-sm font-bold font-inter transition-colors bg-transparent border-0 cursor-pointer shrink-0"
         >
           <i className="fa-solid fa-arrow-left"></i>
           <span className="hidden sm:inline">Peta Misi</span>
         </button>
 
         <h1 className="text-white text-xs sm:text-sm font-bold font-sora truncate absolute left-1/2 -translate-x-1/2 max-w-[55%] text-center">
-          {skillMeta.label} · {isCheckpoint ? `Checkpoint — ${node.title}` : `Node ${node.id} — ${node.title}`}
+          {skillMeta.label} - {isCheckpoint ? `Checkpoint - ${node.title}` : `Node ${node.id} - ${node.title}`}
         </h1>
 
-        <div className="flex items-center gap-0.5 bg-rose-500/10 border border-rose-500/20 py-1.5 px-2.5 rounded-full shrink-0">
+        <div className="flex items-center gap-0.5 bg-white border border-rose-300 py-1.5 px-2.5 rounded-full shrink-0">
           {heartRow}
         </div>
       </header>
 
-      {/* Step indicator */}
-      <div className="flex items-center justify-center gap-2 py-4 px-4 flex-shrink-0">
-        {steps.map((s, i) => (
-          <div key={s.key} className="flex items-center gap-2">
-            <span className={`flex items-center gap-1.5 text-[11px] font-bold font-inter px-2.5 py-1 rounded-full border ${
-              s.state === 'done' ? 'bg-green-500/10 text-green-400 border-green-500/20'
-                : s.state === 'active' ? 'bg-purple/15 text-purple border-purple/30'
-                : 'bg-white/[0.02] text-white/30 border-white/10'
-            }`}>
-              {s.state === 'done' ? '✓' : s.state === 'active' ? '●' : '○'} {s.label}
-            </span>
-            {i < steps.length - 1 && <span className="text-white/15 text-xs">—</span>}
-          </div>
-        ))}
-      </div>
-
       {/* ── MAIN CONTENT ── */}
-      <main className="flex-1 w-full max-w-[680px] mx-auto px-4 pb-16">
-        {stage === 'materi' && (
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            className="flex flex-col gap-5"
-          >
-            <h2 className="text-white font-sora font-bold text-xl">{node.title}</h2>
-            <div className="bg-[#1A1A2E] border border-white/10 rounded-2xl p-5">
-              <h4 className="text-xs font-bold text-white/70 font-sora mb-1.5">{node.briefLabel}</h4>
-              <p className="text-xs text-white/50 leading-relaxed font-inter italic">{node.briefBody}</p>
-            </div>
-            <div className="bg-[#1A1A2E] border border-white/10 rounded-2xl p-6">
-              <p className="text-sm text-white/80 font-inter leading-relaxed mb-4">{node.materi.intro}</p>
-              <ul className="space-y-2.5">
-                {node.materi.points.map((pt, i) => (
-                  <li key={i} className="flex items-start gap-2.5 text-sm text-white/60 font-inter leading-relaxed">
-                    <i className="fa-solid fa-circle text-purple text-[5px] mt-2 flex-shrink-0"></i>
-                    {pt}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <button onClick={goToQuiz} className="w-full bg-purple hover:brightness-110 text-white font-bold py-3.5 rounded-xl transition-all text-sm cursor-pointer border-0">
-              Lanjut ke Quiz
-            </button>
-          </motion.div>
-        )}
+      <main className="flex-1 w-full max-w-[720px] mx-auto px-4 py-8">
+        <div className="rounded-3xl p-5 sm:p-8" style={{ background: '#f5f8fb' }}>
+          {/* Step indicator */}
+          <div className="flex items-center justify-center gap-2 flex-wrap mb-6">
+            {steps.map(s => (
+              <span
+                key={s.key}
+                className="flex items-center gap-1.5 text-[11px] font-bold font-inter px-3 py-1 rounded-full border-2 bg-white"
+                style={stepPillStyle(s.state)}
+              >
+                • {s.label}
+              </span>
+            ))}
+          </div>
 
-        {stage === 'quiz' && !quizDone && (
-          <motion.div
-            key={quizIndex}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            className="flex flex-col gap-5"
-          >
-            <div>
-              <div className="text-purple text-xs font-inter font-semibold mb-2">Soal {quizIndex + 1} dari {quizQuestions.length}</div>
-              <div className="h-1 bg-white/5 rounded-full overflow-hidden mb-5">
-                <div
-                  className="h-full bg-gradient-to-r from-purple to-indigo transition-all duration-500"
-                  style={{ width: `${(quizIndex / quizQuestions.length) * 100}%` }}
-                ></div>
-              </div>
-              <p className="text-white font-semibold font-inter text-base leading-relaxed">{quizQuestions[quizIndex].question}</p>
-            </div>
-            <div className="flex flex-col gap-3">
-              {quizQuestions[quizIndex].options.map((opt, i) => {
-                const isCorrect = i === quizQuestions[quizIndex].correctIndex;
-                const isSelected = i === quizSelected;
-                let cls = 'border-white/10 bg-[#1A1A2E] hover:border-purple/40';
-                if (quizSelected !== null) {
-                  if (isCorrect) cls = 'border-green-500/60 bg-green-500/10';
-                  else if (isSelected) cls = 'border-rose-500/60 bg-rose-500/10';
-                  else cls = 'border-white/5 bg-white/[0.01] opacity-50';
-                }
-                return (
-                  <button
-                    key={i}
-                    onClick={() => answerQuiz(i)}
-                    disabled={quizSelected !== null}
-                    className={`text-left text-sm text-white/80 font-inter p-4 rounded-xl border transition-all cursor-pointer disabled:cursor-default flex items-center justify-between gap-2 ${cls}`}
-                  >
-                    <span>{opt}</span>
-                    {quizSelected !== null && isCorrect && <i className="fa-solid fa-circle-check text-green-400"></i>}
-                    {quizSelected !== null && isSelected && !isCorrect && <i className="fa-solid fa-circle-xmark text-rose-400"></i>}
-                  </button>
-                );
-              })}
-            </div>
-            {quizSelected !== null && quizSelected !== quizQuestions[quizIndex].correctIndex && (
-              <div className="bg-rose-500/5 border border-rose-500/20 rounded-xl p-4 text-sm text-rose-200 font-inter leading-relaxed">
-                {quizQuestions[quizIndex].explanation}
-              </div>
-            )}
-            {quizSelected !== null && (
-              <button onClick={nextQuestion} className="w-full bg-purple hover:brightness-110 text-white font-bold py-3.5 rounded-xl transition-all text-sm cursor-pointer border-0">
-                {quizIndex + 1 < quizQuestions.length ? 'Soal Berikutnya' : 'Lihat Hasil'}
-              </button>
-            )}
-          </motion.div>
-        )}
-
-        {stage === 'quiz' && quizDone && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ type: 'spring', bounce: 0.4 }}
-            className="flex flex-col items-center text-center gap-3 py-14"
-          >
-            <div className="w-16 h-16 rounded-full bg-purple/15 border border-purple/30 flex items-center justify-center text-2xl text-purple">
-              <i className="fa-solid fa-trophy"></i>
-            </div>
-            <h3 className="text-white font-sora font-bold text-xl">
-              {quizCorrectCount === quizQuestions.length ? `${quizCorrectCount} dari ${quizQuestions.length} benar! 🎉` : 'Quiz Selesai!'}
-            </h3>
-            {quizCorrectCount !== quizQuestions.length && (
-              <p className="text-white/50 text-sm font-inter">Skor kamu: <span className="text-white font-bold">{quizCorrectCount}/{quizQuestions.length}</span> benar</p>
-            )}
-            <p className="text-purple text-sm font-bold font-inter mt-2">
-              +{NODE_XP + (quizCorrectCount === quizQuestions.length ? PERFECT_BONUS_XP : 0)} XP
-            </p>
-            <button
-              onClick={isCheckpoint ? goToTantangan : handleFinishNode}
-              className="w-full max-w-xs bg-purple hover:brightness-110 text-white font-bold py-3.5 rounded-xl transition-all text-sm cursor-pointer border-0 mt-4"
+          {stage === 'materi' && (
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="flex flex-col gap-5"
             >
-              {isCheckpoint ? 'Lanjut ke Tantangan' : 'Selesai & Kembali ke Peta'}
-            </button>
-          </motion.div>
-        )}
-
-        {stage === 'tantangan' && (
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            className="flex flex-col gap-5"
-          >
-            <div className="bg-[#1A1A2E] border border-white/10 rounded-2xl p-5">
-              <h4 className="text-xs font-bold text-white/70 font-sora mb-2">{node.briefLabel}</h4>
-              <ul className="text-sm text-white/50 space-y-2 list-disc pl-4 leading-relaxed font-inter">
-                {node.briefBullets.map((b, i) => (
-                  <li key={i}><strong className="text-white/70">{b.strong}</strong>{b.rest}</li>
-                ))}
-              </ul>
-            </div>
-            <p className="text-sm text-white/60 font-inter leading-relaxed">{node.instruction}</p>
-            <div className="flex items-center gap-2 text-sm text-amber-400 font-inter">
-              <i className="fa-solid fa-clock"></i>
-              <span>{node.deadlineText} untuk menyelesaikan</span>
-            </div>
-            <div className="flex flex-col gap-2 mt-2">
-              <button onClick={handleStartTantangan} className="w-full bg-purple hover:brightness-110 text-white font-bold py-3.5 rounded-xl transition-all text-sm cursor-pointer border-0">
-                Mulai Tantangan
+              <h2 className="font-sora font-bold text-xl" style={{ color: BLUE }}>{node.title}</h2>
+              <div className="bg-white border-2 rounded-2xl p-5" style={{ borderColor: BLUE }}>
+                <h4 className="text-xs font-bold font-sora mb-1.5" style={{ color: BLUE }}>{node.briefLabel}</h4>
+                <p className="text-xs text-gray-500 leading-relaxed font-inter italic">{node.briefBody}</p>
+              </div>
+              <div className="bg-white border-2 rounded-2xl p-6" style={{ borderColor: BLUE }}>
+                <p className="text-sm text-[#1a1a1a] font-inter leading-relaxed mb-4">{node.materi.intro}</p>
+                <ul className="space-y-2.5">
+                  {node.materi.points.map((pt, i) => (
+                    <li key={i} className="flex items-start gap-2.5 text-sm text-gray-600 font-inter leading-relaxed">
+                      <i className="fa-solid fa-circle text-[5px] mt-2 flex-shrink-0" style={{ color: ORANGE }}></i>
+                      {pt}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <button
+                onClick={goToQuiz}
+                className="mx-auto text-white font-bold py-3.5 px-10 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
+                style={{ background: GREEN }}
+              >
+                Lanjut ke Quiz
               </button>
-              <p className="text-center text-xs text-white/30 font-inter">Tidak kena lives limit · Dinilai human reviewer</p>
-            </div>
-          </motion.div>
-        )}
+            </motion.div>
+          )}
+
+          {stage === 'quiz' && !quizDone && (
+            <motion.div
+              key={quizIndex}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="flex flex-col gap-5"
+            >
+              <div>
+                <div className="text-xs font-inter font-bold mb-2" style={{ color: ORANGE }}>Soal {quizIndex + 1} dari {quizQuestions.length}</div>
+                <div className="h-2 rounded-full overflow-hidden mb-5" style={{ background: '#e1e8f2' }}>
+                  <div
+                    className="h-full rounded-full transition-all duration-500"
+                    style={{ width: `${(quizIndex / quizQuestions.length) * 100}%`, background: `linear-gradient(90deg, ${GREEN} 0%, ${BLUE} 50%, ${ORANGE} 100%)` }}
+                  ></div>
+                </div>
+                <p className="font-bold font-inter text-base leading-relaxed" style={{ color: BLUE }}>{quizQuestions[quizIndex].question}</p>
+              </div>
+              <div className="flex flex-col gap-3">
+                {quizQuestions[quizIndex].options.map((opt, i) => {
+                  const isCorrect = i === quizQuestions[quizIndex].correctIndex;
+                  const isSelected = i === quizSelected;
+                  let style = { borderColor: BLUE, background: '#fff', color: BLUE };
+                  if (quizSelected !== null) {
+                    if (isCorrect) style = { borderColor: GREEN, background: '#e3faf0', color: GREEN };
+                    else if (isSelected) style = { borderColor: RED, background: '#fdecec', color: RED };
+                  }
+                  return (
+                    <button
+                      key={i}
+                      onClick={() => answerQuiz(i)}
+                      disabled={quizSelected !== null}
+                      className="text-left text-sm font-inter font-semibold p-4 rounded-full border-2 transition-all cursor-pointer disabled:cursor-default flex items-center justify-between gap-2"
+                      style={style}
+                    >
+                      <span>{opt}</span>
+                      {quizSelected !== null && isCorrect && <i className="fa-solid fa-circle-check" style={{ color: GREEN }}></i>}
+                      {quizSelected !== null && isSelected && !isCorrect && <i className="fa-solid fa-circle-xmark" style={{ color: RED }}></i>}
+                    </button>
+                  );
+                })}
+              </div>
+              {quizSelected !== null && quizSelected !== quizQuestions[quizIndex].correctIndex && (
+                <div className="rounded-2xl p-4 text-sm text-white font-inter leading-relaxed" style={{ background: '#6b7280' }}>
+                  {quizQuestions[quizIndex].explanation}
+                </div>
+              )}
+              {quizSelected !== null && (
+                <button
+                  onClick={nextQuestion}
+                  className="mx-auto text-white font-bold py-3.5 px-10 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
+                  style={{ background: GREEN }}
+                >
+                  {quizIndex + 1 < quizQuestions.length ? 'Soal Berikutnya' : 'Lihat Hasil'}
+                </button>
+              )}
+            </motion.div>
+          )}
+
+          {stage === 'quiz' && quizDone && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ type: 'spring', bounce: 0.4 }}
+              className="flex flex-col items-center text-center gap-3 py-14"
+            >
+              <div className="w-16 h-16 rounded-full flex items-center justify-center text-2xl" style={{ background: '#e1e8f2', color: ORANGE }}>
+                <i className="fa-solid fa-trophy"></i>
+              </div>
+              <h3 className="font-sora font-bold text-xl" style={{ color: BLUE }}>
+                {quizCorrectCount === quizQuestions.length ? `${quizCorrectCount} dari ${quizQuestions.length} benar! 🎉` : 'Quiz Selesai!'}
+              </h3>
+              {quizCorrectCount !== quizQuestions.length && (
+                <p className="text-gray-500 text-sm font-inter">Skor kamu: <span className="font-bold" style={{ color: BLUE }}>{quizCorrectCount}/{quizQuestions.length}</span> benar</p>
+              )}
+              <p className="text-sm font-bold font-inter mt-2" style={{ color: ORANGE }}>
+                +{NODE_XP + (quizCorrectCount === quizQuestions.length ? PERFECT_BONUS_XP : 0)} XP
+              </p>
+              <button
+                onClick={isCheckpoint ? goToTantangan : handleFinishNode}
+                className="w-full max-w-xs text-white font-bold py-3.5 rounded-full transition-all text-sm cursor-pointer border-0 mt-4 hover:brightness-110"
+                style={{ background: GREEN }}
+              >
+                {isCheckpoint ? 'Lanjut ke Tantangan' : 'Selesai & Kembali ke Peta'}
+              </button>
+            </motion.div>
+          )}
+
+          {stage === 'tantangan' && (
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="flex flex-col gap-5"
+            >
+              <div className="bg-white border-2 rounded-2xl p-5" style={{ borderColor: BLUE }}>
+                <h4 className="text-xs font-bold font-sora mb-2" style={{ color: BLUE }}>{node.briefLabel}</h4>
+                <ul className="text-sm text-gray-500 space-y-2 list-disc pl-4 leading-relaxed font-inter">
+                  {node.briefBullets.map((b, i) => (
+                    <li key={i}><strong style={{ color: BLUE }}>{b.strong}</strong>{b.rest}</li>
+                  ))}
+                </ul>
+              </div>
+              <p className="text-sm text-gray-600 font-inter leading-relaxed">{node.instruction}</p>
+              <div className="flex items-center gap-2 text-sm font-inter font-semibold" style={{ color: ORANGE }}>
+                <i className="fa-solid fa-clock"></i>
+                <span>{node.deadlineText} untuk menyelesaikan</span>
+              </div>
+              <div className="flex flex-col gap-2 mt-2">
+                <button
+                  onClick={handleStartTantangan}
+                  className="mx-auto text-white font-bold py-3.5 px-10 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
+                  style={{ background: GREEN }}
+                >
+                  Mulai Tantangan
+                </button>
+                <p className="text-center text-xs text-gray-400 font-inter">Tidak kena lives limit · Dinilai human reviewer</p>
+              </div>
+            </motion.div>
+          )}
+        </div>
       </main>
 
       {/* ── AI MENTOR FLOATING WIDGET ── */}
-      <AIMentorWidget node={node} stage={stage} skillLabel={skillMeta.label} />
+      <AIMentorWidget node={node} stage={stage} skillLabel={skillMeta.label} light />
 
       {/* ── LEVEL UP OVERLAY ── */}
       <AnimatePresence>
@@ -332,7 +355,7 @@ export default function UnitPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-[#0F0F1A]/95 backdrop-blur-md z-[70] flex items-center justify-center"
+            className="fixed inset-0 bg-white/95 backdrop-blur-md z-[70] flex items-center justify-center"
           >
             <motion.div
               initial={{ scale: 0.5, opacity: 0 }}
@@ -341,7 +364,7 @@ export default function UnitPage() {
               className="text-center"
             >
               <div className="text-6xl mb-4">🎉</div>
-              <h2 className="text-white font-sora font-extrabold text-4xl">LEVEL UP!</h2>
+              <h2 className="font-sora font-extrabold text-4xl" style={{ color: BLUE }}>LEVEL UP!</h2>
             </motion.div>
           </motion.div>
         )}
@@ -351,7 +374,7 @@ export default function UnitPage() {
       <AnimatePresence>
         {showConfetti && (
           <div className="fixed inset-0 pointer-events-none z-[65] flex items-center justify-center">
-            {['🎉', '✨', '🎊', '⭐', '💜', '🎉', '✨'].map((emoji, i) => (
+            {['🎉', '✨', '🎊', '⭐', '💚', '🎉', '✨'].map((emoji, i) => (
               <motion.span
                 key={i}
                 initial={{ x: 0, y: 0, opacity: 1, scale: 0.6 }}

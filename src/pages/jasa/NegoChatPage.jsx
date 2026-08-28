@@ -4,6 +4,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../../context/AppContext';
 import { getTalentBySlug, NEGO_SCRIPT, NEXT_TALENT, formatRupiah } from '../../data/jasaData';
 
+const BLUE = '#2b6fff';
+const GREEN = '#00c897';
+const ORANGE = '#f37219';
+const RED = '#e5484d';
+
 export default function NegoChatPage() {
   const navigate = useNavigate();
   const { talentSlug } = useParams();
@@ -65,11 +70,11 @@ export default function NegoChatPage() {
   const budget = activeProject.budgetNegotiated ?? activeProject.budget;
 
   return (
-    <div className="min-h-screen bg-[#0F0F1A] flex flex-col">
-      <header className="sticky top-0 z-30 h-14 flex items-center px-4 md:px-6 bg-[#1A1A2E]/95 backdrop-blur border-b border-white/5 flex-shrink-0">
+    <div className="min-h-screen bg-white flex flex-col">
+      <header className="sticky top-0 z-30 h-14 flex items-center px-4 md:px-6 flex-shrink-0" style={{ background: BLUE }}>
         <button
           onClick={() => navigate(`/jasa/kontrak/${talentSlug}`)}
-          className="flex items-center gap-2 text-white/60 hover:text-white text-sm font-inter transition-colors bg-transparent border-0 cursor-pointer"
+          className="flex items-center gap-2 text-white hover:text-white/80 text-sm font-bold font-inter transition-colors bg-transparent border-0 cursor-pointer"
         >
           <i className="fa-solid fa-arrow-left"></i>
           <span>Draft Kontrak</span>
@@ -83,7 +88,7 @@ export default function NegoChatPage() {
         {/* Left: live contract (desktop always visible, mobile collapsible) */}
         <div className="md:w-[38%] shrink-0">
           <details className="md:hidden mb-3" open={false}>
-            <summary className="text-white/60 text-xs font-inter cursor-pointer select-none">Lihat Draft Kontrak ▾</summary>
+            <summary className="text-xs font-inter cursor-pointer select-none text-gray-500">Lihat Draft Kontrak ▾</summary>
             <div className="mt-2">
               <ContractCard compact talent={talent} activeProject={activeProject} dealState={dealState} highlight={highlight} budget={budget} />
             </div>
@@ -94,30 +99,33 @@ export default function NegoChatPage() {
         </div>
 
         {/* Right: chat */}
-        <div className="flex-1 bg-[#1A1A2E] border border-white/10 rounded-2xl flex flex-col overflow-hidden" style={{ minHeight: 480 }}>
-          <div className="px-5 py-4 border-b border-white/10 flex items-center gap-3">
+        <div className="flex-1 bg-white border-2 rounded-2xl flex flex-col overflow-hidden" style={{ minHeight: 480, borderColor: BLUE }}>
+          <div className="px-5 py-4 border-b flex items-center gap-3" style={{ borderColor: '#e5e9f0' }}>
             {talent.avatarImg ? (
-              <img src={talent.avatarImg} alt={talent.name} className="w-9 h-9 rounded-full object-cover border border-white/10 shrink-0" />
+              <img src={talent.avatarImg} alt={talent.name} className="w-9 h-9 rounded-full object-cover shrink-0" />
             ) : (
               <div className="w-9 h-9 rounded-full flex items-center justify-center text-white font-sora font-bold text-xs shrink-0" style={{ background: talent.avatarBg }}>
                 {talent.initials}
               </div>
             )}
             <div>
-              <div className="text-white text-sm font-bold font-sora">{talent.name}</div>
+              <div className="text-sm font-bold font-sora" style={{ color: '#1a1a1a' }}>{talent.name}</div>
               <div className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-green-400"></span>
-                <span className="text-white/40 text-[11px] font-inter">Online</span>
+                <span className="w-1.5 h-1.5 rounded-full" style={{ background: GREEN }}></span>
+                <span className="text-[11px] font-inter text-gray-400">Online</span>
               </div>
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
+          <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3" style={{ background: '#f5f8fb' }}>
             {messages.map((msg, i) => (
               <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm font-inter leading-relaxed whitespace-pre-line ${
-                  msg.role === 'user' ? 'bg-purple text-white rounded-tr-sm' : 'bg-white/[0.04] text-white/80 border border-white/5 rounded-tl-sm'
-                }`}>
+                <div
+                  className="max-w-[85%] rounded-2xl px-4 py-3 text-sm font-inter leading-relaxed whitespace-pre-line"
+                  style={msg.role === 'user'
+                    ? { background: BLUE, color: '#fff', borderTopRightRadius: 4 }
+                    : { background: '#fff', color: '#1a1a1a', borderTopLeftRadius: 4, border: '1px solid #e5e9f0' }}
+                >
                   {msg.text}
                 </div>
               </div>
@@ -126,24 +134,24 @@ export default function NegoChatPage() {
             <AnimatePresence>
               {dealState === 'reject-loading' && (
                 <div className="flex flex-col items-center gap-2 py-6">
-                  <div className="w-6 h-6 border-2 border-white/20 border-t-white/60 rounded-full animate-spin-fast"></div>
-                  <p className="text-white/40 text-xs font-inter">Mencari talent lain yang cocok...</p>
+                  <div className="w-6 h-6 border-2 rounded-full animate-spin-fast" style={{ borderColor: '#d1d5db', borderTopColor: BLUE }}></div>
+                  <p className="text-xs font-inter text-gray-400">Mencari talent lain yang cocok...</p>
                 </div>
               )}
               {dealState === 'reject-next' && (
                 <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-2.5 pt-2">
                   {nextTalent ? (
                     <>
-                      <div className="bg-white/[0.03] border border-white/10 rounded-xl p-3.5">
-                        <p className="text-white/60 text-sm font-inter">{nextTalent.name} tersedia untuk proyekmu</p>
+                      <div className="bg-white border rounded-xl p-3.5" style={{ borderColor: '#e5e9f0' }}>
+                        <p className="text-sm font-inter text-gray-600">{nextTalent.name} tersedia untuk proyekmu</p>
                       </div>
-                      <button onClick={() => navigate(`/portfolio/${nextSlug}`)} className="w-full bg-purple hover:brightness-110 text-white font-bold py-3 rounded-xl transition-all text-sm cursor-pointer border-0">
+                      <button onClick={() => navigate(`/portfolio/${nextSlug}`)} className="w-full text-white font-bold py-3 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110" style={{ background: GREEN }}>
                         Lihat Profil {nextTalent.name.split(' ')[0]}
                       </button>
                     </>
                   ) : (
-                    <div className="bg-white/[0.03] border border-white/10 rounded-xl p-3.5">
-                      <p className="text-white/60 text-sm font-inter">Belum ada talent lain yang cocok saat ini.</p>
+                    <div className="bg-white border rounded-xl p-3.5" style={{ borderColor: '#e5e9f0' }}>
+                      <p className="text-sm font-inter text-gray-600">Belum ada talent lain yang cocok saat ini.</p>
                     </div>
                   )}
                 </motion.div>
@@ -152,16 +160,16 @@ export default function NegoChatPage() {
           </div>
 
           {/* Action zone */}
-          <div className="border-t border-white/10 p-4">
+          <div className="border-t p-4" style={{ borderColor: '#e5e9f0' }}>
             {dealState === 'pending' && messages.length > 0 && (
               <div className="flex flex-wrap gap-2">
-                <button onClick={handleSetuju} className="text-xs font-bold font-inter px-3.5 py-2 rounded-lg bg-green-500/15 text-green-400 border border-green-500/30 cursor-pointer hover:bg-green-500/25 transition-colors">
+                <button onClick={handleSetuju} className="text-xs font-bold font-inter px-3.5 py-2 rounded-full cursor-pointer transition-colors border-2" style={{ background: '#e3faf0', color: GREEN, borderColor: GREEN }}>
                   ✓ Setuju {formatRupiah(script.agreedBudget)}/{script.agreedDurasi}
                 </button>
-                <button onClick={() => setDealState('counter-input')} className="text-xs font-bold font-inter px-3.5 py-2 rounded-lg bg-purple/15 text-purple border border-purple/30 cursor-pointer hover:bg-purple/25 transition-colors">
+                <button onClick={() => setDealState('counter-input')} className="text-xs font-bold font-inter px-3.5 py-2 rounded-full cursor-pointer transition-colors border-2" style={{ background: '#eef2fe', color: BLUE, borderColor: BLUE }}>
                   ↔ Ajukan Counter
                 </button>
-                <button onClick={handleTolak} className="text-xs font-bold font-inter px-3.5 py-2 rounded-lg bg-rose-500/10 text-rose-400 border border-rose-500/25 cursor-pointer hover:bg-rose-500/20 transition-colors">
+                <button onClick={handleTolak} className="text-xs font-bold font-inter px-3.5 py-2 rounded-full cursor-pointer transition-colors border-2" style={{ background: '#fdecec', color: RED, borderColor: RED }}>
                   ✗ Tolak
                 </button>
               </div>
@@ -175,9 +183,10 @@ export default function NegoChatPage() {
                   onChange={e => setCounterInput(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && handleCounterSubmit()}
                   placeholder="Ketik counter offer kamu..."
-                  className="flex-1 bg-white/[0.03] border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder:text-white/25 font-inter focus:outline-none focus:border-purple/50"
+                  className="flex-1 rounded-full px-4 py-2 text-sm font-inter focus:outline-none border-2"
+                  style={{ background: '#f5f8fb', borderColor: '#e5e9f0', color: '#1a1a1a' }}
                 />
-                <button onClick={handleCounterSubmit} disabled={!counterInput.trim()} className="w-10 h-10 rounded-lg bg-purple flex items-center justify-center text-white disabled:opacity-40 cursor-pointer border-0 shrink-0">
+                <button onClick={handleCounterSubmit} disabled={!counterInput.trim()} className="w-10 h-10 rounded-full flex items-center justify-center text-white disabled:opacity-40 cursor-pointer border-0 shrink-0" style={{ background: BLUE }}>
                   <i className="fa-solid fa-paper-plane text-xs"></i>
                 </button>
               </div>
@@ -185,12 +194,12 @@ export default function NegoChatPage() {
 
             {dealState === 'confirm-reject' && (
               <div className="flex flex-col gap-2.5">
-                <p className="text-white/70 text-sm font-inter">Yakin tolak negosiasi ini?</p>
+                <p className="text-sm font-inter" style={{ color: '#1a1a1a' }}>Yakin tolak negosiasi ini?</p>
                 <div className="flex gap-2">
-                  <button onClick={confirmReject} className="flex-1 text-xs font-bold font-inter px-3.5 py-2.5 rounded-lg bg-rose-500/15 text-rose-400 border border-rose-500/30 cursor-pointer">
+                  <button onClick={confirmReject} className="flex-1 text-xs font-bold font-inter px-3.5 py-2.5 rounded-full cursor-pointer border-2" style={{ background: '#fdecec', color: RED, borderColor: RED }}>
                     Ya, tolak
                   </button>
-                  <button onClick={() => setDealState('pending')} className="flex-1 text-xs font-bold font-inter px-3.5 py-2.5 rounded-lg border border-white/15 text-white/60 bg-transparent cursor-pointer">
+                  <button onClick={() => setDealState('pending')} className="flex-1 text-xs font-bold font-inter px-3.5 py-2.5 rounded-full border-2 bg-transparent cursor-pointer" style={{ color: BLUE, borderColor: BLUE }}>
                     Batal
                   </button>
                 </div>
@@ -200,7 +209,8 @@ export default function NegoChatPage() {
             {dealState === 'agreed' && (
               <button
                 onClick={() => navigate(`/jasa/kontrak-final/${talentSlug}`)}
-                className="w-full bg-purple hover:brightness-110 text-white font-bold py-3 rounded-xl transition-all text-sm cursor-pointer border-0"
+                className="w-full text-white font-bold py-3 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
+                style={{ background: GREEN }}
               >
                 Review & Tanda Tangani Kontrak
               </button>
@@ -214,24 +224,24 @@ export default function NegoChatPage() {
 
 function ContractCard({ compact, talent, activeProject, dealState, highlight, budget }) {
   return (
-    <div className={`bg-[#1A1A2E] border border-white/10 rounded-2xl ${compact ? 'p-4' : 'p-6'}`}>
+    <div className={`bg-white border-2 rounded-2xl ${compact ? 'p-4' : 'p-6'}`} style={{ borderColor: BLUE }}>
       <div className="flex items-center justify-between mb-4">
-        <span className="text-[11px] font-bold text-white/40 font-inter uppercase tracking-wide">Draft Kontrak</span>
-        <span className="text-[10px] font-bold text-amber-400 bg-amber-500/10 border border-amber-500/25 px-2 py-0.5 rounded-full font-inter">
+        <span className="text-[11px] font-bold font-inter uppercase tracking-wide" style={{ color: BLUE }}>Draft Kontrak</span>
+        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full font-inter border" style={{ color: ORANGE, borderColor: ORANGE, background: '#fff7ee' }}>
           {dealState === 'agreed' ? 'DIPERBARUI — menunggu konfirmasi final' : 'Dalam Negosiasi'}
         </span>
       </div>
       <div className="space-y-2.5 text-sm font-inter">
-        <div className="flex justify-between"><span className="text-white/40">Talent</span><span className="text-white font-semibold">{talent.name}</span></div>
-        <div className="flex justify-between"><span className="text-white/40">UMKM</span><span className="text-white font-semibold">{activeProject.umkm}</span></div>
-        <div className="flex justify-between"><span className="text-white/40">Skill</span><span className="text-white font-semibold">{activeProject.skill}</span></div>
-        <div className={`flex justify-between rounded-lg transition-colors duration-700 ${highlight ? 'bg-green-500/15 -mx-2 px-2 py-1' : ''}`}>
-          <span className="text-white/40">Budget</span>
-          <span className={`font-semibold ${highlight ? 'text-green-400' : 'text-white'}`}>{formatRupiah(budget)}/bulan</span>
+        <div className="flex justify-between"><span className="text-gray-400">Talent</span><span className="font-semibold" style={{ color: '#1a1a1a' }}>{talent.name}</span></div>
+        <div className="flex justify-between"><span className="text-gray-400">UMKM</span><span className="font-semibold" style={{ color: '#1a1a1a' }}>{activeProject.umkm}</span></div>
+        <div className="flex justify-between"><span className="text-gray-400">Skill</span><span className="font-semibold" style={{ color: '#1a1a1a' }}>{activeProject.skill}</span></div>
+        <div className="flex justify-between rounded-lg transition-colors duration-700" style={highlight ? { background: '#e3faf0', margin: '0 -8px', padding: '4px 8px' } : undefined}>
+          <span className="text-gray-400">Budget</span>
+          <span className="font-semibold" style={{ color: highlight ? GREEN : '#1a1a1a' }}>{formatRupiah(budget)}/bulan</span>
         </div>
-        <div className={`flex justify-between rounded-lg transition-colors duration-700 ${highlight ? 'bg-green-500/15 -mx-2 px-2 py-1' : ''}`}>
-          <span className="text-white/40">Durasi</span>
-          <span className={`font-semibold ${highlight ? 'text-green-400' : 'text-white'}`}>{activeProject.durasi}</span>
+        <div className="flex justify-between rounded-lg transition-colors duration-700" style={highlight ? { background: '#e3faf0', margin: '0 -8px', padding: '4px 8px' } : undefined}>
+          <span className="text-gray-400">Durasi</span>
+          <span className="font-semibold" style={{ color: highlight ? GREEN : '#1a1a1a' }}>{activeProject.durasi}</span>
         </div>
       </div>
     </div>

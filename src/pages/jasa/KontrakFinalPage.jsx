@@ -4,6 +4,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../../context/AppContext';
 import { getTalentBySlug, formatRupiah } from '../../data/jasaData';
 
+const BLUE = '#2b6fff';
+const GREEN = '#00c897';
+const ORANGE = '#f37219';
+
 const PROTECTIONS = [
   'Semua komunikasi via platform WADAH',
   'Dana escrow dikunci per bulan',
@@ -46,12 +50,12 @@ export default function KontrakFinalPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0F0F1A]">
-      <header className="sticky top-0 z-30 h-14 flex items-center px-4 md:px-6 bg-[#1A1A2E]/95 backdrop-blur border-b border-white/5">
+    <div className="min-h-screen bg-white">
+      <header className="sticky top-0 z-30 h-14 flex items-center px-4 md:px-6" style={{ background: BLUE }}>
         {phase === 'review' && (
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center gap-2 text-white/60 hover:text-white text-sm font-inter transition-colors bg-transparent border-0 cursor-pointer"
+            className="flex items-center gap-2 text-white hover:text-white/80 text-sm font-bold font-inter transition-colors bg-transparent border-0 cursor-pointer"
           >
             <i className="fa-solid fa-arrow-left"></i>
             <span>Kembali</span>
@@ -66,29 +70,29 @@ export default function KontrakFinalPage() {
         {(phase === 'review' || phase === 'signing') && (
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-5">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold text-white/40 font-inter uppercase tracking-wide">Kontrak Final</span>
-              <span className="text-[11px] font-bold text-sky-400 bg-sky-500/10 border border-sky-500/25 px-2.5 py-1 rounded-full font-inter">
+              <span className="text-[11px] font-bold font-inter uppercase tracking-wide" style={{ color: BLUE }}>Kontrak Final</span>
+              <span className="text-[11px] font-bold px-2.5 py-1 rounded-full font-inter border-2" style={{ color: BLUE, borderColor: BLUE, background: '#eef2fe' }}>
                 Menunggu Tanda Tangan
               </span>
             </div>
 
-            <div className="bg-[#1A1A2E] border border-white/10 rounded-2xl p-6">
+            <div className="bg-white border-2 rounded-2xl p-6" style={{ borderColor: BLUE }}>
               <div className="space-y-3 text-sm font-inter">
-                <div className="flex justify-between"><span className="text-white/40">Talent</span><span className="text-white font-semibold">{talent.name}</span></div>
-                <div className="flex justify-between"><span className="text-white/40">UMKM</span><span className="text-white font-semibold">{activeProject.umkm}</span></div>
-                <div className="flex justify-between"><span className="text-white/40">Skill</span><span className="text-white font-semibold">{activeProject.skill}</span></div>
-                <div className="flex flex-col gap-1"><span className="text-white/40">Scope</span><span className="text-white font-semibold">{activeProject.desc}</span></div>
-                <div className="flex justify-between"><span className="text-white/40">Budget</span><span className="text-green-400 font-bold">{formatRupiah(budget)} / bulan</span></div>
-                <div className="flex justify-between"><span className="text-white/40">Durasi</span><span className="text-green-400 font-bold">{activeProject.durasi}</span></div>
-                <div className="flex justify-between pt-3 border-t border-white/10"><span className="text-white/60 font-semibold">Total</span><span className="text-white font-sora font-extrabold text-lg">{formatRupiah(total)}</span></div>
+                <div className="flex justify-between"><span className="text-gray-400">Talent</span><span className="font-semibold" style={{ color: '#1a1a1a' }}>{talent.name}</span></div>
+                <div className="flex justify-between"><span className="text-gray-400">UMKM</span><span className="font-semibold" style={{ color: '#1a1a1a' }}>{activeProject.umkm}</span></div>
+                <div className="flex justify-between"><span className="text-gray-400">Skill</span><span className="font-semibold" style={{ color: '#1a1a1a' }}>{activeProject.skill}</span></div>
+                <div className="flex flex-col gap-1"><span className="text-gray-400">Scope</span><span className="font-semibold" style={{ color: '#1a1a1a' }}>{activeProject.desc}</span></div>
+                <div className="flex justify-between"><span className="text-gray-400">Budget</span><span className="font-bold" style={{ color: GREEN }}>{formatRupiah(budget)} / bulan</span></div>
+                <div className="flex justify-between"><span className="text-gray-400">Durasi</span><span className="font-bold" style={{ color: GREEN }}>{activeProject.durasi}</span></div>
+                <div className="flex justify-between pt-3 border-t" style={{ borderColor: '#e5e9f0' }}><span className="font-semibold text-gray-500">Total</span><span className="font-sora font-extrabold text-lg" style={{ color: BLUE }}>{formatRupiah(total)}</span></div>
               </div>
 
-              <div className="mt-5 pt-5 border-t border-white/10">
-                <h3 className="text-white/70 text-xs font-bold font-inter uppercase tracking-wide mb-3">Perlindungan WADAH</h3>
+              <div className="mt-5 pt-5 border-t" style={{ borderColor: '#e5e9f0' }}>
+                <h3 className="text-xs font-bold font-inter uppercase tracking-wide mb-3" style={{ color: ORANGE }}>Perlindungan WADAH</h3>
                 <div className="space-y-2">
                   {PROTECTIONS.map(p => (
-                    <div key={p} className="flex items-center gap-2 text-sm text-white/60 font-inter">
-                      <i className="fa-solid fa-circle-check text-green-400 text-xs"></i>
+                    <div key={p} className="flex items-center gap-2 text-sm font-inter text-gray-600">
+                      <i className="fa-solid fa-circle-check text-xs" style={{ color: GREEN }}></i>
                       {p}
                     </div>
                   ))}
@@ -97,7 +101,7 @@ export default function KontrakFinalPage() {
             </div>
 
             {phase === 'review' && (
-              <button onClick={handleSign} className="w-full bg-purple hover:brightness-110 text-white font-bold py-3.5 rounded-xl transition-all text-sm cursor-pointer border-0">
+              <button onClick={handleSign} className="mx-auto text-white font-bold py-3.5 px-10 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110" style={{ background: GREEN }}>
                 ✓ Setujui & Tanda Tangani
               </button>
             )}
@@ -105,7 +109,7 @@ export default function KontrakFinalPage() {
             {phase === 'signing' && (
               <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center gap-2 py-4">
                 <div className="text-3xl">✍️</div>
-                <p className="text-white/50 text-sm font-inter">Menandatangani kontrak...</p>
+                <p className="text-sm font-inter text-gray-400">Menandatangani kontrak...</p>
               </motion.div>
             )}
           </motion.div>
@@ -113,18 +117,18 @@ export default function KontrakFinalPage() {
 
         {phase === 'active' && (
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-4">
-            <div className="bg-green-500/10 border border-green-500/30 rounded-2xl p-6">
-              <div className="text-green-400 font-sora font-extrabold text-base mb-2">KONTRAK AKTIF ✓</div>
-              <div className="text-white font-sora font-bold text-lg mb-1">{activeProject.umkm} × {talent.name}</div>
-              <div className="text-white/60 text-sm font-inter">Budget: {formatRupiah(budget)}/bulan · Durasi: {activeProject.durasi}</div>
-              <div className="text-white/60 text-sm font-inter mt-1">Dana escrow bulan pertama terkunci: {formatRupiah(budget)}</div>
+            <div className="rounded-2xl p-6 border-2" style={{ background: '#e3faf0', borderColor: GREEN }}>
+              <div className="font-sora font-extrabold text-base mb-2" style={{ color: GREEN }}>KONTRAK AKTIF ✓</div>
+              <div className="font-sora font-bold text-lg mb-1" style={{ color: '#1a1a1a' }}>{activeProject.umkm} × {talent.name}</div>
+              <div className="text-sm font-inter text-gray-600">Budget: {formatRupiah(budget)}/bulan · Durasi: {activeProject.durasi}</div>
+              <div className="text-sm font-inter mt-1 text-gray-600">Dana escrow bulan pertama terkunci: {formatRupiah(budget)}</div>
             </div>
 
-            <div className="bg-white/[0.03] border border-white/10 rounded-xl p-4">
-              <p className="text-white/50 text-xs font-inter">Komunikasi dengan {talent.name.split(' ')[0]} ada di tab Chat</p>
+            <div className="rounded-xl p-4" style={{ background: '#f5f8fb' }}>
+              <p className="text-xs font-inter text-gray-500">Komunikasi dengan {talent.name.split(' ')[0]} ada di tab Chat</p>
             </div>
 
-            <button onClick={() => navigate('/')} className="w-full bg-purple hover:brightness-110 text-white font-bold py-3.5 rounded-xl transition-all text-sm cursor-pointer border-0">
+            <button onClick={() => navigate('/')} className="w-full text-white font-bold py-3.5 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110" style={{ background: GREEN }}>
               Kembali ke Beranda
             </button>
           </motion.div>
@@ -138,9 +142,9 @@ export default function KontrakFinalPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-[#0F0F1A]/95 backdrop-blur-md z-[70] flex items-center justify-center overflow-hidden"
+            className="fixed inset-0 bg-white/95 backdrop-blur-md z-[70] flex items-center justify-center overflow-hidden"
           >
-            {['🎉', '✨', '🎊', '⭐', '💜', '🎉', '✨', '🎊'].map((emoji, i) => (
+            {['🎉', '✨', '🎊', '⭐', '💚', '🎉', '✨', '🎊'].map((emoji, i) => (
               <motion.span
                 key={i}
                 initial={{ x: 0, y: 0, opacity: 1, scale: 0.6 }}
@@ -163,7 +167,7 @@ export default function KontrakFinalPage() {
               className="text-center"
             >
               <div className="text-6xl mb-4">🎉</div>
-              <h2 className="text-white font-sora font-extrabold text-4xl">Kontrak Aktif!</h2>
+              <h2 className="font-sora font-extrabold text-4xl" style={{ color: GREEN }}>Kontrak Aktif!</h2>
             </motion.div>
           </motion.div>
         )}

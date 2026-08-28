@@ -3,6 +3,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { getTalentBySlug } from '../../data/jasaData';
 
+const BLUE = '#2b6fff';
+const GREEN = '#00c897';
+
 export default function TalentPortfolioPage() {
   const navigate = useNavigate();
   const { talentSlug } = useParams();
@@ -15,11 +18,11 @@ export default function TalentPortfolioPage() {
   if (!talent) return null;
 
   return (
-    <div className="min-h-screen bg-[#0F0F1A]">
-      <header className="sticky top-0 z-30 h-14 flex items-center px-4 md:px-6 bg-[#1A1A2E]/95 backdrop-blur border-b border-white/5">
+    <div className="min-h-screen bg-white">
+      <header className="sticky top-0 z-30 h-14 flex items-center px-4 md:px-6" style={{ background: BLUE }}>
         <button
           onClick={() => navigate('/jasa', { state: { resumeStep: 2 } })}
-          className="flex items-center gap-2 text-white/60 hover:text-white text-sm font-inter transition-colors bg-transparent border-0 cursor-pointer"
+          className="flex items-center gap-2 text-white hover:text-white/80 text-sm font-bold font-inter transition-colors bg-transparent border-0 cursor-pointer"
         >
           <i className="fa-solid fa-arrow-left"></i>
           <span>Hasil Matching</span>
@@ -30,9 +33,9 @@ export default function TalentPortfolioPage() {
       </header>
 
       {/* Hero */}
-      <div className="px-4 py-12 text-center" style={{ background: 'linear-gradient(180deg, #0F0F1A 0%, #1A1A2E 100%)' }}>
+      <div className="px-4 py-12 text-center" style={{ background: '#f5f8fb' }}>
         {talent.avatarImg ? (
-          <img src={talent.avatarImg} alt={talent.name} className="w-20 h-20 rounded-full object-cover border-2 border-purple/40 mx-auto mb-4" />
+          <img src={talent.avatarImg} alt={talent.name} className="w-20 h-20 rounded-full object-cover border-2 mx-auto mb-4" style={{ borderColor: BLUE }} />
         ) : (
           <div
             className="w-20 h-20 rounded-full flex items-center justify-center text-white font-sora font-bold text-2xl mx-auto mb-4"
@@ -41,12 +44,12 @@ export default function TalentPortfolioPage() {
             {talent.initials}
           </div>
         )}
-        <div className="inline-flex items-center gap-1.5 bg-green-500/10 border border-green-500/30 rounded-full px-3 py-1.5 mb-3">
-          <i className="fa-solid fa-circle-check text-green-400 text-xs"></i>
-          <span className="text-green-400 text-xs font-bold font-inter">AI Verified — WADAH Career Sandbox</span>
+        <div className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 mb-3 border-2" style={{ background: '#e3faf0', borderColor: GREEN }}>
+          <i className="fa-solid fa-circle-check text-xs" style={{ color: GREEN }}></i>
+          <span className="text-xs font-bold font-inter" style={{ color: GREEN }}>AI Verified — WADAH Career Sandbox</span>
         </div>
-        <h2 className="text-white font-sora font-extrabold text-2xl mb-1">{talent.name}</h2>
-        <p className="text-white/50 font-inter text-sm mb-6">{talent.role}</p>
+        <h2 className="font-sora font-extrabold text-2xl mb-1" style={{ color: BLUE }}>{talent.name}</h2>
+        <p className="text-sm mb-6 text-gray-500 font-inter">{talent.role}</p>
 
         <div className="flex items-center justify-center gap-3 flex-wrap">
           {[
@@ -54,9 +57,9 @@ export default function TalentPortfolioPage() {
             { value: talent.riwayat.length, label: 'Simulasi selesai' },
             { value: `${talent.matchPct}%`, label: 'Match proyekmu' },
           ].map(stat => (
-            <div key={stat.label} className="bg-white/[0.03] border border-white/10 rounded-xl px-5 py-3 min-w-[110px]">
-              <div className="text-white font-sora font-extrabold text-xl">{stat.value}</div>
-              <div className="text-white/40 text-[11px] font-inter mt-0.5">{stat.label}</div>
+            <div key={stat.label} className="bg-white border-2 rounded-xl px-5 py-3 min-w-[110px]" style={{ borderColor: BLUE }}>
+              <div className="font-sora font-extrabold text-xl" style={{ color: BLUE }}>{stat.value}</div>
+              <div className="text-[11px] font-inter mt-0.5 text-gray-500">{stat.label}</div>
             </div>
           ))}
         </div>
@@ -65,17 +68,18 @@ export default function TalentPortfolioPage() {
       <main className="max-w-[800px] mx-auto px-4 py-10 space-y-8">
         {/* Breakdown skor */}
         <section>
-          <h3 className="text-white font-sora font-bold text-sm mb-4">📊 Breakdown Skor Kompetensi</h3>
-          <div className="bg-[#1A1A2E] border border-white/10 rounded-2xl p-5 space-y-4">
+          <h3 className="font-sora font-bold text-sm mb-4" style={{ color: BLUE }}>📊 Breakdown Skor Kompetensi</h3>
+          <div className="bg-white border-2 rounded-2xl p-5 space-y-4" style={{ borderColor: BLUE }}>
             {talent.competencies.map(c => (
               <div key={c.label}>
                 <div className="flex justify-between text-xs font-inter mb-1.5">
-                  <span className="text-white/70">{c.label}</span>
-                  <span className="text-white font-bold">{c.score}</span>
+                  <span className="text-gray-500">{c.label}</span>
+                  <span className="font-bold" style={{ color: BLUE }}>{c.score}</span>
                 </div>
-                <div className="w-full bg-white/5 rounded-full h-2 overflow-hidden">
+                <div className="w-full rounded-full h-2 overflow-hidden" style={{ background: '#e1e8f2' }}>
                   <motion.div
-                    className="h-full rounded-full bg-gradient-to-r from-green-500 to-green-400"
+                    className="h-full rounded-full"
+                    style={{ background: GREEN }}
                     initial={{ width: '0%' }}
                     whileInView={{ width: `${c.score * 10}%` }}
                     viewport={{ once: true }}
@@ -89,15 +93,15 @@ export default function TalentPortfolioPage() {
 
         {/* Riwayat simulasi */}
         <section>
-          <h3 className="text-white font-sora font-bold text-sm mb-4">🏆 Riwayat Simulasi</h3>
+          <h3 className="font-sora font-bold text-sm mb-4" style={{ color: BLUE }}>🏆 Riwayat Simulasi</h3>
           <div className="space-y-2.5">
             {talent.riwayat.map(r => (
-              <div key={r.task + r.umkm} className="flex items-center gap-3 bg-[#1A1A2E] border border-white/10 rounded-xl p-3.5">
-                <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center text-lg shrink-0">{r.icon}</div>
+              <div key={r.task + r.umkm} className="flex items-center gap-3 bg-white border-2 rounded-xl p-3.5" style={{ borderColor: BLUE }}>
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center text-lg shrink-0" style={{ background: '#e1e8f2' }}>{r.icon}</div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-white text-sm font-semibold font-inter truncate">{r.task} — {r.umkm}</div>
+                  <div className="text-sm font-semibold font-inter truncate" style={{ color: '#1a1a1a' }}>{r.task} — {r.umkm}</div>
                 </div>
-                <div className="text-green-400 font-bold text-sm font-inter shrink-0">{r.score}/10</div>
+                <div className="font-bold text-sm font-inter shrink-0" style={{ color: GREEN }}>{r.score}/10</div>
               </div>
             ))}
           </div>
@@ -105,10 +109,10 @@ export default function TalentPortfolioPage() {
 
         {/* Skill terverifikasi */}
         <section>
-          <h3 className="text-white font-sora font-bold text-sm mb-4">⚡ Skill Terverifikasi</h3>
+          <h3 className="font-sora font-bold text-sm mb-4" style={{ color: BLUE }}>⚡ Skill Terverifikasi</h3>
           <div className="flex flex-wrap gap-2">
             {talent.skills.map(s => (
-              <span key={s} className="text-xs bg-purple/10 text-purple border border-purple/25 px-3 py-1.5 rounded-full font-inter">{s}</span>
+              <span key={s} className="text-xs px-3 py-1.5 rounded-full font-inter border-2" style={{ color: BLUE, borderColor: BLUE, background: '#eef2fe' }}>{s}</span>
             ))}
           </div>
         </section>
@@ -117,15 +121,17 @@ export default function TalentPortfolioPage() {
         <section className="flex flex-col gap-3 pt-2">
           <button
             onClick={() => navigate(`/jasa/kontrak/${talent.slug}`)}
-            className="w-full bg-purple hover:brightness-110 text-white font-bold py-3.5 rounded-xl transition-all text-sm cursor-pointer border-0"
+            className="w-full text-white font-bold py-3.5 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
+            style={{ background: GREEN }}
           >
             Hubungi {talent.name.split(' ')[0]}
           </button>
           <button
             onClick={() => navigate('/jasa', { state: { resumeStep: 2 } })}
-            className="w-full border border-white/15 text-white/60 hover:bg-white/5 font-semibold py-3 rounded-xl transition-all text-sm cursor-pointer bg-transparent"
+            className="w-full font-semibold py-3 rounded-full transition-all text-sm cursor-pointer bg-transparent border-2"
+            style={{ color: BLUE, borderColor: BLUE }}
           >
-          Kembali ke Hasil Matching
+            Kembali ke Hasil Matching
           </button>
         </section>
       </main>

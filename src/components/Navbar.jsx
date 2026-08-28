@@ -1,19 +1,18 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useApp } from '../context/AppContext';
-import { Zap, Home } from 'lucide-react';
+import { Home } from 'lucide-react';
 
 export default function Navbar() {
-  const { demoSkip } = useApp();
   const location = useLocation();
   const navigate = useNavigate();
-  const isHome = location.pathname === '/';
 
   // The Skill Map, Profile, Unit, Submit, Certificate, Talenta onboarding,
   // and Jasa (UMKM matching/contract) pages own their own full-screen dark
   // header — this light navbar would show up as a jarring light strip above
   // them. /verifikasi is deliberately excluded: it's a public-facing page
-  // and uses the light theme on purpose.
-  const hasOwnHeader = location.pathname === '/rina/task' || location.pathname === '/rina/profile'
+  // and uses the light theme on purpose. "/" also owns its header now (see
+  // LandingPage.jsx) since it needs marketing nav links this shared bar
+  // doesn't have.
+  const hasOwnHeader = location.pathname === '/' || location.pathname === '/rina/task' || location.pathname === '/rina/profile'
     || location.pathname.startsWith('/rina/submit') || location.pathname.startsWith('/unit/')
     || location.pathname.startsWith('/rina/sertifikat/')
     || location.pathname === '/jasa' || location.pathname.startsWith('/portfolio/')
@@ -43,15 +42,13 @@ export default function Navbar() {
 
         {/* Right side */}
         <div className="flex items-center gap-3">
-          {!isHome && (
-            <button
-              onClick={() => navigate('/')}
-              className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-deep transition-colors font-inter"
-            >
-              <Home size={15} />
-              <span className="hidden sm:inline">Beranda</span>
-            </button>
-          )}
+          <button
+            onClick={() => navigate('/')}
+            className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-deep transition-colors font-inter"
+          >
+            <Home size={15} />
+            <span className="hidden sm:inline">Beranda</span>
+          </button>
         </div>
       </div>
     </nav>

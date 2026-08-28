@@ -114,33 +114,43 @@ export default function TalentaFlow() {
   if (onboardingComplete) return <Navigate to="/rina/task" replace />;
 
   return (
-    <div className="min-h-screen bg-[#0F0F1A] flex flex-col">
-      <header className="sticky top-0 z-30 h-14 flex items-center px-4 md:px-6 bg-[#1A1A2E]/95 backdrop-blur border-b border-white/5 flex-shrink-0">
+    <div className="min-h-screen bg-bg flex flex-col">
+      <header className="sticky top-0 z-30 h-14 flex items-center px-4 md:px-6 bg-white/95 backdrop-blur border-b border-gray-100 flex-shrink-0">
         <button
           onClick={() => navigate('/')}
-          className="flex items-center gap-2 text-white/60 hover:text-white text-sm font-inter transition-colors bg-transparent border-0 cursor-pointer"
+          className="flex items-center gap-2 text-gray-500 hover:text-[#1a1a1a] text-sm font-inter transition-colors bg-transparent border-0 cursor-pointer"
         >
           <ArrowLeft size={15} />
           <span>Beranda</span>
         </button>
-        <h1 className="text-white text-xs sm:text-sm font-bold font-sora truncate absolute left-1/2 -translate-x-1/2 max-w-[55%] text-center">
-          Mulai Perjalanan Kariermu
-        </h1>
       </header>
 
-      {/* Step chips */}
       {step < 3 && (
-        <div className="flex items-center justify-center gap-2 py-4 px-4 flex-shrink-0">
+        <h1
+          className="text-center font-sora font-extrabold text-3xl sm:text-4xl md:text-5xl px-4 pt-8 pb-1"
+          style={{ color: '#2b6fff' }}
+        >
+          Mulai Perjalanan Kariermu
+        </h1>
+      )}
+
+      {/* Step circles */}
+      {step < 3 && (
+        <div className="flex items-start justify-center gap-1 sm:gap-3 py-6 px-4 flex-shrink-0">
           {STEP_LABELS.map((label, i) => (
-            <div key={label} className="flex items-center gap-2">
-              <span className={`flex items-center gap-1.5 text-[11px] font-bold font-inter px-2.5 py-1 rounded-full border ${
-                i < step ? 'bg-green-500/10 text-green-400 border-green-500/20'
-                  : i === step ? 'bg-purple/15 text-purple border-purple/30'
-                    : 'bg-white/[0.02] text-white/30 border-white/10'
-              }`}>
-                {i < step ? '✓' : i === step ? '●' : '○'} {label}
-              </span>
-              {i < STEP_LABELS.length - 1 && <span className="text-white/15 text-xs">—</span>}
+            <div key={label} className="flex items-start">
+              <div className="flex flex-col items-center gap-2 w-16 sm:w-20">
+                <div
+                  className="w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center font-sora font-bold text-base sm:text-lg flex-shrink-0"
+                  style={i <= step ? { background: '#00c897', color: '#fff' } : { background: '#c9f0e1', color: 'rgba(0,0,0,0.35)' }}
+                >
+                  {i < step ? <CheckCircle size={18} /> : i + 1}
+                </div>
+                <span className="text-[10px] sm:text-xs font-bold font-inter text-center leading-tight" style={{ color: '#1a1a1a' }}>{label}</span>
+              </div>
+              {i < STEP_LABELS.length - 1 && (
+                <div className="h-0.5 w-6 sm:w-12 mt-5" style={{ background: i < step ? '#00c897' : '#c9f0e1' }} />
+              )}
             </div>
           ))}
         </div>
@@ -150,75 +160,84 @@ export default function TalentaFlow() {
         {/* ── STEP 0: Data Diri ── */}
         {step === 0 && (
           <div className="animate-fade-in flex flex-col gap-6">
-            <h2 className="text-white font-sora font-bold text-xl">Data Diri</h2>
+            <div className="rounded-3xl p-6 sm:p-8 flex flex-col gap-6" style={{ background: '#f5f8fb' }}>
+              <h2 className="font-sora font-bold text-2xl" style={{ color: '#0052ff' }}>Data Diri</h2>
 
-            <div className="flex flex-col gap-4">
-              <div>
-                <h3 className="text-white/70 font-sora font-bold text-xs uppercase tracking-wide mb-2">Nama Lengkap</h3>
-                <input
-                  value={name}
-                  onChange={e => setName(e.target.value)}
-                  placeholder="Nama lengkapmu"
-                  className="w-full bg-[#1A1A2E] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder:text-white/25 font-inter focus:outline-none focus:border-purple/50"
-                />
-              </div>
-
-              <div>
-                <h3 className="text-white/70 font-sora font-bold text-xs uppercase tracking-wide mb-2">Nomor HP</h3>
-                <div className="flex items-center gap-2">
-                  <span className="bg-[#1A1A2E] border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white/50 font-inter">+62</span>
+              <div className="flex flex-col gap-5">
+                <div>
+                  <h3 className="font-inter font-bold text-sm uppercase tracking-wide mb-2" style={{ color: '#0052ff' }}>Nama Lengkap</h3>
                   <input
-                    value={phone}
-                    onChange={e => setPhone(e.target.value.replace(/[^\d-]/g, ''))}
-                    placeholder="812-3456-7890"
-                    className="flex-1 bg-[#1A1A2E] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder:text-white/25 font-inter focus:outline-none focus:border-purple/50"
+                    value={name}
+                    onChange={e => setName(e.target.value)}
+                    placeholder="Nama lengkapmu"
+                    className="w-full rounded-2xl px-5 py-4 text-base text-[#1a1a1a] placeholder:text-[#797d85] font-inter border-[3px] border-dashed focus:outline-none"
+                    style={{ background: '#cfddfb', borderColor: '#0052ff' }}
                   />
+                </div>
+
+                <div>
+                  <h3 className="font-inter font-bold text-sm uppercase tracking-wide mb-2" style={{ color: '#0052ff' }}>Nomor HP</h3>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="rounded-2xl px-4 py-4 text-base font-bold font-inter border-[3px] border-dashed"
+                      style={{ background: '#cfddfb', borderColor: '#0052ff', color: '#797d85' }}
+                    >
+                      +62
+                    </span>
+                    <input
+                      value={phone}
+                      onChange={e => setPhone(e.target.value.replace(/[^\d-]/g, ''))}
+                      placeholder="812-3456-7890"
+                      className="flex-1 rounded-2xl px-5 py-4 text-base font-bold placeholder:font-normal text-[#1a1a1a] placeholder:text-[#797d85] font-inter border-[3px] border-dashed focus:outline-none"
+                      style={{ background: '#cfddfb', borderColor: '#0052ff' }}
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="font-inter font-bold text-sm uppercase tracking-wide mb-2" style={{ color: '#0052ff' }}>
+                    Foto Profil
+                  </h3>
+
+                  {!photoUploading && !photoUploaded && (
+                    <button
+                      onClick={simUploadPhoto}
+                      className="flex items-center gap-3 w-full rounded-2xl p-4 border-[3px] border-dashed hover:brightness-95 transition-all text-left cursor-pointer"
+                      style={{ background: '#cfddfb', borderColor: '#0052ff' }}
+                    >
+                      <Upload size={20} style={{ color: '#0052ff' }} />
+                      <span className="text-base font-inter" style={{ color: '#797d85' }}>Upload Foto Profil</span>
+                    </button>
+                  )}
+
+                  {photoUploading && (
+                    <div className="flex items-center gap-3 rounded-2xl p-4 border-[3px] border-dashed" style={{ background: '#cfddfb', borderColor: '#0052ff' }}>
+                      <div className="w-6 h-6 rounded-full border-2 animate-spin-fast flex-shrink-0" style={{ borderColor: '#0052ff', borderTopColor: 'transparent' }} />
+                      <span className="text-base font-inter" style={{ color: '#0052ff' }}>Mengupload...</span>
+                    </div>
+                  )}
+
+                  {photoUploaded && (
+                    <div className="flex items-center gap-3 rounded-2xl p-4 border-[3px] border-dashed" style={{ background: '#cfddfb', borderColor: '#0052ff' }}>
+                      <img src="/rina.jpg" alt="Foto profil" className="w-11 h-11 rounded-full object-cover border-2 border-white" />
+                      <span className="text-sm font-semibold font-inter flex items-center gap-1.5" style={{ color: '#00c897' }}>
+                        <CheckCircle size={16} /> Foto berhasil diupload
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
 
-              <div>
-                <h3 className="text-white/70 font-sora font-bold text-xs uppercase tracking-wide mb-2">
-                  Foto Profil
-                </h3>
-
-                {!photoUploading && !photoUploaded && (
-                  <button
-                    onClick={simUploadPhoto}
-                    className="flex items-center gap-3 w-full border border-dashed border-white/15 rounded-xl p-3 hover:border-purple/40 transition-all text-left bg-transparent cursor-pointer"
-                  >
-                    <div className="w-11 h-11 rounded-full bg-purple/10 flex items-center justify-center flex-shrink-0">
-                      <Upload size={16} className="text-purple" />
-                    </div>
-                    <span className="text-sm text-white/50 font-inter">Upload foto profil</span>
-                  </button>
-                )}
-
-                {photoUploading && (
-                  <div className="flex items-center gap-3 border border-purple/30 rounded-xl p-3 bg-purple/5">
-                    <div className="w-11 h-11 rounded-full border-2 border-purple border-t-transparent animate-spin-fast flex-shrink-0" />
-                    <span className="text-sm text-purple font-inter">Mengupload...</span>
-                  </div>
-                )}
-
-                {photoUploaded && (
-                  <div className="flex items-center gap-3">
-                    <img src="/rina.jpg" alt="Foto profil" className="w-11 h-11 rounded-full object-cover border border-purple/40" />
-                    <span className="text-sm text-green-400 font-semibold font-inter flex items-center gap-1.5">
-                      <CheckCircle size={14} /> Foto berhasil diupload
-                    </span>
-                  </div>
-                )}
-              </div>
+              <button onClick={useDemoProfile} className="self-start text-sm font-inter underline bg-transparent border-0 cursor-pointer" style={{ color: '#f27418' }}>
+                ⚡ Isi contoh cepat (demo)
+              </button>
             </div>
-
-            <button onClick={useDemoProfile} className="self-start text-xs text-purple font-inter underline bg-transparent border-0 cursor-pointer">
-              ⚡ Isi contoh cepat (demo)
-            </button>
 
             <button
               onClick={handleSendOtp}
               disabled={!name.trim() || !phone.trim() || sendingOtp}
-              className="w-full flex items-center justify-center gap-2 bg-purple hover:brightness-110 text-white font-bold py-3.5 rounded-xl transition-all text-sm cursor-pointer border-0 disabled:opacity-40 disabled:cursor-not-allowed font-inter"
+              className="w-full flex items-center justify-center gap-2 text-white font-bold py-3.5 rounded-full transition-all text-sm cursor-pointer border-0 disabled:opacity-40 disabled:cursor-not-allowed font-inter hover:brightness-110"
+              style={{ background: '#2b6fff' }}
             >
               {sendingOtp ? (
                 <>
@@ -234,50 +253,54 @@ export default function TalentaFlow() {
 
         {/* ── STEP 1: Verifikasi OTP ── */}
         {step === 1 && (
-          <div className="animate-fade-in flex flex-col gap-6 items-center text-center">
-            <div>
-              <h2 className="text-white font-sora font-bold text-xl mb-2">Verifikasi Nomor HP</h2>
-              <p className="text-white/50 font-inter text-sm">
-                Kode 6 digit sudah dikirim ke <span className="font-semibold text-white/80">+62 {phone || '812-3456-7890'}</span>
-              </p>
-            </div>
+          <div className="animate-fade-in flex flex-col gap-6">
+            <div className="rounded-3xl p-6 sm:p-8 flex flex-col items-center gap-6 text-center" style={{ background: '#f5f8fb' }}>
+              <div>
+                <h2 className="font-sora font-bold text-2xl sm:text-3xl mb-2" style={{ color: '#0052ff' }}>Verifikasi Nomor HP</h2>
+                <p className="font-inter text-base" style={{ color: '#0052ff' }}>
+                  Kode 6 digit sudah dikirim ke <span className="font-bold" style={{ color: '#f27418' }}>+62 {phone || '812-3456-7890'}</span>
+                </p>
+              </div>
 
-            <div className="flex justify-center gap-2">
-              {otp.map((digit, i) => (
-                <input
-                  key={i}
-                  ref={el => (otpRefs.current[i] = el)}
-                  value={digit}
-                  onChange={e => handleOtpChange(i, e.target.value)}
-                  onKeyDown={e => handleOtpKeyDown(i, e)}
-                  inputMode="numeric"
-                  maxLength={1}
-                  className="w-11 h-14 text-center text-xl font-sora font-bold bg-[#1A1A2E] border border-white/10 rounded-xl text-white focus:outline-none focus:border-purple/50"
-                />
-              ))}
-            </div>
+              <div className="flex justify-center gap-2 sm:gap-3">
+                {otp.map((digit, i) => (
+                  <input
+                    key={i}
+                    ref={el => (otpRefs.current[i] = el)}
+                    value={digit}
+                    onChange={e => handleOtpChange(i, e.target.value)}
+                    onKeyDown={e => handleOtpKeyDown(i, e)}
+                    inputMode="numeric"
+                    maxLength={1}
+                    className="w-12 h-16 sm:w-[72px] sm:h-[84px] text-center text-2xl sm:text-3xl font-sora font-bold rounded-2xl border-[3px] border-dashed focus:outline-none"
+                    style={{ background: '#cfddfb', borderColor: '#0052ff', color: '#1a1a1a' }}
+                  />
+                ))}
+              </div>
 
-            <button onClick={fillDemoOtp} className="text-xs text-purple font-inter underline bg-transparent border-0 cursor-pointer">
-              ⚡ Isi contoh cepat (demo)
-            </button>
+              <button onClick={fillDemoOtp} className="text-sm font-inter underline bg-transparent border-0 cursor-pointer" style={{ color: '#f27418' }}>
+                ⚡ Isi contoh cepat (demo)
+              </button>
 
-            <div className="text-sm text-white/40 font-inter">
-              Tidak menerima kode?{' '}
-              {resendCooldown > 0 ? (
-                <span className="text-white/30">Kirim ulang ({resendCooldown}s)</span>
-              ) : (
-                <button onClick={handleResendOtp} className="text-purple font-semibold hover:underline bg-transparent border-0 cursor-pointer">Kirim ulang</button>
-              )}
+              <div className="text-sm font-inter" style={{ color: '#f27418' }}>
+                <span className="font-bold">Tidak menerima kode?</span>{' '}
+                {resendCooldown > 0 ? (
+                  <span>Kirim ulang ({resendCooldown}s)</span>
+                ) : (
+                  <button onClick={handleResendOtp} className="font-semibold hover:underline bg-transparent border-0 cursor-pointer" style={{ color: '#f27418' }}>Kirim ulang</button>
+                )}
+              </div>
             </div>
 
             <div className="flex justify-between w-full pt-2">
-              <button onClick={() => setStep(0)} className="flex items-center gap-2 text-white/50 hover:text-white font-inter text-sm bg-transparent border-0 cursor-pointer">
+              <button onClick={() => setStep(0)} className="flex items-center gap-2 font-inter text-sm bg-transparent border-0 cursor-pointer" style={{ color: '#0052ff' }}>
                 <ArrowLeft size={16} /> Kembali
               </button>
               <button
                 onClick={() => setStep(2)}
                 disabled={!otpComplete}
-                className="flex items-center gap-2 bg-purple hover:brightness-110 text-white font-bold px-6 py-3 rounded-xl transition-all text-sm cursor-pointer border-0 disabled:opacity-40 disabled:cursor-not-allowed font-inter"
+                className="flex items-center gap-2 text-white font-bold px-6 py-3 rounded-full transition-all text-sm cursor-pointer border-0 disabled:opacity-40 disabled:cursor-not-allowed font-inter hover:brightness-110"
+                style={{ background: '#2b6fff' }}
               >
                 Verifikasi <ArrowRight size={16} />
               </button>
@@ -288,7 +311,7 @@ export default function TalentaFlow() {
         {/* ── STEP 2: Pilih Skill (satu skill utama) — picking triggers activation directly ── */}
         {step === 2 && (
           <div className="animate-fade-in flex flex-col gap-6">
-            <h2 className="text-white font-sora font-bold text-xl">Pilih Skill Utamamu</h2>
+            <h2 className="font-sora font-bold text-2xl" style={{ color: '#1a1a1a' }}>Pilih Skill Utamamu</h2>
 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
               {SKILLS.map(skill => {
@@ -297,38 +320,38 @@ export default function TalentaFlow() {
                   <button
                     key={skill.id}
                     onClick={() => setLocalSkill(skill.id)}
-                    className={`relative p-3.5 rounded-xl border text-left transition-all cursor-pointer ${
-                      sel ? 'border-purple bg-purple/10' : 'border-white/10 bg-[#1A1A2E] hover:border-purple/40'
-                    }`}
+                    className="relative p-3.5 rounded-2xl border-2 text-left transition-all cursor-pointer"
+                    style={sel ? { borderColor: '#2b6fff', background: '#eef2fe' } : { borderColor: '#e5e9f0', background: '#fff' }}
                   >
                     {sel && (
-                      <div className="absolute top-2 right-2 w-5 h-5 bg-purple rounded-full flex items-center justify-center">
+                      <div className="absolute top-2 right-2 w-5 h-5 rounded-full flex items-center justify-center" style={{ background: '#2b6fff' }}>
                         <CheckCircle size={12} className="text-white" />
                       </div>
                     )}
                     <div className="text-xl mb-1.5">{skill.emoji}</div>
-                    <div className="font-semibold text-white text-xs font-inter">{skill.label}</div>
-                    <div className="text-white/40 text-[10px] font-inter mt-0.5">{skill.tagline}</div>
+                    <div className="font-semibold text-xs font-inter" style={{ color: '#1a1a1a' }}>{skill.label}</div>
+                    <div className="text-[10px] font-inter mt-0.5" style={{ color: '#797d85' }}>{skill.tagline}</div>
                   </button>
                 );
               })}
             </div>
 
             {skillMeta && (
-              <div className="bg-[#1E1A3A] border border-purple/40 rounded-xl p-4">
-                <div className="text-sm text-white/80 font-inter leading-relaxed">{skillMeta.desc}</div>
-                <div className="text-xs text-purple font-inter mt-2">Tools: {skillMeta.tools}</div>
+              <div className="rounded-2xl p-4 border-2" style={{ background: '#eef2fe', borderColor: '#2b6fff' }}>
+                <div className="text-sm font-inter leading-relaxed" style={{ color: '#1a1a1a' }}>{skillMeta.desc}</div>
+                <div className="text-xs font-inter mt-2" style={{ color: '#0052ff' }}>Tools: {skillMeta.tools}</div>
               </div>
             )}
 
             <div className="flex justify-between">
-              <button onClick={() => setStep(1)} className="flex items-center gap-2 text-white/50 hover:text-white font-inter text-sm bg-transparent border-0 cursor-pointer">
+              <button onClick={() => setStep(1)} className="flex items-center gap-2 font-inter text-sm bg-transparent border-0 cursor-pointer" style={{ color: '#0052ff' }}>
                 <ArrowLeft size={16} /> Kembali
               </button>
               <button
                 onClick={handleStartActivation}
                 disabled={!localSkill}
-                className="flex items-center gap-2 bg-purple hover:brightness-110 text-white font-bold px-7 py-3 rounded-xl transition-all text-sm cursor-pointer border-0 disabled:opacity-40 disabled:cursor-not-allowed font-inter"
+                className="flex items-center gap-2 text-white font-bold px-7 py-3 rounded-full transition-all text-sm cursor-pointer border-0 disabled:opacity-40 disabled:cursor-not-allowed font-inter hover:brightness-110"
+                style={{ background: '#2b6fff' }}
               >
                 Mulai Journey <ArrowRight size={16} />
               </button>
@@ -340,35 +363,37 @@ export default function TalentaFlow() {
         {step === 3 && (
           <div className="animate-fade-in pt-6">
             <div
-              className="rounded-2xl p-10 flex flex-col items-center justify-center text-center min-h-[420px] overflow-hidden"
-              style={{ background: 'linear-gradient(135deg, #1E1B4B 0%, #312E81 60%, #4F46E9 100%)' }}
+              className="rounded-3xl p-8 sm:p-10 flex flex-col items-center justify-center text-center min-h-[420px] overflow-hidden"
+              style={{ background: '#f5f8fb' }}
             >
-              <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-2xl mb-6 animate-pop">
-                <img src="/logo.png" alt="WADAH" className="w-full h-full object-cover" />
-              </div>
+              <img src="/map-journey.png" alt="" className="w-full max-w-xs mb-4 pointer-events-none select-none" />
 
-              <h2 className="font-sora font-extrabold text-white text-2xl mb-2">
+              <h2 className="font-sora font-bold text-xl sm:text-2xl mb-2" style={{ color: '#0052ff' }}>
                 Menyiapkan Journey {skillMeta?.label} Kamu...
               </h2>
-              <p className="text-white/60 font-inter text-sm mb-8">Skill Map sedang disusun berdasarkan pilihanmu</p>
+              <p className="font-inter text-sm mb-8" style={{ color: '#0052ff' }}>Skill Map sedang disusun berdasarkan pilihanmu</p>
 
-              <div className="w-full max-w-xs space-y-2.5 text-left mb-8">
+              <div className="w-full max-w-xs rounded-2xl p-4 space-y-3 text-left mb-8 bg-white border" style={{ borderColor: 'rgba(0,82,255,0.15)' }}>
                 {ACTIVATION_CHECKS.map((label, i) => (
                   <div
                     key={label}
-                    className="flex items-center gap-2.5 text-white/70 text-xs font-inter animate-fade-in"
-                    style={{ animationDelay: `${i * 0.5}s`, animationFillMode: 'both' }}
+                    className="flex items-center gap-2.5 text-sm font-inter font-medium animate-fade-in"
+                    style={{ animationDelay: `${i * 0.5}s`, animationFillMode: 'both', color: '#f37219' }}
                   >
-                    <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin-fast flex-shrink-0" />
+                    <div className="w-3.5 h-3.5 border-2 rounded-full animate-spin-fast flex-shrink-0" style={{ borderColor: 'rgba(0,82,255,0.2)', borderTopColor: '#0052ff' }} />
                     {label}
                   </div>
                 ))}
               </div>
 
-              <div className="w-full max-w-xs bg-white/10 rounded-full h-1.5 overflow-hidden">
+              <div className="w-full max-w-xs rounded-full h-2.5 overflow-hidden" style={{ background: '#d9d9d9' }}>
                 <div
-                  className="h-full bg-gradient-to-r from-purple to-indigo rounded-full"
-                  style={{ width: barFilled ? '100%' : '0%', transition: `width ${ACTIVATION_DURATION - 200}ms linear` }}
+                  className="h-full rounded-full"
+                  style={{
+                    width: barFilled ? '100%' : '0%',
+                    transition: `width ${ACTIVATION_DURATION - 200}ms linear`,
+                    background: 'linear-gradient(90deg, #00c897 0%, #2b6fff 50%, #f37219 100%)',
+                  }}
                 />
               </div>
             </div>

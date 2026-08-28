@@ -5,6 +5,10 @@ import { useApp, XP_PER_LEVEL } from '../../context/AppContext';
 import { SKILL_MAPS, DEFAULT_SKILL, getSkillMeta } from '../../data/skillMaps';
 import { getCertificateBySkill } from '../../data/certificates';
 
+const BLUE = '#2b6fff';
+const ORANGE = '#f37219';
+const GREEN = '#00c897';
+
 const PORTFOLIO_WORKS = [
   { emoji: '🏮', title: 'Banner Promosi Toko Mode', client: 'Toko Busana Ibu Sari', score: 76.5, date: 'April 2026' },
   { emoji: '🍜', title: 'Infografis Menu Restoran', client: 'Resto Padang Minang', score: 78.5, date: 'Mei 2026' },
@@ -32,88 +36,84 @@ export default function ProfilePage() {
   const certificate = certificateEarnedAt[skillId] ? getCertificateBySkill(skillId) : null;
 
   return (
-    <div className="min-h-screen bg-[#0F0F1A]">
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="sticky top-0 z-30 h-14 flex items-center px-4 md:px-6 bg-[#1A1A2E]/95 backdrop-blur border-b border-white/5">
+      <header className="sticky top-0 z-30 h-16 flex items-center px-4 md:px-6" style={{ background: BLUE }}>
         <button
           onClick={() => navigate('/rina/task')}
-          className="flex items-center gap-2 text-white/60 hover:text-white text-sm font-inter transition-colors bg-transparent border-0 cursor-pointer"
+          className="flex items-center gap-2 text-white hover:text-white/80 text-sm font-bold font-inter transition-colors bg-transparent border-0 cursor-pointer"
         >
-          <ArrowLeft size={16} />
+          <ArrowLeft size={18} />
           Kembali ke Peta Misi
         </button>
       </header>
 
       <main className="max-w-2xl mx-auto px-4 py-8 md:py-10 space-y-6">
         {/* Identity + XP */}
-        <div className="bg-[#1A1A2E] border border-white/10 rounded-2xl p-6">
-          <div className="flex items-start gap-4">
-            <img src="/rina.jpg" className="w-16 h-16 rounded-full object-cover border-2 border-purple/40" alt="Rina" />
-            <div className="flex-1 min-w-0">
-              <h1 className="text-white font-sora font-bold text-xl">Rina Kusumawati</h1>
-              <div className="inline-flex items-center gap-1.5 bg-purple/15 border border-purple/30 rounded-full px-2.5 py-1 text-xs text-purple font-semibold font-inter mt-1.5">
-                Level {level} · {levelName}
+        <div className="bg-white border-2 rounded-2xl p-6" style={{ borderColor: BLUE }}>
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex items-start gap-4 min-w-0">
+              <img src="/rina.jpg" className="w-16 h-16 rounded-full object-cover border-2 shrink-0" style={{ borderColor: BLUE }} alt="Rina" />
+              <div className="min-w-0">
+                <h1 className="font-sora font-bold text-xl" style={{ color: BLUE }}>Rina Kusumawati</h1>
+                <div className="italic font-semibold font-inter text-sm mt-1" style={{ color: BLUE }}>Level {level} - {levelName}</div>
+                <div className="text-gray-400 text-xs font-inter mt-1">{exp} XP Total Terkumpul</div>
               </div>
+            </div>
+            <div className="text-right shrink-0">
+              <div className="font-sora font-extrabold text-xl" style={{ color: BLUE }}>+{xpToNextLevel} XP</div>
+              <div className="text-gray-400 text-xs font-inter mt-0.5">Ke Level {level + 1}</div>
             </div>
           </div>
 
           <div className="mt-5">
-            <div className="flex justify-between text-xs font-inter mb-1.5">
-              <span className="text-white/40">{exp} XP total terkumpul</span>
-              <span className="text-white/40">{xpInLevel} / {XP_PER_LEVEL} XP</span>
+            <div className="w-full rounded-full h-2.5 overflow-hidden" style={{ background: '#e1e8f2' }}>
+              <div className="h-full rounded-full transition-all duration-700" style={{ width: `${xpProgressPct}%`, background: ORANGE }} />
             </div>
-            <div className="w-full bg-white/5 rounded-full h-2.5 overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-purple to-indigo rounded-full transition-all duration-700"
-                style={{ width: `${xpProgressPct}%` }}
-              />
+            <div className="flex justify-between text-xs font-inter font-semibold mt-1.5" style={{ color: ORANGE }}>
+              <span>{xpInLevel}/{XP_PER_LEVEL} XP</span>
+              <span>Level {level + 1} Dalam {xpToNextLevel} XP Lagi !!</span>
             </div>
-            <div className="text-white/30 text-[11px] font-inter mt-1.5">{xpToNextLevel} XP lagi ke Level {level + 1}</div>
           </div>
         </div>
 
         {/* Active skill progress */}
-        <div className="bg-[#1A1A2E] border border-white/10 rounded-2xl p-5">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2.5">
-              <span className="text-2xl">{skillMeta.emoji}</span>
-              <div>
-                <div className="text-white font-sora font-bold text-sm">{skillMeta.label}</div>
-                <div className="text-white/40 text-xs font-inter">{skillMap.mapTitle}</div>
-              </div>
+        <div className="bg-white border-2 rounded-2xl p-5" style={{ borderColor: BLUE }}>
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-11 h-11 rounded-xl flex items-center justify-center text-xl shrink-0" style={{ background: '#e1e8f2' }}>
+              {skillMeta.emoji}
             </div>
-            <span className="text-xs text-purple font-bold font-inter">{completedCount}/{totalNodes} node</span>
+            <div className="min-w-0">
+              <div className="font-sora font-bold text-sm" style={{ color: BLUE }}>{skillMeta.label}</div>
+              <div className="italic text-xs font-inter font-semibold" style={{ color: BLUE }}>{skillMap.mapTitle}</div>
+            </div>
           </div>
-          <div className="w-full bg-white/5 rounded-full h-2 overflow-hidden">
-            <div
-              className="h-full bg-gradient-to-r from-purple to-indigo rounded-full transition-all duration-700"
-              style={{ width: `${(completedCount / totalNodes) * 100}%` }}
-            />
+          <div className="w-full rounded-full h-2 overflow-hidden" style={{ background: '#e1e8f2' }}>
+            <div className="h-full rounded-full transition-all duration-700" style={{ width: `${(completedCount / totalNodes) * 100}%`, background: ORANGE }} />
           </div>
+          <div className="text-xs font-bold font-inter mt-1.5" style={{ color: ORANGE }}>{completedCount}/{totalNodes} Node</div>
         </div>
 
         {/* Visibility toggle */}
-        <div className="bg-[#1A1A2E] border border-white/10 rounded-2xl p-5 flex items-center justify-between">
-          <div>
-            <div className="text-white text-sm font-semibold font-inter">Visibilitas Profil</div>
-            <div className="text-white/40 text-xs font-inter mt-0.5">
+        <div className="bg-white border-2 rounded-2xl p-5 flex items-center justify-between gap-4" style={{ borderColor: BLUE }}>
+          <div className="min-w-0">
+            <div className="font-sora font-bold text-sm" style={{ color: BLUE }}>Visibilitas Profil</div>
+            <div className="italic text-xs font-inter font-semibold mt-0.5" style={{ color: BLUE }}>
               {visibility === 'public' ? 'Profil bisa ditemukan UMKM lewat Smart Matching' : 'Profil disembunyikan dari pool matching — kamu tetap bisa belajar'}
             </div>
           </div>
-          <div className="flex bg-white/5 rounded-xl p-1 border border-white/10 shrink-0">
+          <div className="flex rounded-full p-1 shrink-0" style={{ background: '#e1e8f2' }}>
             <button
               onClick={() => setVisibility('public')}
-              className={`flex items-center gap-1.5 text-xs font-bold font-inter px-3 py-1.5 rounded-lg transition-all cursor-pointer border-0 ${
-                visibility === 'public' ? 'bg-purple text-white' : 'bg-transparent text-white/40'
-              }`}
+              className="flex items-center gap-1.5 text-xs font-bold font-inter px-3.5 py-1.5 rounded-full transition-all cursor-pointer border-0"
+              style={visibility === 'public' ? { background: ORANGE, color: '#fff' } : { color: '#9ca3af' }}
             >
               <Eye size={13} /> Public
             </button>
             <button
               onClick={() => setVisibility('private')}
-              className={`flex items-center gap-1.5 text-xs font-bold font-inter px-3 py-1.5 rounded-lg transition-all cursor-pointer border-0 ${
-                visibility === 'private' ? 'bg-purple text-white' : 'bg-transparent text-white/40'
-              }`}
+              className="flex items-center gap-1.5 text-xs font-bold font-inter px-3.5 py-1.5 rounded-full transition-all cursor-pointer border-0"
+              style={visibility === 'private' ? { background: ORANGE, color: '#fff' } : { color: '#9ca3af' }}
             >
               <EyeOff size={13} /> Private
             </button>
@@ -122,41 +122,40 @@ export default function ProfilePage() {
 
         {/* Sertifikat Kompetensi — only after the skill's final project is approved */}
         {certificate && (
-          <div className="rounded-2xl p-[1.5px]" style={{ background: 'linear-gradient(135deg, #7C3AED 0%, #4F46E9 50%, #D97706 100%)' }}>
-            <div className="bg-[#1A1A2E] rounded-2xl p-5 flex items-center gap-4">
-              <div className="w-11 h-11 rounded-xl bg-purple/15 border border-purple/30 flex items-center justify-center shrink-0">
-                <GraduationCap size={20} className="text-purple" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="text-white font-sora font-bold text-sm">Sertifikat Kompetensi {certificate.skillLabel}</div>
-                <div className="text-white/40 text-[11px] font-inter mt-0.5 font-mono">{certificate.certId}</div>
-              </div>
-              <button
-                onClick={() => navigate(`/rina/sertifikat/${skillId}`)}
-                className="text-xs font-bold font-inter px-3.5 py-2 rounded-lg bg-purple/15 text-purple border border-purple/30 cursor-pointer hover:bg-purple/25 transition-colors shrink-0"
-              >
-                Lihat
-              </button>
+          <div className="bg-white border-2 rounded-2xl p-5 flex items-center gap-4" style={{ borderColor: BLUE }}>
+            <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0" style={{ background: '#e1e8f2' }}>
+              <GraduationCap size={20} style={{ color: BLUE }} />
             </div>
+            <div className="flex-1 min-w-0">
+              <div className="font-sora font-bold text-sm" style={{ color: BLUE }}>Sertifikat Kompetensi {certificate.skillLabel}</div>
+              <div className="text-gray-400 text-[11px] font-inter mt-0.5 font-mono">{certificate.certId}</div>
+            </div>
+            <button
+              onClick={() => navigate(`/rina/sertifikat/${skillId}`)}
+              className="text-xs font-bold font-inter px-3.5 py-2 rounded-full text-white cursor-pointer transition-colors shrink-0 hover:brightness-110"
+              style={{ background: ORANGE }}
+            >
+              Lihat
+            </button>
           </div>
         )}
 
         {/* Verified Portfolio — only after first checkpoint approved */}
         {verificationSubmitted && (
-          <div className="bg-[#1A1A2E] border border-white/10 rounded-2xl p-5">
-            <h2 className="text-white font-sora font-bold text-sm mb-4">Verified Portfolio</h2>
+          <div className="bg-white border-2 rounded-2xl p-5" style={{ borderColor: BLUE }}>
+            <h2 className="font-sora font-bold text-sm mb-4" style={{ color: BLUE }}>Verified Portfolio</h2>
             <div className="space-y-3">
               {PORTFOLIO_WORKS.map(work => (
-                <div key={work.title} className="flex items-center gap-3 bg-white/[0.03] border border-white/5 rounded-xl p-3">
-                  <div className="w-11 h-11 rounded-lg bg-white/5 flex items-center justify-center text-xl shrink-0">{work.emoji}</div>
+                <div key={work.title} className="flex items-center gap-3 rounded-xl p-3" style={{ background: '#f5f8fb' }}>
+                  <div className="w-11 h-11 rounded-lg flex items-center justify-center text-xl shrink-0" style={{ background: '#e1e8f2' }}>{work.emoji}</div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-white text-xs font-semibold font-inter truncate">{work.title}</div>
-                    <div className="text-white/40 text-[11px] font-inter">{work.client} · {work.date}</div>
+                    <div className="text-[#1a1a1a] text-xs font-semibold font-inter truncate">{work.title}</div>
+                    <div className="text-gray-400 text-[11px] font-inter">{work.client} · {work.date}</div>
                   </div>
                   <div className="text-right shrink-0">
-                    <div className="text-green-400 font-bold text-xs font-inter">{work.score}%</div>
-                    <div className="flex items-center gap-1 text-[9px] text-white/40 font-inter mt-0.5">
-                      <CheckCircle size={9} className="text-green-400" /> Human Reviewed
+                    <div className="font-bold text-xs font-inter" style={{ color: GREEN }}>{work.score}%</div>
+                    <div className="flex items-center gap-1 text-[9px] text-gray-400 font-inter mt-0.5">
+                      <CheckCircle size={9} style={{ color: GREEN }} /> Human Reviewed
                     </div>
                   </div>
                 </div>
@@ -167,18 +166,18 @@ export default function ProfilePage() {
 
         {/* Track Record — only after first real project accepted */}
         {projectAccepted && (
-          <div className="bg-[#1A1A2E] border border-white/10 rounded-2xl p-5">
-            <h2 className="text-white font-sora font-bold text-sm mb-4">Track Record</h2>
-            <div className="bg-white/[0.03] border border-white/5 rounded-xl p-4">
+          <div className="bg-white border-2 rounded-2xl p-5" style={{ borderColor: BLUE }}>
+            <h2 className="font-sora font-bold text-sm mb-4" style={{ color: BLUE }}>Track Record</h2>
+            <div className="rounded-xl p-4" style={{ background: '#f5f8fb' }}>
               <div className="flex items-center justify-between mb-2">
-                <div className="text-white text-xs font-semibold font-inter">{activeProject.umkm}</div>
+                <div className="text-[#1a1a1a] text-xs font-semibold font-inter">{activeProject.umkm}</div>
                 <div className="flex items-center gap-0.5">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={12} className="text-amber-400 fill-amber-400" />
+                    <Star key={i} size={12} className="fill-current" style={{ color: ORANGE }} />
                   ))}
                 </div>
               </div>
-              <p className="text-white/50 text-xs font-inter leading-relaxed italic">
+              <p className="text-gray-500 text-xs font-inter leading-relaxed italic">
                 "Hasil kerjanya rapi dan sesuai brief, komunikasinya juga responsif. Pasti order lagi ke depannya!"
               </p>
             </div>
@@ -186,40 +185,46 @@ export default function ProfilePage() {
         )}
 
         {/* Optional: CV + external links */}
-        <div className="bg-[#1A1A2E] border border-white/10 rounded-2xl p-5 space-y-4">
+        <div className="bg-white border-2 rounded-2xl p-5 space-y-4" style={{ borderColor: BLUE }}>
           <div>
-            <div className="flex items-center justify-between mb-2">
-              <h2 className="text-white font-sora font-bold text-sm">CV / Resume</h2>
-              <span className="text-[10px] text-white/30 font-inter">Melengkapi profil, bukan syarat kerja</span>
+            <div className="flex items-center justify-between gap-2 mb-2">
+              <h2 className="font-sora font-bold text-sm" style={{ color: BLUE }}>CV/Resume</h2>
+              <span className="text-[10px] font-inter font-semibold shrink-0" style={{ color: ORANGE }}>Melengkapi profil, bukan syarat kerja</span>
             </div>
             {!cvUploaded ? (
               <button
                 onClick={() => setCvUploaded(true)}
-                className="w-full border-2 border-dashed border-white/10 hover:border-purple/40 rounded-xl p-4 flex items-center justify-center gap-2 text-white/40 hover:text-white/70 text-xs font-inter transition-all bg-transparent cursor-pointer"
+                className="w-full rounded-2xl p-4 flex items-center justify-center gap-2 text-xs font-inter font-semibold transition-all cursor-pointer border-[3px] border-dashed"
+                style={{ background: '#cfddfb', borderColor: '#0052ff', color: '#0052ff' }}
               >
                 <Upload size={14} /> Upload CV/Resume (opsional)
               </button>
             ) : (
-              <div className="flex items-center gap-2 bg-white/[0.03] border border-white/10 rounded-xl p-3 text-xs text-white/70 font-inter">
-                <CheckCircle size={14} className="text-green-400" /> CV_Rina_Kusumawati.pdf
+              <div
+                className="flex items-center justify-center gap-2 rounded-2xl p-4 text-xs font-inter font-semibold border-[3px] border-dashed"
+                style={{ background: '#cfddfb', borderColor: '#0052ff', color: GREEN }}
+              >
+                <CheckCircle size={14} /> CV_Rina_Kusumawati.pdf
               </div>
             )}
           </div>
 
           <div>
-            <h2 className="text-white font-sora font-bold text-sm mb-2 flex items-center gap-1.5"><LinkIcon size={14} /> Link Eksternal</h2>
+            <h2 className="font-sora font-bold text-sm mb-2 flex items-center gap-1.5" style={{ color: BLUE }}><LinkIcon size={14} /> Link Eksternal</h2>
             <div className="space-y-2">
               <input
                 value={links.behance}
                 onChange={e => setLinks(prev => ({ ...prev, behance: e.target.value }))}
-                placeholder="Link Behance (opsional)"
-                className="w-full bg-white/[0.03] border border-white/10 rounded-lg px-3 py-2 text-xs text-white placeholder:text-white/25 font-inter focus:outline-none focus:border-purple/50"
+                placeholder="Link Behance (Opsional)"
+                className="w-full rounded-full px-4 py-2.5 text-xs font-inter text-[#1a1a1a] placeholder:text-gray-400 focus:outline-none"
+                style={{ background: '#cfddfb' }}
               />
               <input
                 value={links.linkedin}
                 onChange={e => setLinks(prev => ({ ...prev, linkedin: e.target.value }))}
-                placeholder="Link LinkedIn (opsional)"
-                className="w-full bg-white/[0.03] border border-white/10 rounded-lg px-3 py-2 text-xs text-white placeholder:text-white/25 font-inter focus:outline-none focus:border-purple/50"
+                placeholder="Link LinkedIn (Opsional)"
+                className="w-full rounded-full px-4 py-2.5 text-xs font-inter text-[#1a1a1a] placeholder:text-gray-400 focus:outline-none"
+                style={{ background: '#cfddfb' }}
               />
             </div>
           </div>
@@ -227,7 +232,8 @@ export default function ProfilePage() {
 
         <button
           onClick={() => navigate('/rina/task')}
-          className="w-full flex items-center justify-center gap-2 bg-purple hover:brightness-110 text-white font-bold py-3.5 rounded-xl transition-all active:scale-95 font-inter text-sm cursor-pointer border-0"
+          className="w-full flex items-center justify-center gap-2 text-white font-bold py-3.5 rounded-full transition-all active:scale-95 font-inter text-sm cursor-pointer border-0 hover:brightness-110"
+          style={{ background: GREEN }}
         >
           <ArrowLeft size={16} />
           Kembali ke Peta Misi

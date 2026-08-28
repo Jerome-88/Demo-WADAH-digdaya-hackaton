@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useRef, useMemo, useEffect, useLayoutEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import TopBar from '../../components/TopBar';
 import AIMentorWidget from '../../components/AIMentorWidget';
 import useGameAudio from '../../hooks/useGameAudio';
@@ -9,13 +9,31 @@ import { useApp } from '../../context/AppContext';
 import { SKILL_MAPS, DEFAULT_SKILL, getSkillMeta, nodeIdToSlug, getNodeUnit, getTotalUnits, getUnitNote } from '../../data/skillMaps';
 import { formatRupiah } from '../../data/jasaData';
 
-const ZIGZAG = ['-translate-x-10', 'translate-x-10', '-translate-x-6', 'translate-x-6', 'translate-x-0'];
 const UNIT_TABS = [1, 2, 3];
+
+const WADY_QUOTES = [
+  'Semangat! Satu langkah lagi kamu makin jago! 💪',
+  'Kamu udah lebih baik dari kemarin, terus ya! 🌟',
+  'Konsisten itu kunci! Aku percaya kamu bisa! 🔥',
+  'Jangan nyerah, portofoliomu makin keren nih! 🚀',
+  'Yuk lanjut! Klien impianmu nunggu di ujung jalan! 🎯',
+];
 
 export default function RinaTask() {
   const navigate = useNavigate();
   const { streak, hearts, selectedSkill, completedNodeIds, activeProject } = useApp();
   const { playFail, playClick } = useGameAudio();
+
+  // Wady's speech bubble rotates through motivational quotes; stays visible
+  // until the user dismisses it.
+  const [wadyQuoteIndex, setWadyQuoteIndex] = useState(0);
+  const [wadyBubbleClosed, setWadyBubbleClosed] = useState(false);
+  useEffect(() => {
+    const id = setInterval(() => {
+      setWadyQuoteIndex(i => (i + 1) % WADY_QUOTES.length);
+    }, 8000);
+    return () => clearInterval(id);
+  }, []);
 
   const skillId = selectedSkill || DEFAULT_SKILL;
   const skillMap = SKILL_MAPS[skillId] || SKILL_MAPS[DEFAULT_SKILL];
@@ -77,41 +95,76 @@ export default function RinaTask() {
 
   // Pair each node with its position in the full flat array (unlock logic
   // needs the global index) before filtering down to the active unit only.
-  const visibleNodes = skillMap.nodes
-    .map((node, globalIndex) => ({ node, globalIndex }))
-    .filter(({ node }) => getNodeUnit(node.id) === activeUnit);
+  const visibleNodes = useMemo(
+    () => skillMap.nodes
+      .map((node, globalIndex) => ({ node, globalIndex }))
+      .filter(({ node }) => getNodeUnit(node.id) === activeUnit),
+    [skillMap, activeUnit]
+  );
+
+  // Measure each node's rendered center so the connector line can be drawn
+  // as an SVG polyline that follows the zig-zag exactly, instead of guessing
+  // pixel offsets that would drift across screen sizes.
+  const mapColumnRef = useRef(null);
+  const nodeRefs = useRef({});
+  const [pathPoints, setPathPoints] = useState([]);
+  const [svgSize, setSvgSize] = useState({ width: 0, height: 0 });
+
+  useLayoutEffect(() => {
+    const measure = () => {
+      const container = mapColumnRef.current;
+      if (!container) return;
+      const containerRect = container.getBoundingClientRect();
+      const points = visibleNodes
+        .map(({ node }) => nodeRefs.current[node.id])
+        .filter(Boolean)
+        .map(el => {
+          const r = el.getBoundingClientRect();
+          return { x: r.left + r.width / 2 - containerRect.left, y: r.top + r.height / 2 - containerRect.top };
+        });
+      setPathPoints(points);
+      setSvgSize({ width: containerRect.width, height: containerRect.height });
+    };
+    measure();
+    const settleTimer = setTimeout(measure, 150);
+    window.addEventListener('resize', measure);
+    return () => {
+      clearTimeout(settleTimer);
+      window.removeEventListener('resize', measure);
+    };
+  }, [visibleNodes]);
 
   return (
-    <div className="min-h-screen bg-[#0F0F1A]">
-      <TopBar mapTitle={skillMap.mapTitle} streak={streak} hearts={hearts} />
+    <div className="min-h-screen bg-white">
+      <TopBar mapTitle={skillMap.mapTitle} streak={streak} hearts={hearts} light />
 
       {/* ── FULL SCREEN MAP ── */}
-      <main className="max-w-2xl mx-auto px-4 py-10 md:py-14">
+      <main className="w-[85vw] max-w-[900px] mx-auto px-2 sm:px-3 py-10 md:py-14">
         <div className="text-center mb-8">
-          <p className="text-white/40 text-xs font-inter">{getUnitNote(skillMap, activeUnit)}</p>
+          <p className="text-sm font-inter font-medium" style={{ color: '#00c897' }}>{getUnitNote(skillMap, activeUnit)}</p>
         </div>
 
         {/* Cross-side match banner — same activeProject the UMKM posted via /jasa */}
         {activeProject && activeProject.status === 'open' && activeProject.skillId === skillId && (
           <button
             onClick={() => navigate('/rina/match')}
-            className="w-full text-left mb-8 rounded-2xl p-4 flex items-center gap-3 cursor-pointer border-0 transition-all hover:brightness-110"
-            style={{ background: 'rgba(5, 150, 105, 0.1)', border: '1px solid #059669' }}
+            className="w-full text-left mb-8 rounded-2xl p-4 flex items-center gap-3 cursor-pointer border-0 transition-all hover:brightness-105"
+            style={{ background: 'rgba(0,200,151,0.08)', border: '1px solid #00c897' }}
           >
             <span className="text-xl shrink-0">✨</span>
             <div className="flex-1 min-w-0">
-              <div className="text-green-400 text-xs font-bold font-inter">Ada proyek yang cocok untukmu!</div>
-              <div className="text-white text-sm font-semibold font-inter mt-0.5">{activeProject.umkm} · {activeProject.location}</div>
-              <div className="text-white/60 text-xs font-inter mt-0.5">
+              <div className="text-xs font-bold font-inter" style={{ color: '#00c897' }}>Ada proyek yang cocok untukmu!</div>
+              <div className="text-[#1a1a1a] text-sm font-semibold font-inter mt-0.5">{activeProject.umkm} · {activeProject.location}</div>
+              <div className="text-gray-500 text-xs font-inter mt-0.5">
                 membutuhkan {skillMeta.label} · Budget: {formatRupiah(activeProject.budget)} {activeProject.durasi ? `· Durasi: ${activeProject.durasi}` : ''}
               </div>
             </div>
-            <span className="text-green-400 text-xs font-bold font-inter shrink-0">Lihat Detail Proyek</span>
+            <span className="text-xs font-bold font-inter shrink-0" style={{ color: '#00c897' }}>Lihat Detail Proyek</span>
           </button>
         )}
 
         {/* Unit tabs */}
-        <div className="grid grid-cols-3 gap-2 bg-white/[0.03] p-1.5 rounded-xl border border-white/5 text-[11px] font-bold mb-12 max-w-sm mx-auto">
+        <div className="grid grid-cols-3 gap-2 p-1.5 rounded-xl text-[11px] font-bold mb-12 max-w-sm mx-auto" style={{ background: '#e1e8f2' }}>
           {UNIT_TABS.map(unitNumber => {
             const unlocked = isUnitUnlocked(unitNumber);
             const active = unitNumber === activeUnit;
@@ -121,12 +174,13 @@ export default function RinaTask() {
                 key={unitNumber}
                 onClick={() => handleUnitTab(unitNumber)}
                 className={`py-2 px-1 rounded-lg text-center flex items-center justify-center gap-1 border-0 ${
-                  active ? 'bg-purple text-white cursor-default'
-                    : unlocked ? 'text-white/60 hover:text-white bg-transparent cursor-pointer'
-                    : 'text-white/30 cursor-not-allowed bg-transparent'
+                  active ? 'text-white cursor-default'
+                    : unlocked ? 'text-gray-500 hover:text-[#1a1a1a] bg-transparent cursor-pointer'
+                    : 'text-gray-300 cursor-not-allowed bg-transparent'
                 }`}
+                style={active ? { background: '#f37219' } : undefined}
               >
-                {unitDone && <i className="fa-solid fa-check text-[9px] text-green-400"></i>}
+                {unitDone && <i className="fa-solid fa-check text-[9px]" style={{ color: '#00c897' }}></i>}
                 Unit {unitNumber}
                 {!unlocked && <i className="fa-solid fa-lock text-[8px]"></i>}
               </button>
@@ -134,46 +188,143 @@ export default function RinaTask() {
           })}
         </div>
 
-        {/* Zig-zag node column */}
-        <div className="relative flex flex-col items-center gap-14">
-          <div className="absolute top-2 bottom-2 left-1/2 -translate-x-1/2 w-0 border-l-4 border-dashed border-white/10 -z-0"></div>
+        {/* Map card */}
+        <div className="relative rounded-3xl p-4 sm:p-6 overflow-hidden" style={{ background: '#f5f8fb' }}>
+          {/* Zig-zag node column */}
+          <div ref={mapColumnRef} className="relative flex flex-col gap-14">
+            <svg
+              className="absolute inset-0 w-full h-full pointer-events-none"
+              viewBox={`0 0 ${svgSize.width} ${svgSize.height}`}
+              preserveAspectRatio="none"
+            >
+              {pathPoints.length > 1 && (
+                <polyline
+                  points={pathPoints.map(p => `${p.x},${p.y}`).join(' ')}
+                  fill="none"
+                  stroke="#c7d2e0"
+                  strokeWidth="4"
+                  strokeDasharray="10 8"
+                  strokeLinecap="round"
+                />
+              )}
+            </svg>
 
-          {visibleNodes.map(({ node, globalIndex }, localIndex) => {
-            const done = isCompleted(node.id);
-            const unlocked = isUnlocked(globalIndex);
-            const isCheckpoint = node.type === 'checkpoint';
+            {visibleNodes.map(({ node, globalIndex }, localIndex) => {
+              const done = isCompleted(node.id);
+              const unlocked = isUnlocked(globalIndex);
+              const isCheckpoint = node.type === 'checkpoint';
+              // The checkpoint is always last in a unit — pin it to the right so it
+              // never lands on top of the decorative mascot parked bottom-left.
+              const alignRight = isCheckpoint ? true : localIndex % 2 === 1;
 
-            let circleClass = 'bg-[#2D2D3D] text-white/40 opacity-60';
-            if (done) circleClass = 'bg-[#059669] text-white shadow-[0_0_0_4px_rgba(5,150,105,0.25)]';
-            else if (unlocked) circleClass = isCheckpoint
-              ? 'bg-gradient-to-tr from-purple to-indigo text-white shadow-lg'
-              : 'bg-purple text-white shadow-lg';
+              let circleStyle = { background: '#e1e8f2', color: '#a8b3c4' };
+              if (done) {
+                circleStyle = isCheckpoint
+                  ? { background: '#00c897', color: '#fff', boxShadow: '0 0 0 5px rgba(255,183,3,0.35)' }
+                  : { background: '#00c897', color: '#fff', boxShadow: '0 0 0 4px rgba(0,200,151,0.2)' };
+              } else if (unlocked) {
+                circleStyle = isCheckpoint
+                  ? { background: 'linear-gradient(135deg, #2b6fff, #00c897)', color: '#fff', boxShadow: '0 0 0 5px rgba(255,183,3,0.25)' }
+                  : { background: '#f37219', color: '#fff' };
+              }
 
-            return (
-              <div key={node.id} className={`relative z-10 flex flex-col items-center gap-2 ${ZIGZAG[localIndex] || ''}`}>
-                <motion.button
-                  onClick={() => handleOpenNode(node, globalIndex)}
-                  whileHover={unlocked ? { scale: 1.06 } : {}}
-                  whileTap={unlocked ? { scale: 0.95 } : {}}
-                  animate={unlocked && !done ? { boxShadow: ['0 0 0 0 rgba(124,58,237,0.4)', '0 0 0 10px rgba(124,58,237,0)'] } : {}}
-                  transition={unlocked && !done ? { duration: 1.8, repeat: Infinity } : {}}
-                  className={`rounded-full flex items-center justify-center border-0 cursor-pointer ${circleClass} ${isCheckpoint ? 'w-20 h-20 text-2xl' : 'w-16 h-16 text-xl'}`}
+              return (
+                <motion.div
+                  key={node.id}
+                  ref={el => { nodeRefs.current[node.id] = el; }}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: localIndex * 0.1, duration: 0.4, ease: 'easeOut' }}
+                  className={`group relative z-10 flex flex-col items-center gap-2 w-32 ${alignRight ? 'self-end mr-0 sm:mr-2' : 'self-start ml-0 sm:ml-2'}`}
                 >
-                  {done ? <i className="fa-solid fa-check"></i> : !unlocked ? <i className="fa-solid fa-lock text-base"></i> : <i className={`fa-solid ${node.icon}`}></i>}
-                </motion.button>
-                <span className={`text-[11px] font-inter text-center max-w-[120px] leading-tight ${
-                  done ? 'text-green-400 font-bold' : unlocked ? 'text-white font-semibold' : 'text-white/30'
-                }`}>
-                  {isCheckpoint ? (node.isFinalProject ? 'GERBANG AKHIR 🎓' : `KASTIL CHECKPOINT ${activeUnit}`) : node.title}
-                </span>
-              </div>
-            );
-          })}
+                  {isCheckpoint && (
+                    <span
+                      className="text-[10px] font-extrabold tracking-wider px-2.5 py-1 rounded-full mb-1"
+                      style={{ background: '#f37219', color: '#fff' }}
+                    >
+                      CHECKPOINT
+                    </span>
+                  )}
+                  {isCheckpoint && node.isFinalProject && (
+                    <span className="absolute -top-3 text-xl">👑</span>
+                  )}
+                  <motion.button
+                    onClick={() => handleOpenNode(node, globalIndex)}
+                    whileHover={unlocked ? { scale: 1.06 } : {}}
+                    whileTap={unlocked ? { scale: 0.95 } : {}}
+                    animate={unlocked && !done ? { boxShadow: ['0 0 0 0 rgba(243,114,25,0.45)', '0 0 16px 10px rgba(243,114,25,0)'] } : {}}
+                    transition={unlocked && !done ? { duration: 2.6, repeat: Infinity, ease: 'easeInOut' } : {}}
+                    className={`rounded-full flex items-center justify-center border-0 cursor-pointer shadow-lg ${isCheckpoint ? 'w-24 h-24 text-3xl' : 'w-16 h-16 text-xl'}`}
+                    style={circleStyle}
+                  >
+                    {done ? <i className="fa-solid fa-check"></i> : !unlocked ? <i className="fa-solid fa-lock text-base"></i> : <i className={`fa-solid ${node.icon}`}></i>}
+                  </motion.button>
+
+                  {!unlocked && (
+                    <div
+                      className="absolute -top-9 left-1/2 -translate-x-1/2 whitespace-nowrap px-3 py-1.5 rounded-lg text-[11px] font-inter font-semibold text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-20"
+                      style={{ background: '#1a1a2e' }}
+                    >
+                      Selesaikan unit sebelumnya
+                      <span className="absolute top-full left-1/2 -translate-x-1/2 w-2 h-2 -mt-1 rotate-45" style={{ background: '#1a1a2e' }} />
+                    </div>
+                  )}
+
+                  <span className="text-[11px] font-inter text-center max-w-[120px] leading-tight font-semibold" style={{
+                    color: done ? '#00c897' : unlocked ? '#1a1a1a' : '#a8b3c4',
+                  }}>
+                    {isCheckpoint ? (node.isFinalProject ? 'GERBANG AKHIR 🎓' : `KASTIL CHECKPOINT ${activeUnit}`) : node.title}
+                  </span>
+                </motion.div>
+              );
+            })}
+          </div>
         </div>
       </main>
 
-      {/* ── AI MENTOR FLOATING WIDGET ── */}
-      <AIMentorWidget node={null} stage={null} skillLabel={skillMeta.label} />
+      {/* ── WADY SPEECH BUBBLE (sits above the AI Mentor trigger, bottom-right) ── */}
+      <AnimatePresence>
+        {!wadyBubbleClosed && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1, y: [0, -8, 0] }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{
+              opacity: { duration: 0.3, ease: 'easeOut' },
+              scale: { duration: 0.3, ease: 'easeOut' },
+              y: { duration: 3, repeat: Infinity, ease: 'easeInOut' },
+            }}
+            className="hidden sm:block fixed bottom-36 right-4 z-40 w-64 bg-white rounded-2xl px-4 py-3 pr-7 shadow-lg border-2 text-center"
+            style={{ borderColor: '#2b6fff' }}
+          >
+            <button
+              onClick={() => setWadyBubbleClosed(true)}
+              className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full flex items-center justify-center text-gray-400 hover:text-white hover:bg-[#2b6fff] transition-colors border-0 bg-transparent cursor-pointer"
+              title="Tutup"
+            >
+              <i className="fa-solid fa-xmark text-[10px]"></i>
+            </button>
+            <div className="min-h-[2.5em] flex items-center justify-center">
+              <AnimatePresence mode="wait">
+                <motion.p
+                  key={wadyQuoteIndex}
+                  className="font-inter font-semibold text-sm text-[#1a1a1a]"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {WADY_QUOTES[wadyQuoteIndex]}
+                </motion.p>
+              </AnimatePresence>
+            </div>
+            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-b-2 border-r-2 rotate-45" style={{ borderColor: '#2b6fff' }} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── AI MENTOR FLOATING WIDGET (trigger shows Wady, bottom-right) ── */}
+      <AIMentorWidget node={null} stage={null} skillLabel={skillMeta.label} light />
     </div>
   );
 }

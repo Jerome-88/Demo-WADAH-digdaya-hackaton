@@ -1,9 +1,15 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import AIMentorWidget from '../../components/AIMentorWidget';
 import { showToast } from '../../utils/toast';
 import { useApp } from '../../context/AppContext';
 import { SKILL_MAPS, DEFAULT_SKILL, getSkillMeta, getNodeUnit } from '../../data/skillMaps';
+
+const BLUE = '#2b6fff';
+const GREEN = '#00c897';
+const ORANGE = '#f37219';
+const RED = '#e5484d';
 
 const MAX_REVISIONS = 2;
 const XP_TABLE = { 0: 150, 1: 120, 2: 100 };
@@ -293,54 +299,63 @@ export default function RinaSubmit() {
   const xpAmount = XP_TABLE[revisionCount] ?? XP_TABLE[MAX_REVISIONS];
 
   return (
-    <div className="min-h-screen bg-[#0F0F1A] flex flex-col">
+    <div className="min-h-screen bg-white flex flex-col">
       {/* ── TOP BAR ── */}
-      <header className="sticky top-0 z-30 h-14 flex items-center px-4 md:px-6 bg-[#1A1A2E]/95 backdrop-blur border-b border-white/5 flex-shrink-0">
+      <header className="sticky top-0 z-30 h-14 flex items-center px-4 md:px-6 flex-shrink-0" style={{ background: BLUE }}>
         <button
           onClick={() => navigate('/rina/task')}
-          className="flex items-center gap-2 text-white/60 hover:text-white text-sm font-inter transition-colors bg-transparent border-0 cursor-pointer"
+          className="flex items-center gap-2 text-white hover:text-white/80 text-sm font-bold font-inter transition-colors bg-transparent border-0 cursor-pointer"
         >
           <i className="fa-solid fa-arrow-left"></i>
           <span>Peta Misi</span>
         </button>
         <h1 className="text-white text-xs sm:text-sm font-bold font-sora truncate absolute left-1/2 -translate-x-1/2 max-w-[55%] text-center">
-          {skillMeta.label} · Tantangan Checkpoint
+          {skillMeta.label} - Node {checkpointNode?.id} - Tantangan Checkpoint
         </h1>
+        <div className="flex items-center gap-0.5 bg-white border border-rose-300 py-1.5 px-2.5 rounded-full ml-auto">
+          {[...Array(5)].map((_, i) => (
+            <i key={i} className="fa-solid fa-heart text-xs" style={{ color: i < 4 ? '#f43f5e' : '#e5e7eb' }}></i>
+          ))}
+        </div>
       </header>
 
-      <main className="flex-1 w-full max-w-[680px] mx-auto px-4 py-10 pb-16">
+      <main className="flex-1 w-full max-w-[720px] mx-auto px-4 py-8 pb-16">
         {/* ── FORM: initial submission ── */}
         {view === 'form' && (
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-6">
             <div>
-              <h2 className="text-white font-sora font-bold text-xl mb-1">Kumpulkan Hasil Kerja</h2>
-              <p className="text-white/50 text-sm font-inter">Pastikan hasil checkpoint-mu untuk {skillMeta.label} sudah memenuhi semua ketentuan sebelum dikirim ke reviewer.</p>
+              <h2 className="font-sora font-bold text-xl mb-1" style={{ color: BLUE }}>Kumpulkan Hasil Kerja</h2>
+              <p className="text-sm font-inter font-medium" style={{ color: BLUE }}>Pastikan hasil checkpoint-mu untuk {skillMeta.label} sudah memenuhi semua ketentuan sebelum dikirim ke reviewer.</p>
             </div>
 
-            <div className="bg-[#1A1A2E] border border-white/10 rounded-2xl p-6">
+            <div className="rounded-3xl p-6" style={{ background: '#f5f8fb' }}>
               <div className="flex items-center gap-2 mb-4">
-                <i className="fa-solid fa-file-lines text-purple"></i>
-                <h3 className="text-white font-sora font-bold text-sm">Checklist Sebelum Submit</h3>
+                <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0" style={{ background: GREEN }}>
+                  <i className="fa-solid fa-file-lines text-white text-xs"></i>
+                </div>
+                <h3 className="font-sora font-bold text-sm" style={{ color: ORANGE }}>Checklist Sebelum Submit</h3>
               </div>
               <div className="space-y-3">
                 {checklist.map((item, i) => (
                   <label key={i} className="flex items-start gap-3 cursor-pointer group">
                     <div
                       onClick={() => toggleCheck(i)}
-                      className={`w-5 h-5 rounded flex items-center justify-center flex-shrink-0 mt-0.5 border-2 transition-all ${
-                        checkedItems.has(i) ? 'bg-purple border-purple' : 'border-white/20 group-hover:border-purple/60'
-                      }`}
+                      className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 border-2 transition-all"
+                      style={checkedItems.has(i) ? { borderColor: GREEN, color: GREEN } : { borderColor: BLUE }}
                     >
-                      {checkedItems.has(i) && <i className="fa-solid fa-check text-white text-[9px]"></i>}
+                      {checkedItems.has(i) && <i className="fa-solid fa-check text-[9px]" style={{ color: GREEN }}></i>}
                     </div>
-                    <span className={`text-sm font-inter leading-relaxed ${checkedItems.has(i) ? 'text-white/30 line-through' : 'text-white/70'}`}>
+                    <span
+                      className="text-sm font-inter font-medium leading-relaxed"
+                      style={checkedItems.has(i) ? { color: GREEN, textDecoration: 'line-through' } : { color: BLUE }}
+                    >
                       {item}
                     </span>
                   </label>
                 ))}
               </div>
               {allChecked && (
-                <div className="mt-4 flex items-center gap-2 text-green-400 text-sm font-semibold font-inter">
+                <div className="mt-4 flex items-center gap-2 text-sm font-semibold font-inter" style={{ color: GREEN }}>
                   <i className="fa-solid fa-circle-check"></i>
                   Semua checklist terpenuhi!
                 </div>
@@ -348,74 +363,56 @@ export default function RinaSubmit() {
             </div>
 
             <div>
-              <h3 className="text-white font-sora font-bold text-sm mb-3">Upload File Hasil Kerja</h3>
+              <h3 className="font-sora font-bold text-sm mb-3" style={{ color: ORANGE }}>Upload File Hasil Kerja</h3>
 
               {!uploaded && !uploading && (
                 <div
                   onClick={simUploadFile}
-                  className="border-2 border-dashed border-white/15 rounded-2xl p-10 text-center hover:border-purple/50 hover:bg-purple/[0.03] transition-all cursor-pointer group"
+                  className="rounded-2xl p-10 text-center transition-all cursor-pointer border-[3px] border-dashed"
+                  style={{ background: '#cfddfb', borderColor: '#0052ff' }}
                 >
-                  <div className="w-14 h-14 bg-purple/10 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-purple/20 transition-colors">
-                    <i className="fa-solid fa-upload text-purple text-lg"></i>
+                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: '#fff' }}>
+                    <i className="fa-solid fa-upload text-lg" style={{ color: '#0052ff' }}></i>
                   </div>
-                  <div className="font-semibold text-white/80 font-inter mb-1">Drag & drop atau klik untuk upload</div>
-                  <div className="text-white/30 text-sm font-inter">Dokumen, gambar, atau video hasil checkpoint</div>
-                  <div className="mt-4 inline-block bg-purple/15 text-purple text-xs px-4 py-2 rounded-full font-inter font-semibold">
+                  <div className="font-semibold font-inter mb-1" style={{ color: '#0052ff' }}>Drag & drop atau klik untuk upload</div>
+                  <div className="text-sm font-inter" style={{ color: '#5b7bb8' }}>Dokumen, gambar, atau video hasil checkpoint</div>
+                  <div className="mt-4 inline-block text-white text-xs px-4 py-2 rounded-full font-inter font-semibold" style={{ background: '#0052ff' }}>
                     Pilih File
                   </div>
                 </div>
               )}
 
               {uploading && (
-                <div className="border-2 border-purple/30 rounded-2xl p-10 text-center bg-purple/5">
-                  <div className="w-12 h-12 border-4 border-purple border-t-transparent rounded-full animate-spin-fast mx-auto mb-4" />
-                  <div className="font-semibold text-purple font-inter">Mengupload file…</div>
-                  <div className="text-white/30 text-sm font-inter mt-1">Mohon tunggu</div>
+                <div className="rounded-2xl p-10 text-center border-[3px] border-dashed" style={{ background: '#cfddfb', borderColor: '#0052ff' }}>
+                  <div className="w-12 h-12 border-4 rounded-full animate-spin-fast mx-auto mb-4" style={{ borderColor: '#0052ff', borderTopColor: 'transparent' }} />
+                  <div className="font-semibold font-inter" style={{ color: '#0052ff' }}>Mengupload file…</div>
+                  <div className="text-sm font-inter mt-1" style={{ color: '#5b7bb8' }}>Mohon tunggu</div>
                 </div>
               )}
 
               {uploaded && (
-                <div className="border-2 border-green-500/30 rounded-2xl overflow-hidden">
-                  <div className="bg-gradient-to-br from-indigo to-purple h-40 flex items-center justify-center relative">
-                    <div className="text-center">
-                      <div className="text-5xl mb-2">{skillMeta.emoji}</div>
-                      <div className="text-white font-sora font-bold text-lg">{checkpointNode?.title || 'Checkpoint Task'}</div>
-                      <div className="text-white/70 text-xs font-inter mt-1">{skillMeta.label}</div>
-                    </div>
-                    <div className="absolute top-3 right-3 bg-green-500/90 rounded-full px-2.5 py-1 flex items-center gap-1">
-                      <i className="fa-solid fa-check text-white text-[10px]"></i>
-                      <span className="text-white text-xs font-semibold font-inter">Uploaded</span>
-                    </div>
-                  </div>
-                  <div className="bg-[#1A1A2E] p-4 flex items-center gap-3">
-                    <div className="w-10 h-10 bg-green-500/10 rounded-xl flex items-center justify-center">
-                      <i className="fa-solid fa-image text-green-400"></i>
-                    </div>
-                    <div className="flex-1">
-                      <div className="font-semibold text-white/80 font-inter text-sm">checkpoint_{skillId}_final</div>
-                      <div className="text-xs text-white/30 font-inter mt-0.5">Siap dikirim ke reviewer</div>
-                    </div>
-                    <div className="flex items-center gap-1 text-green-400 text-xs font-semibold font-inter">
-                      <i className="fa-solid fa-check"></i>
-                      Siap
-                    </div>
-                  </div>
+                <div className="rounded-2xl p-8 text-center border-2 border-dashed" style={{ background: GREEN, borderColor: GREEN }}>
+                  <div className="text-white font-bold font-inter">Your Submission has been Uploaded</div>
+                  <div className="text-white/90 text-sm font-inter mt-1">Checkpoint_{skillId}_final.zip</div>
                 </div>
               )}
             </div>
 
             {uploaded && (
               <div className="flex flex-col gap-4">
-                <div className="bg-purple/10 border border-purple/30 rounded-xl p-4 flex items-center gap-3">
-                  <i className="fa-solid fa-user-check text-purple text-lg"></i>
+                <div className="rounded-2xl p-4 flex items-center gap-3" style={{ background: '#f5f8fb' }}>
+                  <div className="w-9 h-9 rounded-full bg-white flex items-center justify-center shrink-0">
+                    <i className="fa-solid fa-user text-gray-400"></i>
+                  </div>
                   <div>
-                    <div className="font-semibold text-purple font-inter text-sm">Dinilai human reviewer</div>
-                    <div className="text-white/50 text-xs font-inter">Praktisi industri berpengalaman akan review karyamu dan kasih feedback langsung.</div>
+                    <div className="font-semibold font-inter text-sm" style={{ color: BLUE }}>Dinilai human reviewer</div>
+                    <div className="text-gray-500 text-xs font-inter">Praktisi industri berpengalaman akan review karyamu dan kasih feedback langsung.</div>
                   </div>
                 </div>
                 <button
                   onClick={handleFirstSubmit}
-                  className="w-full bg-purple hover:brightness-110 text-white font-bold py-3.5 rounded-xl transition-all text-sm cursor-pointer border-0"
+                  className="mx-auto text-white font-bold py-3.5 px-10 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
+                  style={{ background: GREEN }}
                 >
                   Kumpulkan Sekarang
                 </button>
@@ -428,35 +425,36 @@ export default function RinaSubmit() {
         {view === 'submitted' && (
           <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center text-center gap-4 py-10">
             <div className="text-5xl">📬</div>
-            <h2 className="text-white font-sora font-bold text-xl">
+            <h2 className="font-sora font-bold text-xl" style={{ color: BLUE }}>
               {revisionCount === 0 ? 'Tantanganmu Sudah Dikirim!' : 'Revisimu Sudah Dikirim!'}
             </h2>
-            <p className="text-white/50 text-sm font-inter">Human reviewer akan memeriksa karyamu</p>
+            <p className="text-gray-500 text-sm font-inter">Human reviewer akan memeriksa karyamu</p>
 
-            <div className="w-full bg-[#1A1A2E] border border-white/10 rounded-2xl p-5 text-left space-y-2.5 mt-2">
-              <div className="flex items-start gap-2.5 text-sm text-white/70 font-inter">
+            <div className="w-full rounded-2xl p-5 text-left space-y-2.5 mt-2" style={{ background: '#f5f8fb' }}>
+              <div className="flex items-start gap-2.5 text-sm font-inter" style={{ color: '#1a1a1a' }}>
                 <span>⏱</span> Estimasi review: 1 hari kerja
               </div>
-              <div className="flex items-start gap-2.5 text-sm text-white/70 font-inter">
+              <div className="flex items-start gap-2.5 text-sm font-inter" style={{ color: '#1a1a1a' }}>
                 <span>👤</span> Direview oleh praktisi industri berpengalaman
               </div>
-              <div className="flex items-start gap-2.5 text-sm text-white/70 font-inter">
+              <div className="flex items-start gap-2.5 text-sm font-inter" style={{ color: '#1a1a1a' }}>
                 <span>🔔</span> Kamu akan dapat notifikasi setelah review selesai
               </div>
             </div>
 
-            <div className="w-full bg-sky-500/10 border border-sky-500/20 rounded-xl p-4 text-left">
-              <p className="text-sky-300 text-sm font-inter leading-relaxed">
+            <div className="w-full rounded-xl p-4 text-left border-2" style={{ background: '#eef2fe', borderColor: BLUE }}>
+              <p className="text-sm font-inter leading-relaxed" style={{ color: BLUE }}>
                 ❄️ Streak kamu di-freeze selama menunggu review. Tenang, streak tidak akan putus.
               </p>
             </div>
 
-            <div className="w-full bg-white/[0.02] border border-white/10 rounded-xl p-4 mt-2">
-              <div className="text-white/40 text-[11px] font-inter font-bold uppercase tracking-wide mb-2">⚡ Demo Mode</div>
-              <p className="text-white/50 text-xs font-inter mb-3">Dalam demo ini, kita bisa langsung simulasikan hasil review reviewer tanpa menunggu.</p>
+            <div className="w-full rounded-xl p-4 mt-2 border-2" style={{ background: '#fff', borderColor: '#e5e9f0' }}>
+              <div className="text-gray-400 text-[11px] font-inter font-bold uppercase tracking-wide mb-2">⚡ Demo Mode</div>
+              <p className="text-gray-500 text-xs font-inter mb-3">Dalam demo ini, kita bisa langsung simulasikan hasil review reviewer tanpa menunggu.</p>
               <button
                 onClick={handleSimulateReview}
-                className="w-full bg-amber-500 hover:brightness-110 text-white font-bold py-3 rounded-xl transition-all text-sm cursor-pointer border-0"
+                className="w-full text-white font-bold py-3 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
+                style={{ background: ORANGE }}
               >
                 Simulasikan Keputusan Reviewer
               </button>
@@ -464,7 +462,8 @@ export default function RinaSubmit() {
 
             <button
               onClick={() => navigate('/rina/task')}
-              className="w-full border border-white/15 text-white/70 hover:bg-white/5 font-semibold py-3 rounded-xl transition-all text-sm cursor-pointer bg-transparent mt-1"
+              className="w-full font-semibold py-3 rounded-full transition-all text-sm cursor-pointer bg-transparent mt-1 border-2"
+              style={{ color: BLUE, borderColor: BLUE }}
             >
               Kembali ke Peta Misi
             </button>
@@ -475,63 +474,63 @@ export default function RinaSubmit() {
         {view === 'revision-feedback' && (
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-5">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-purple/15 border border-purple/30 flex items-center justify-center text-purple font-bold text-xs font-sora shrink-0">RV</div>
+              <img src="/reviewer.jpg" alt="Reviewer" className="w-10 h-10 rounded-full object-cover shrink-0" />
               <div className="flex-1">
-                <div className="text-white text-sm font-semibold font-inter">Reviewer · {skillMeta.label} Specialist</div>
-                <div className="text-white/30 text-xs font-inter">1 hari yang lalu</div>
+                <div className="text-sm font-bold font-inter" style={{ color: BLUE }}>Reviewer - {skillMeta.label} Specialist</div>
+                <div className="italic text-xs font-inter font-semibold" style={{ color: BLUE }}>1 hari yang lalu</div>
               </div>
-              <span className="text-[10px] font-bold text-rose-400 bg-rose-500/10 border border-rose-500/30 px-2.5 py-1 rounded-full font-inter shrink-0">PERLU REVISI</span>
+              <span className="text-[10px] font-bold px-2.5 py-1 rounded-full font-inter shrink-0 border-2" style={{ color: RED, borderColor: RED, background: '#fdecec' }}>PERLU REVISI</span>
             </div>
 
-            <div className="bg-amber-500/5 border border-amber-500/25 rounded-2xl p-5">
-              <h3 className="text-amber-300 font-sora font-bold text-sm mb-3">Feedback dari Reviewer:</h3>
-              <p className="text-white/70 text-sm font-inter leading-relaxed mb-3">{feedback.intro}</p>
-              <ol className="space-y-3">
+            <div className="rounded-2xl p-5" style={{ background: '#f5f8fb' }}>
+              <h3 className="font-sora font-bold text-sm mb-3" style={{ color: ORANGE }}>Feedback dari Reviewer:</h3>
+              <p className="text-sm font-inter leading-relaxed mb-3 text-gray-600">{feedback.intro}</p>
+              <ul className="space-y-2">
                 {feedback.points.map((p, i) => (
-                  <li key={i} className="text-sm text-white/70 font-inter leading-relaxed flex gap-2">
-                    <span className="text-amber-400 font-bold shrink-0">{i + 1}.</span>
-                    <span><strong className="text-white/90">{p.title}</strong> — {p.detail}</span>
+                  <li key={i} className="text-sm font-inter leading-relaxed flex gap-2">
+                    <span className="mt-2 w-1.5 h-1.5 rounded-full shrink-0" style={{ background: BLUE }}></span>
+                    <span className="text-gray-600"><strong style={{ color: BLUE }}>{p.title}</strong> - {p.detail}</span>
                   </li>
                 ))}
-              </ol>
+              </ul>
             </div>
 
-            <div className="bg-[#1A1A2E] border border-white/10 rounded-2xl p-5 space-y-2">
-              <div className="flex items-center gap-2.5 text-sm text-white/70 font-inter">
-                <span>📝</span> Revisi ke-{revisionCount + 1} dari maksimal {MAX_REVISIONS}
+            <div className="rounded-2xl p-5 space-y-2" style={{ background: '#f5f8fb' }}>
+              <div className="text-sm font-bold font-inter" style={{ color: GREEN }}>Revisi ke {revisionCount + 1} dari maksimal {MAX_REVISIONS}</div>
+              <div className="flex items-center gap-2 text-sm font-inter" style={{ color: GREEN }}>
+                <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: GREEN }}></span> Selesaikan dalam 3 hari
               </div>
-              <div className="flex items-center gap-2.5 text-sm text-white/70 font-inter">
-                <span>⏱</span> Selesaikan dalam 3 hari
-              </div>
-              <div className="flex items-center gap-2.5 text-sm text-white/70 font-inter">
-                <span>✨</span> Masih bisa dapat +{XP_TABLE[revisionCount + 1] ?? XP_TABLE[MAX_REVISIONS]} XP kalau approved di revisi ini
+              <div className="flex items-center gap-2 text-sm font-inter" style={{ color: GREEN }}>
+                <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: GREEN }}></span> Masih bisa dapat +{XP_TABLE[revisionCount + 1] ?? XP_TABLE[MAX_REVISIONS]} XP kalau approved di revisi ini
               </div>
             </div>
 
             <div className="flex flex-col gap-2.5">
               <button
                 onClick={handleStartRevision}
-                className="w-full bg-purple hover:brightness-110 text-white font-bold py-3.5 rounded-xl transition-all text-sm cursor-pointer border-0"
+                className="w-full text-white font-bold py-3.5 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
+                style={{ background: ORANGE }}
               >
                 Mulai Revisi
               </button>
               <button
                 onClick={() => setShowPrevSubmission(v => !v)}
-                className="w-full border border-white/15 text-white/60 hover:bg-white/5 font-semibold py-3 rounded-xl transition-all text-sm cursor-pointer bg-transparent"
+                className="w-full text-white font-semibold py-3 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
+                style={{ background: GREEN }}
               >
                 Lihat Submission Sebelumnya
               </button>
             </div>
 
             {showPrevSubmission && (
-              <div className="border-2 border-white/10 rounded-2xl overflow-hidden">
-                <div className="bg-gradient-to-br from-indigo to-purple h-32 flex items-center justify-center">
+              <div className="rounded-2xl overflow-hidden border-2" style={{ borderColor: '#e5e9f0' }}>
+                <div className="h-32 flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${BLUE}, ${GREEN})` }}>
                   <div className="text-center">
                     <div className="text-4xl mb-1">{skillMeta.emoji}</div>
-                    <div className="text-white/70 text-xs font-inter">{checkpointNode?.title}</div>
+                    <div className="text-white/90 text-xs font-inter">{checkpointNode?.title}</div>
                   </div>
                 </div>
-                <div className="bg-[#1A1A2E] p-3 text-xs text-white/40 font-inter">checkpoint_{skillId}_final (submission awal)</div>
+                <div className="p-3 text-xs text-gray-400 font-inter" style={{ background: '#f5f8fb' }}>checkpoint_{skillId}_final (submission awal)</div>
               </div>
             )}
           </motion.div>
@@ -541,58 +540,60 @@ export default function RinaSubmit() {
         {view === 'revision-form' && (
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-5">
             <div>
-              <span className="text-[10px] font-bold text-purple bg-purple/15 border border-purple/30 px-2.5 py-1 rounded-full font-inter">
+              <span className="text-[10px] font-bold px-2.5 py-1 rounded-full font-inter border-2" style={{ color: BLUE, borderColor: BLUE, background: '#eef2fe' }}>
                 SUBMISSION REVISI KE-{revisionCount + 1}
               </span>
             </div>
 
             {/* Collapsed brief, expandable */}
-            <div className="bg-[#1A1A2E] border border-white/10 rounded-2xl overflow-hidden">
+            <div className="rounded-2xl overflow-hidden border-2" style={{ borderColor: BLUE, background: '#fff' }}>
               <button
                 onClick={() => setBriefExpanded(v => !v)}
                 className="w-full flex items-center justify-between p-4 bg-transparent border-0 cursor-pointer"
               >
-                <span className="text-white text-sm font-semibold font-inter">{checkpointNode?.briefLabel}</span>
-                <i className={`fa-solid fa-chevron-down text-white/40 text-xs transition-transform ${briefExpanded ? 'rotate-180' : ''}`}></i>
+                <span className="text-sm font-semibold font-inter" style={{ color: BLUE }}>{checkpointNode?.briefLabel}</span>
+                <i className={`fa-solid fa-chevron-down text-xs transition-transform ${briefExpanded ? 'rotate-180' : ''}`} style={{ color: BLUE }}></i>
               </button>
               {briefExpanded && checkpointNode?.briefBullets && (
-                <ul className="px-4 pb-4 space-y-1.5 text-xs text-white/50 list-disc pl-8 leading-relaxed font-inter">
+                <ul className="px-4 pb-4 space-y-1.5 text-xs text-gray-500 list-disc pl-8 leading-relaxed font-inter">
                   {checkpointNode.briefBullets.map((b, i) => (
-                    <li key={i}><strong className="text-white/70">{b.strong}</strong>{b.rest}</li>
+                    <li key={i}><strong style={{ color: '#1a1a1a' }}>{b.strong}</strong>{b.rest}</li>
                   ))}
                 </ul>
               )}
             </div>
 
             {/* Reviewer feedback, always visible */}
-            <div className="bg-amber-500/5 border border-amber-500/25 rounded-2xl p-5">
-              <h3 className="text-amber-300 font-sora font-bold text-sm mb-3">Feedback dari Reviewer:</h3>
-              <p className="text-white/70 text-sm font-inter leading-relaxed mb-3">{feedback.intro}</p>
-              <ol className="space-y-3">
+            <div className="rounded-2xl p-5" style={{ background: '#f5f8fb' }}>
+              <h3 className="font-sora font-bold text-sm mb-3" style={{ color: ORANGE }}>Feedback dari Reviewer:</h3>
+              <p className="text-sm font-inter leading-relaxed mb-3 text-gray-600">{feedback.intro}</p>
+              <ul className="space-y-2">
                 {feedback.points.map((p, i) => (
-                  <li key={i} className="text-sm text-white/70 font-inter leading-relaxed flex gap-2">
-                    <span className="text-amber-400 font-bold shrink-0">{i + 1}.</span>
-                    <span><strong className="text-white/90">{p.title}</strong> — {p.detail}</span>
+                  <li key={i} className="text-sm font-inter leading-relaxed flex gap-2">
+                    <span className="mt-2 w-1.5 h-1.5 rounded-full shrink-0" style={{ background: BLUE }}></span>
+                    <span className="text-gray-600"><strong style={{ color: BLUE }}>{p.title}</strong> - {p.detail}</span>
                   </li>
                 ))}
-              </ol>
+              </ul>
             </div>
 
             {/* Reminder checklist (non-mandatory) */}
-            <div className="bg-[#1A1A2E] border border-white/10 rounded-2xl p-5">
-              <h3 className="text-white/70 font-sora font-bold text-xs mb-3 uppercase tracking-wide">Reminder Revisi</h3>
+            <div className="rounded-2xl p-5" style={{ background: '#f5f8fb' }}>
+              <h3 className="font-sora font-bold text-xs mb-3 uppercase tracking-wide" style={{ color: ORANGE }}>Reminder Revisi</h3>
               <div className="space-y-2.5">
                 {feedback.checklist.map((item, i) => (
                   <label key={i} className="flex items-start gap-3 cursor-pointer group">
                     <div
                       onClick={() => toggleReminder(i)}
-                      className={`w-5 h-5 rounded flex items-center justify-center flex-shrink-0 mt-0.5 border-2 transition-all ${
-                        revisionReminders.has(i) ? 'bg-purple border-purple' : 'border-white/20 group-hover:border-purple/60'
-                      }`}
+                      className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 border-2 transition-all"
+                      style={revisionReminders.has(i) ? { borderColor: GREEN } : { borderColor: BLUE }}
                     >
-                      {revisionReminders.has(i) && <i className="fa-solid fa-check text-white text-[9px]"></i>}
+                      {revisionReminders.has(i) && <i className="fa-solid fa-check text-[9px]" style={{ color: GREEN }}></i>}
                     </div>
-                    <span className={`text-sm font-inter leading-relaxed ${revisionReminders.has(i) ? 'text-white/30 line-through' : 'text-white/70'}`}>
+                    <span
+                      className="text-sm font-inter font-medium leading-relaxed"
+                      style={revisionReminders.has(i) ? { color: GREEN, textDecoration: 'line-through' } : { color: BLUE }}
+                    >
                       {item}
                     </span>
                   </label>
@@ -602,41 +603,36 @@ export default function RinaSubmit() {
 
             {/* Upload area — same as first submission */}
             <div>
-              <h3 className="text-white font-sora font-bold text-sm mb-3">Upload File Hasil Revisi</h3>
+              <h3 className="font-sora font-bold text-sm mb-3" style={{ color: ORANGE }}>Upload File Hasil Revisi</h3>
 
               {!uploaded && !uploading && (
                 <div
                   onClick={simUploadFile}
-                  className="border-2 border-dashed border-white/15 rounded-2xl p-10 text-center hover:border-purple/50 hover:bg-purple/[0.03] transition-all cursor-pointer group"
+                  className="rounded-2xl p-10 text-center transition-all cursor-pointer border-[3px] border-dashed"
+                  style={{ background: '#cfddfb', borderColor: '#0052ff' }}
                 >
-                  <div className="w-14 h-14 bg-purple/10 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-purple/20 transition-colors">
-                    <i className="fa-solid fa-upload text-purple text-lg"></i>
+                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4 bg-white">
+                    <i className="fa-solid fa-upload text-lg" style={{ color: '#0052ff' }}></i>
                   </div>
-                  <div className="font-semibold text-white/80 font-inter mb-1">Drag & drop atau klik untuk upload</div>
-                  <div className="text-white/30 text-sm font-inter">Versi revisi dari hasil checkpoint-mu</div>
-                  <div className="mt-4 inline-block bg-purple/15 text-purple text-xs px-4 py-2 rounded-full font-inter font-semibold">
+                  <div className="font-semibold font-inter mb-1" style={{ color: '#0052ff' }}>Drag & drop atau klik untuk upload</div>
+                  <div className="text-sm font-inter" style={{ color: '#5b7bb8' }}>Versi revisi dari hasil checkpoint-mu</div>
+                  <div className="mt-4 inline-block text-white text-xs px-4 py-2 rounded-full font-inter font-semibold" style={{ background: '#0052ff' }}>
                     Pilih File
                   </div>
                 </div>
               )}
 
               {uploading && (
-                <div className="border-2 border-purple/30 rounded-2xl p-10 text-center bg-purple/5">
-                  <div className="w-12 h-12 border-4 border-purple border-t-transparent rounded-full animate-spin-fast mx-auto mb-4" />
-                  <div className="font-semibold text-purple font-inter">Mengupload file…</div>
+                <div className="rounded-2xl p-10 text-center border-[3px] border-dashed" style={{ background: '#cfddfb', borderColor: '#0052ff' }}>
+                  <div className="w-12 h-12 border-4 rounded-full animate-spin-fast mx-auto mb-4" style={{ borderColor: '#0052ff', borderTopColor: 'transparent' }} />
+                  <div className="font-semibold font-inter" style={{ color: '#0052ff' }}>Mengupload file…</div>
                 </div>
               )}
 
               {uploaded && (
-                <div className="border-2 border-green-500/30 rounded-2xl p-4 flex items-center gap-3 bg-[#1A1A2E]">
-                  <div className="w-10 h-10 bg-green-500/10 rounded-xl flex items-center justify-center shrink-0">
-                    <i className="fa-solid fa-image text-green-400"></i>
-                  </div>
-                  <div className="flex-1">
-                    <div className="font-semibold text-white/80 font-inter text-sm">checkpoint_{skillId}_revisi{revisionCount + 1}</div>
-                    <div className="text-xs text-white/30 font-inter mt-0.5">Siap dikirim ke reviewer</div>
-                  </div>
-                  <i className="fa-solid fa-check text-green-400"></i>
+                <div className="rounded-2xl p-8 text-center border-2 border-dashed" style={{ background: GREEN, borderColor: GREEN }}>
+                  <div className="text-white font-bold font-inter">Your Submission has been Uploaded</div>
+                  <div className="text-white/90 text-sm font-inter mt-1">checkpoint_{skillId}_revisi{revisionCount + 1}.zip</div>
                 </div>
               )}
             </div>
@@ -644,7 +640,8 @@ export default function RinaSubmit() {
             {uploaded && (
               <button
                 onClick={handleSubmitRevision}
-                className="w-full bg-purple hover:brightness-110 text-white font-bold py-3.5 rounded-xl transition-all text-sm cursor-pointer border-0"
+                className="mx-auto text-white font-bold py-3.5 px-10 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
+                style={{ background: GREEN }}
               >
                 Submit Revisi
               </button>
@@ -657,56 +654,56 @@ export default function RinaSubmit() {
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-5">
             <div className="flex flex-col items-center text-center gap-2 py-4">
               <div className="text-5xl mb-1">{isFinalProject ? '🎓' : '✅'}</div>
-              <h2 className="text-white font-sora font-bold text-2xl">{isFinalProject ? 'Proyek Akhir Selesai!' : 'Tantangan Selesai!'}</h2>
+              <h2 className="font-sora font-bold text-2xl" style={{ color: BLUE }}>{isFinalProject ? 'Proyek Akhir Selesai!' : 'Tantangan Selesai!'}</h2>
               {isFinalProject && (
-                <p className="text-purple text-sm font-inter font-semibold">Sertifikat Kompetensi {skillMeta.label}-mu sudah terbit 🎉</p>
+                <p className="text-sm font-inter font-semibold" style={{ color: GREEN }}>Sertifikat Kompetensi {skillMeta.label}-mu sudah terbit 🎉</p>
               )}
             </div>
 
-            <div className="bg-purple/10 border border-purple/30 rounded-2xl p-4 flex items-center gap-4">
-              <div className="w-11 h-11 bg-purple/20 rounded-full flex items-center justify-center shrink-0">
-                <i className="fa-solid fa-bolt text-purple"></i>
+            <div className="rounded-2xl p-4 flex items-center gap-4 border-2" style={{ background: '#eef2fe', borderColor: BLUE }}>
+              <div className="w-11 h-11 rounded-full flex items-center justify-center shrink-0 bg-white">
+                <i className="fa-solid fa-bolt" style={{ color: ORANGE }}></i>
               </div>
               <div>
-                <div className="font-sora font-bold text-purple text-base">
+                <div className="font-sora font-bold text-base" style={{ color: BLUE }}>
                   +{xpAmount} XP {revisionCount === 0 ? '(approved langsung)' : `(approved setelah ${revisionCount} revisi)`}
                 </div>
-                <div className="text-white/50 text-xs font-inter">Kerja bagus menyelesaikan checkpoint ini!</div>
+                <div className="text-gray-500 text-xs font-inter">Kerja bagus menyelesaikan checkpoint ini!</div>
               </div>
             </div>
 
-            <div className="bg-gradient-to-r from-purple/20 to-indigo/20 border border-purple/30 rounded-2xl p-4 flex items-center gap-3">
+            <div className="rounded-2xl p-4 flex items-center gap-3" style={{ background: `linear-gradient(135deg, ${BLUE}, ${GREEN})` }}>
               <span className="text-2xl">{skillMeta.emoji}</span>
-              <div className="text-white font-sora font-bold text-sm">
+              <div className="font-sora font-bold text-sm text-white">
                 {skillMeta.label} — {isFinalProject ? 'Sertifikasi Selesai' : `Unit ${getNodeUnit(checkpointNode.id)} Complete`}
               </div>
             </div>
 
             {revisionCount > 0 && (
-              <div className="bg-[#1A1A2E] border border-white/10 rounded-2xl p-5">
+              <div className="rounded-2xl p-5" style={{ background: '#f5f8fb' }}>
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-9 h-9 rounded-full bg-purple/15 border border-purple/30 flex items-center justify-center text-purple font-bold text-xs font-sora shrink-0">RV</div>
+                  <img src="/reviewer.jpg" alt="Reviewer" className="w-9 h-9 rounded-full object-cover shrink-0" />
                   <div>
-                    <div className="text-white text-sm font-semibold font-inter">Reviewer · {skillMeta.label} Specialist</div>
-                    <div className="text-white/30 text-xs font-inter">Baru saja</div>
+                    <div className="text-sm font-bold font-inter" style={{ color: BLUE }}>Reviewer - {skillMeta.label} Specialist</div>
+                    <div className="italic text-xs font-inter font-semibold" style={{ color: BLUE }}>Baru saja</div>
                   </div>
                 </div>
-                <p className="text-white/70 text-sm font-inter leading-relaxed italic">"{feedback.approvedComment}"</p>
+                <p className="text-sm font-inter leading-relaxed italic text-gray-600">"{feedback.approvedComment}"</p>
               </div>
             )}
 
-            <div className="bg-[#1A1A2E] border border-white/10 rounded-2xl p-5">
-              <div className="flex items-center gap-2 text-green-400 text-sm font-semibold font-inter mb-3">
+            <div className="rounded-2xl p-5" style={{ background: '#f5f8fb' }}>
+              <div className="flex items-center gap-2 text-sm font-semibold font-inter mb-3" style={{ color: GREEN }}>
                 <i className="fa-solid fa-circle-check"></i>
                 Ditambahkan ke Verified Portfolio kamu
               </div>
-              <div className="flex items-center gap-3 bg-white/[0.03] border border-white/5 rounded-xl p-3">
-                <div className="w-11 h-11 rounded-lg bg-white/5 flex items-center justify-center text-xl shrink-0">{skillMeta.emoji}</div>
+              <div className="flex items-center gap-3 rounded-xl p-3 bg-white">
+                <div className="w-11 h-11 rounded-lg flex items-center justify-center text-xl shrink-0" style={{ background: '#e1e8f2' }}>{skillMeta.emoji}</div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-white text-xs font-semibold font-inter truncate">{checkpointNode?.title}</div>
-                  <div className="text-white/40 text-[11px] font-inter">{skillMeta.label} · Human Reviewed</div>
+                  <div className="text-xs font-semibold font-inter truncate" style={{ color: '#1a1a1a' }}>{checkpointNode?.title}</div>
+                  <div className="text-gray-400 text-[11px] font-inter">{skillMeta.label} · Human Reviewed</div>
                 </div>
-                <i className="fa-solid fa-circle-check text-green-400"></i>
+                <i className="fa-solid fa-circle-check" style={{ color: GREEN }}></i>
               </div>
             </div>
 
@@ -714,13 +711,15 @@ export default function RinaSubmit() {
               <div className="flex flex-col gap-2.5">
                 <button
                   onClick={() => navigate(`/rina/sertifikat/${skillId}`)}
-                  className="w-full bg-gradient-to-r from-purple to-indigo hover:brightness-110 text-white font-bold py-3.5 rounded-xl transition-all text-sm cursor-pointer border-0"
+                  className="w-full text-white font-bold py-3.5 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
+                  style={{ background: `linear-gradient(90deg, ${BLUE}, ${GREEN})` }}
                 >
                   🎓 Lihat Sertifikatmu
                 </button>
                 <button
                   onClick={() => navigate('/rina/task')}
-                  className="w-full border border-white/15 text-white/60 hover:bg-white/5 font-semibold py-3 rounded-xl transition-all text-sm cursor-pointer bg-transparent"
+                  className="w-full font-semibold py-3 rounded-full transition-all text-sm cursor-pointer bg-transparent border-2"
+                  style={{ color: BLUE, borderColor: BLUE }}
                 >
                   Kembali ke Peta Misi
                 </button>
@@ -728,7 +727,8 @@ export default function RinaSubmit() {
             ) : (
               <button
                 onClick={() => navigate('/rina/task')}
-                className="w-full bg-purple hover:brightness-110 text-white font-bold py-3.5 rounded-xl transition-all text-sm cursor-pointer border-0"
+                className="w-full text-white font-bold py-3.5 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
+                style={{ background: GREEN }}
               >
                 Lanjut ke Peta Misi
               </button>
@@ -741,25 +741,25 @@ export default function RinaSubmit() {
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-5">
             <div className="flex flex-col items-center text-center gap-2 py-4">
               <div className="text-5xl mb-1">🔄</div>
-              <h2 className="text-white font-sora font-bold text-xl">Ulangi Tantangan Ini</h2>
-              <p className="text-white/50 text-sm font-inter">Tidak apa-apa — ini bagian dari proses belajar</p>
+              <h2 className="font-sora font-bold text-xl" style={{ color: BLUE }}>Ulangi Tantangan Ini</h2>
+              <p className="text-gray-500 text-sm font-inter">Tidak apa-apa — ini bagian dari proses belajar</p>
             </div>
 
-            <div className="bg-amber-500/5 border border-amber-500/25 rounded-2xl p-5">
-              <h3 className="text-amber-300 font-sora font-bold text-sm mb-3">Feedback Final dari Reviewer:</h3>
-              <p className="text-white/70 text-sm font-inter leading-relaxed mb-3">{feedback.intro}</p>
-              <ol className="space-y-3">
+            <div className="rounded-2xl p-5" style={{ background: '#f5f8fb' }}>
+              <h3 className="font-sora font-bold text-sm mb-3" style={{ color: ORANGE }}>Feedback Final dari Reviewer:</h3>
+              <p className="text-sm font-inter leading-relaxed mb-3 text-gray-600">{feedback.intro}</p>
+              <ul className="space-y-2">
                 {feedback.points.map((p, i) => (
-                  <li key={i} className="text-sm text-white/70 font-inter leading-relaxed flex gap-2">
-                    <span className="text-amber-400 font-bold shrink-0">{i + 1}.</span>
-                    <span><strong className="text-white/90">{p.title}</strong> — {p.detail}</span>
+                  <li key={i} className="text-sm font-inter leading-relaxed flex gap-2">
+                    <span className="mt-2 w-1.5 h-1.5 rounded-full shrink-0" style={{ background: BLUE }}></span>
+                    <span className="text-gray-600"><strong style={{ color: BLUE }}>{p.title}</strong> - {p.detail}</span>
                   </li>
                 ))}
-              </ol>
+              </ul>
             </div>
 
-            <div className="bg-[#1A1A2E] border border-white/10 rounded-2xl p-4">
-              <p className="text-white/60 text-sm font-inter leading-relaxed">
+            <div className="rounded-2xl p-4" style={{ background: '#f5f8fb' }}>
+              <p className="text-sm font-inter leading-relaxed text-gray-600">
                 Kamu sudah mencapai batas {MAX_REVISIONS} revisi untuk tantangan ini. Pelajari feedback di atas dan coba lagi dari awal.
               </p>
             </div>
@@ -767,13 +767,15 @@ export default function RinaSubmit() {
             <div className="flex flex-col gap-2.5">
               <button
                 onClick={handleTryAgain}
-                className="w-full bg-purple hover:brightness-110 text-white font-bold py-3.5 rounded-xl transition-all text-sm cursor-pointer border-0"
+                className="w-full text-white font-bold py-3.5 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
+                style={{ background: GREEN }}
               >
                 Coba Lagi
               </button>
               <button
                 onClick={() => showToast('💬 Yuk, tanya di AI Mentor pojok kanan bawah', 'fa-robot')}
-                className="w-full border border-white/15 text-white/60 hover:bg-white/5 font-semibold py-3 rounded-xl transition-all text-sm cursor-pointer bg-transparent"
+                className="w-full font-semibold py-3 rounded-full transition-all text-sm cursor-pointer bg-transparent border-2"
+                style={{ color: BLUE, borderColor: BLUE }}
               >
                 Tanya AI Mentor tentang feedback ini
               </button>
@@ -782,6 +784,9 @@ export default function RinaSubmit() {
         )}
       </main>
 
+      {/* ── AI MENTOR FLOATING WIDGET ── */}
+      <AIMentorWidget node={checkpointNode} stage="tantangan" skillLabel={skillMeta.label} light />
+
       {/* ── APPROVED CELEBRATION OVERLAY ── */}
       <AnimatePresence>
         {view === 'approved-celebrating' && (
@@ -789,9 +794,9 @@ export default function RinaSubmit() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-[#0F0F1A]/95 backdrop-blur-md z-[70] flex items-center justify-center overflow-hidden"
+            className="fixed inset-0 bg-white/95 backdrop-blur-md z-[70] flex items-center justify-center overflow-hidden"
           >
-            {['🎉', '✨', '🎊', '⭐', '💜', '🎉', '✨', '🎊'].map((emoji, i) => (
+            {['🎉', '✨', '🎊', '⭐', '💚', '🎉', '✨', '🎊'].map((emoji, i) => (
               <motion.span
                 key={i}
                 initial={{ x: 0, y: 0, opacity: 1, scale: 0.6 }}
@@ -814,7 +819,7 @@ export default function RinaSubmit() {
               className="text-center"
             >
               <div className="text-6xl mb-4">✓</div>
-              <h2 className="text-white font-sora font-extrabold text-4xl">DISETUJUI! ✓</h2>
+              <h2 className="font-sora font-extrabold text-4xl" style={{ color: GREEN }}>DISETUJUI! ✓</h2>
             </motion.div>
           </motion.div>
         )}
