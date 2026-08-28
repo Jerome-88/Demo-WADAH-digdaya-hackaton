@@ -15,17 +15,17 @@ const MATCH_LINES = [
   '✓ Menemukan 3 talent terbaik untukmu!',
 ];
 
-const NAV_LINKS = ['For Business', 'For Talent', 'Cara Kerja', 'About'];
-
 export default function JasaFlow() {
   const navigate = useNavigate();
   const location = useLocation();
   const { setActiveProject } = useApp();
 
+  // step: 0=Pilih Skill, 1=Detail Bisnis, 2=Mencari (matching animation),
+  // 3=Hasil (talent results).
   const [step, setStep] = useState(location.state?.resumeStep ?? 0);
 
-  // ── Step 1 state ──
-  const [selectedSkills, setSelectedSkills] = useState(new Set());
+  // ── Step 0-1 state ──
+  const [selectedSkill, setSelectedSkill] = useState(null);
   const [umkmName, setUmkmName] = useState('');
   const [description, setDescription] = useState('');
   const [, setScopeStatus] = useState('idle'); // idle | loading | done
@@ -34,16 +34,6 @@ export default function JasaFlow() {
 
   // ── Step 2 state (matching animation) ──
   const [animLines, setAnimLines] = useState(0); // how many MATCH_LINES revealed
-
-  const firstSkillId = [...selectedSkills][0] || null;
-
-  function toggleSkill(id) {
-    setSelectedSkills(prev => {
-      const next = new Set(prev);
-      if (next.has(id)) { next.delete(id); } else { next.add(id); }
-      return next;
-    });
-  }
 
   // AI "scope analysis" — a breakdown of likely deliverables, not a price
   // estimate. Triggered once the UMKM blurs the description textarea (or
@@ -58,33 +48,33 @@ export default function JasaFlow() {
   }
 
   function handleDescriptionBlur() {
-    analyzeScope(firstSkillId, description);
+    analyzeScope(selectedSkill, description);
   }
 
   function fillDemo() {
     const skillId = 'desain';
     const desc = 'Saya punya toko sepatu kecil di Pasar Baru, Bandung. Mau bikin desain poster untuk promosi sneakers edisi spesial Lebaran. Talentnya bisa dari mana saja, asalkan hasil kerjanya rapi dan sesuai dengan gaya anak muda zaman sekarang.';
-    setSelectedSkills(new Set([skillId]));
+    setSelectedSkill(skillId);
     setUmkmName('SepatuKu');
     setDescription(desc);
     setBudgetValue('500000');
     analyzeScope(skillId, desc);
   }
 
-  const step1Valid = selectedSkills.size > 0 && description.trim() && umkmName.trim() && budgetValue.trim();
+  const detailsValid = description.trim() && umkmName.trim() && budgetValue.trim();
 
-  function goToStep2() {
-    setStep(1);
+  function goToMatching() {
+    setStep(2);
     setAnimLines(0);
   }
 
-  function goToStep3() {
-    const skillMeta = getSkillMeta(firstSkillId);
+  function goToResults() {
+    const skillMeta = getSkillMeta(selectedSkill);
     setActiveProject({
-      id: `${firstSkillId}-${umkmName.toLowerCase().replace(/\s+/g, '-')}`,
+      id: `${selectedSkill}-${umkmName.toLowerCase().replace(/\s+/g, '-')}`,
       umkm: umkmName,
       location: 'Indonesia',
-      skillId: firstSkillId,
+      skillId: selectedSkill,
       skill: skillMeta.label,
       budget: Number(budgetValue) || 0,
       budgetNegotiated: null,
@@ -93,52 +83,29 @@ export default function JasaFlow() {
       scope: scopeItems,
       status: 'open',
     });
-    setStep(2);
+    setStep(3);
   }
 
   // Reveal MATCH_LINES one by one, then auto-advance to the results step —
   // this animation stands in for the old AI clarification chat.
   useEffect(() => {
-    if (step !== 1) return;
+    if (step !== 2) return;
     const timers = MATCH_LINES.map((_, i) => setTimeout(() => setAnimLines(i + 1), 700 + i * 900));
-    const done = setTimeout(goToStep3, 700 + MATCH_LINES.length * 900 + 700);
+    const done = setTimeout(goToResults, 700 + MATCH_LINES.length * 900 + 700);
     return () => { timers.forEach(clearTimeout); clearTimeout(done); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step]);
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between gap-4">
-          <button onClick={() => navigate('/')} className="flex items-center gap-2.5 flex-shrink-0">
-            <img src="/logo.png" alt="WADAH" className="w-9 h-9 object-contain" />
-            <div className="leading-tight text-left hidden sm:block">
-              <div className="font-sora font-extrabold text-[#1a1a1a] text-sm">WADAH</div>
-              <div className="text-[9px] text-gray-400 font-inter leading-tight">Work-Simulation AI Driven<br />Augmented Hiring</div>
-            </div>
-          </button>
-
-          <nav className="hidden md:flex items-center gap-6">
-            {NAV_LINKS.map(label => (
-              <button
-                key={label}
-                onClick={() => navigate(label === 'For Talent' ? '/talenta' : '/jasa')}
-                className="flex flex-col items-center gap-1 font-inter font-bold text-[#1a1a1a] text-sm hover:opacity-70 transition-opacity"
-              >
-                {label}
-                <span className="w-5 h-0.5 rounded-full" style={{ background: ORANGE }} />
-              </button>
-            ))}
-          </nav>
-
-          <button
-            onClick={() => navigate('/')}
-            className="text-white font-bold px-5 py-2 rounded-full text-sm font-inter flex-shrink-0"
-            style={{ background: ORANGE }}
-          >
-            Login
-          </button>
-        </div>
+      <header className="sticky top-0 z-30 h-14 flex items-center px-4 md:px-6 bg-white/95 backdrop-blur border-b border-gray-100 flex-shrink-0">
+        <button
+          onClick={() => navigate('/')}
+          className="flex items-center gap-2 text-gray-500 hover:text-[#1a1a1a] text-sm font-inter transition-colors bg-transparent border-0 cursor-pointer"
+        >
+          <i className="fa-solid fa-arrow-left text-sm"></i>
+          <span>Beranda</span>
+        </button>
       </header>
 
       <main className="flex-1 w-full max-w-[720px] mx-auto px-4 py-8">
@@ -165,30 +132,52 @@ export default function JasaFlow() {
         </div>
 
         <div className="rounded-3xl p-5 sm:p-8" style={{ background: '#f5f8fb' }}>
-          {/* ── STEP 1 ── */}
+          {/* ── STEP 1: Pilih Skill ── */}
           {step === 0 && (
             <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-6">
-              <div>
-                <h3 className="font-sora font-bold text-lg mb-3" style={{ color: BLUE }}>Pilih Skill Utamamu</h3>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
-                  {SKILLS.map(cat => {
-                    const active = selectedSkills.has(cat.id);
-                    return (
-                      <button
-                        key={cat.id}
-                        onClick={() => toggleSkill(cat.id)}
-                        className="p-3.5 rounded-2xl border-2 text-left transition-all cursor-pointer"
-                        style={active ? { borderColor: BLUE, background: '#eef2fe' } : { borderColor: BLUE, background: '#fff' }}
-                      >
-                        <div className="text-xl mb-1.5">{cat.emoji}</div>
-                        <div className="font-semibold text-xs font-inter" style={{ color: BLUE }}>{cat.label}</div>
-                        <div className="text-[10px] font-inter mt-0.5" style={{ color: BLUE, opacity: 0.7 }}>{cat.tagline}</div>
-                      </button>
-                    );
-                  })}
-                </div>
+              <h3 className="font-sora font-bold text-lg" style={{ color: BLUE }}>Pilih Skill yang Kamu Butuhkan</h3>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
+                {SKILLS.map(cat => {
+                  const active = selectedSkill === cat.id;
+                  return (
+                    <button
+                      key={cat.id}
+                      onClick={() => setSelectedSkill(cat.id)}
+                      className="relative p-3.5 rounded-2xl border-2 text-left transition-all cursor-pointer"
+                      style={active ? { borderColor: BLUE, background: '#eef2fe' } : { borderColor: '#e5e9f0', background: '#fff' }}
+                    >
+                      {active && (
+                        <div className="absolute top-2 right-2 w-5 h-5 rounded-full flex items-center justify-center" style={{ background: BLUE }}>
+                          <i className="fa-solid fa-check text-white text-[10px]"></i>
+                        </div>
+                      )}
+                      <div className="text-xl mb-1.5">{cat.emoji}</div>
+                      <div className="font-semibold text-xs font-inter" style={{ color: '#1a1a1a' }}>{cat.label}</div>
+                      <div className="text-[10px] font-inter mt-0.5" style={{ color: '#797d85' }}>{cat.tagline}</div>
+                    </button>
+                  );
+                })}
               </div>
 
+              <div className="flex items-center justify-between pt-2">
+                <button onClick={() => navigate('/')} className="flex items-center gap-2 font-inter font-semibold text-sm bg-transparent border-0 cursor-pointer" style={{ color: BLUE }}>
+                  <i className="fa-solid fa-arrow-left"></i> Back
+                </button>
+                <button
+                  onClick={() => setStep(1)}
+                  disabled={!selectedSkill}
+                  className="text-white font-bold py-3 px-10 rounded-full transition-all text-sm cursor-pointer border-0 disabled:opacity-40 disabled:cursor-not-allowed hover:brightness-110"
+                  style={{ background: BLUE }}
+                >
+                  Next
+                </button>
+              </div>
+            </motion.div>
+          )}
+
+          {/* ── STEP 2: Detail Bisnis ── */}
+          {step === 1 && (
+            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-6">
               <div>
                 <h3 className="font-sora font-bold text-lg mb-2" style={{ color: BLUE }}>Nama Bisnis/UMKM</h3>
                 <input
@@ -241,12 +230,12 @@ export default function JasaFlow() {
               </button>
 
               <div className="flex items-center justify-between pt-2">
-                <button onClick={() => navigate('/')} className="flex items-center gap-2 font-inter font-semibold text-sm bg-transparent border-0 cursor-pointer" style={{ color: BLUE }}>
+                <button onClick={() => setStep(0)} className="flex items-center gap-2 font-inter font-semibold text-sm bg-transparent border-0 cursor-pointer" style={{ color: BLUE }}>
                   <i className="fa-solid fa-arrow-left"></i> Back
                 </button>
                 <button
-                  onClick={goToStep2}
-                  disabled={!step1Valid}
+                  onClick={goToMatching}
+                  disabled={!detailsValid}
                   className="text-white font-bold py-3 px-10 rounded-full transition-all text-sm cursor-pointer border-0 disabled:opacity-40 disabled:cursor-not-allowed hover:brightness-110"
                   style={{ background: BLUE }}
                 >
@@ -256,8 +245,8 @@ export default function JasaFlow() {
             </motion.div>
           )}
 
-          {/* ── STEP 2 (matching animation) ── */}
-          {step === 1 && (
+          {/* ── STEP 3 (matching animation) ── */}
+          {step === 2 && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center gap-6 py-24">
               {animLines < MATCH_LINES.length && (
                 <div className="flex gap-1.5">
@@ -284,8 +273,8 @@ export default function JasaFlow() {
             </motion.div>
           )}
 
-          {/* ── STEP 3 ── */}
-          {step === 2 && (
+          {/* ── STEP 4: Hasil ── */}
+          {step === 3 && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col gap-5">
               <div className="text-center">
                 <h2 className="font-sora font-bold text-xl mb-1" style={{ color: BLUE }}>3 Talent Paling Cocok Untukmu</h2>

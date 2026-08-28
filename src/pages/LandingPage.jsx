@@ -115,10 +115,10 @@ export default function LandingPage() {
               <button
                 key={label}
                 onClick={() => goToNavLink(target)}
-                className="flex flex-col items-center gap-1.5 font-inter font-bold text-[#1a1a1a] text-sm hover:opacity-70 transition-opacity"
+                className="group flex flex-col items-center gap-1.5 font-inter font-bold text-[#1a1a1a] text-sm"
               >
                 {label}
-                <span className="w-6 h-0.5 rounded-full" style={{ background: ORANGE }} />
+                <span className="w-6 h-0.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: ORANGE }} />
               </button>
             ))}
           </nav>
@@ -186,7 +186,7 @@ export default function LandingPage() {
         <motion.img
           src="/rocket.png"
           alt=""
-          className="hidden lg:block absolute right-40 top-60 w-45 -rotate-11 pointer-events-none select-none"
+          className="hidden lg:block absolute right-40 top-60 w-[180px] -rotate-11 pointer-events-none select-none"
           animate={{ y: [0, -18, 0], rotate: [-11, -7, -11] }}
           transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: 0.6 }}
         />
@@ -220,7 +220,7 @@ export default function LandingPage() {
                 <div className="flex flex-wrap justify-center gap-x-12 gap-y-5 mb-7">
                   {stats.map(({ icon: Icon, value, label }) => (
                     <div key={label} className="flex flex-col items-center gap-1.5">
-                      <Icon size={20} className="text-white" />
+                      <Icon size={20} className="text-black" />
                       <div className="font-sora font-bold text-[#1a1a1a] text-xl">{value}</div>
                       <div className="text-[#1a1a1a] text-xs font-inter">{label}</div>
                     </div>
@@ -286,7 +286,7 @@ export default function LandingPage() {
             <motion.img
               src="/mascot-solution.png"
               alt=""
-              className="w-50 pointer-events-none select-none"
+              className="w-[200px] pointer-events-none select-none"
               animate={{ y: [0, -12, 0] }}
               transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
             />
@@ -393,28 +393,30 @@ export default function LandingPage() {
 
 
       {/* ── Contact ───────────────────────────────────────────── */}
-      <section id="contact" className="max-w-2xl mx-auto px-6 py-16 text-center scroll-mt-20">
-        <h2 className="font-sora font-bold text-3xl mb-2" style={{ color: ORANGE }}>Contact</h2>
-        <p className="text-gray-500 font-inter mb-10">Tertarik kolaborasi atau mau tau lebih lanjut soal WADAH?</p>
+      <section id="contact" className="scroll-mt-20" style={{ background: '#eef1f8' }}>
+        <div className="max-w-2xl mx-auto px-6 py-16 text-center">
+          <h2 className="font-sora font-bold text-3xl mb-2" style={{ color: ORANGE }}>Contact</h2>
+          <p className="text-gray-500 font-inter mb-10">Tertarik kolaborasi atau mau tau lebih lanjut soal WADAH?</p>
 
-        <div className="bg-white rounded-2xl border-2 p-8" style={{ borderColor: BLUE }}>
-          <div className="font-sora font-bold text-xl text-[#1a1a1a] mb-1">Jerome Maxcellino Budianto</div>
-          <div className="text-sm text-gray-500 font-inter mb-6">Ketua Tim WADAH</div>
+          <div className="bg-white rounded-2xl border-2 p-8" style={{ borderColor: BLUE }}>
+            <div className="font-sora font-bold text-xl text-[#1a1a1a] mb-1">Jerome Maxcellino Budianto</div>
+            <div className="text-sm text-gray-500 font-inter mb-6">Ketua Tim WADAH</div>
 
-          <div className="flex flex-wrap justify-center gap-3">
-            {contactLinks.map(({ icon: Icon, label, href }) => (
-              <a
-                key={label}
-                href={href}
-                target={href.startsWith('http') ? '_blank' : undefined}
-                rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                className="flex items-center gap-2 rounded-full px-4 py-2 text-sm font-inter font-semibold border-2 hover:shadow-md transition-all"
-                style={{ borderColor: BLUE, color: BLUE }}
-              >
-                <Icon size={16} />
-                {label}
-              </a>
-            ))}
+            <div className="flex flex-wrap justify-center gap-3">
+              {contactLinks.map(({ icon: Icon, label, href }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target={href.startsWith('http') ? '_blank' : undefined}
+                  rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                  className="flex items-center gap-2 rounded-full px-4 py-2 text-sm font-inter font-semibold border-2 hover:shadow-md transition-all"
+                  style={{ borderColor: BLUE, color: BLUE }}
+                >
+                  <Icon size={16} />
+                  {label}
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </section>

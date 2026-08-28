@@ -21,7 +21,7 @@ export default function TalentPortfolioPage() {
     <div className="min-h-screen bg-white">
       <header className="sticky top-0 z-30 h-14 flex items-center px-4 md:px-6" style={{ background: BLUE }}>
         <button
-          onClick={() => navigate('/jasa', { state: { resumeStep: 2 } })}
+          onClick={() => navigate('/jasa', { state: { resumeStep: 3 } })}
           className="flex items-center gap-2 text-white hover:text-white/80 text-sm font-bold font-inter transition-colors bg-transparent border-0 cursor-pointer"
         >
           <i className="fa-solid fa-arrow-left"></i>
@@ -68,7 +68,7 @@ export default function TalentPortfolioPage() {
       <main className="max-w-[800px] mx-auto px-4 py-10 space-y-8">
         {/* Breakdown skor */}
         <section>
-          <h3 className="font-sora font-bold text-sm mb-4" style={{ color: BLUE }}>📊 Breakdown Skor Kompetensi</h3>
+          <h3 className="font-sora font-bold text-sm mb-4" style={{ color: BLUE }}>Breakdown Skor Kompetensi</h3>
           <div className="bg-white border-2 rounded-2xl p-5 space-y-4" style={{ borderColor: BLUE }}>
             {talent.competencies.map(c => (
               <div key={c.label}>
@@ -93,7 +93,7 @@ export default function TalentPortfolioPage() {
 
         {/* Riwayat simulasi */}
         <section>
-          <h3 className="font-sora font-bold text-sm mb-4" style={{ color: BLUE }}>🏆 Riwayat Simulasi</h3>
+          <h3 className="font-sora font-bold text-sm mb-4" style={{ color: BLUE }}>Riwayat Simulasi</h3>
           <div className="space-y-2.5">
             {talent.riwayat.map(r => (
               <div key={r.task + r.umkm} className="flex items-center gap-3 bg-white border-2 rounded-xl p-3.5" style={{ borderColor: BLUE }}>
@@ -109,7 +109,7 @@ export default function TalentPortfolioPage() {
 
         {/* Skill terverifikasi */}
         <section>
-          <h3 className="font-sora font-bold text-sm mb-4" style={{ color: BLUE }}>⚡ Skill Terverifikasi</h3>
+          <h3 className="font-sora font-bold text-sm mb-4" style={{ color: BLUE }}>Skill Terverifikasi</h3>
           <div className="flex flex-wrap gap-2">
             {talent.skills.map(s => (
               <span key={s} className="text-xs px-3 py-1.5 rounded-full font-inter border-2" style={{ color: BLUE, borderColor: BLUE, background: '#eef2fe' }}>{s}</span>
@@ -122,14 +122,14 @@ export default function TalentPortfolioPage() {
           <button
             onClick={() => navigate(`/jasa/kontrak/${talent.slug}`)}
             className="w-full text-white font-bold py-3.5 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
-            style={{ background: GREEN }}
+            style={{ background: '#f27418' }}
           >
             Hubungi {talent.name.split(' ')[0]}
           </button>
           <button
-            onClick={() => navigate('/jasa', { state: { resumeStep: 2 } })}
+            onClick={() => navigate('/jasa', { state: { resumeStep: 3 } })}
             className="w-full font-semibold py-3 rounded-full transition-all text-sm cursor-pointer bg-transparent border-2"
-            style={{ color: BLUE, borderColor: BLUE }}
+            style={{ color: 'white', background: GREEN }}
           >
             Kembali ke Hasil Matching
           </button>
