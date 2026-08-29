@@ -223,7 +223,7 @@ export default function AIMentorWidget({ node, stage, skillLabel, light = false 
         transition={light && !open ? { duration: 3, repeat: Infinity, ease: 'easeInOut' } : {}}
         className={`relative flex items-center justify-center border-0 cursor-pointer ${
           light && !open
-            ? 'w-28 h-28 rounded-full bg-transparent shadow-none'
+            ? 'w-16 h-16 sm:w-28 sm:h-28 rounded-full bg-transparent shadow-none'
             : `w-14 h-14 rounded-full text-white shadow-2xl ${light ? 'shadow-[#00c897]/30' : 'bg-purple shadow-purple/30'}`
         }`}
         style={{ background: light && open ? '#00c897' : light ? undefined : undefined }}
