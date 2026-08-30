@@ -44,9 +44,17 @@ export default function TalentPortfolioPage() {
             {talent.initials}
           </div>
         )}
-        <div className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 mb-3 border-2" style={{ background: '#e3faf0', borderColor: GREEN }}>
-          <i className="fa-solid fa-circle-check text-xs" style={{ color: GREEN }}></i>
-          <span className="text-xs font-bold font-inter" style={{ color: GREEN }}>AI Verified — WADAH Career Sandbox</span>
+        <div className="flex flex-wrap items-center justify-center gap-2 mb-3">
+          <div className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 border-2" style={{ background: '#e3faf0', borderColor: GREEN }}>
+            <i className="fa-solid fa-circle-check text-xs" style={{ color: GREEN }}></i>
+            <span className="text-xs font-bold font-inter" style={{ color: GREEN }}>AI Verified — WADAH Career Sandbox</span>
+          </div>
+          {talent.certifications?.map(cert => (
+            <div key={cert} className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 border-2" style={{ background: '#fff7ec', borderColor: '#f27418' }}>
+              <i className="fa-solid fa-graduation-cap text-xs" style={{ color: '#f27418' }}></i>
+              <span className="text-xs font-bold font-inter" style={{ color: '#f27418' }}>Certified — {cert}</span>
+            </div>
+          ))}
         </div>
         <h2 className="font-sora font-extrabold text-2xl mb-1" style={{ color: BLUE }}>{talent.name}</h2>
         <p className="text-sm mb-6 text-gray-500 font-inter">{talent.role}</p>

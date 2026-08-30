@@ -229,7 +229,7 @@ export default function TalentaFlow() {
               </div>
 
               <button onClick={useDemoProfile} className="self-start text-sm font-inter underline bg-transparent border-0 cursor-pointer" style={{ color: '#f27418' }}>
-                ⚡ Isi contoh cepat (demo)
+              Isi contoh cepat (demo)
               </button>
             </div>
 
@@ -279,7 +279,7 @@ export default function TalentaFlow() {
               </div>
 
               <button onClick={fillDemoOtp} className="text-sm font-inter underline bg-transparent border-0 cursor-pointer" style={{ color: '#f27418' }}>
-                ⚡ Isi contoh cepat (demo)
+              Isi contoh cepat (demo)
               </button>
 
               <div className="text-sm font-inter" style={{ color: '#f27418' }}>

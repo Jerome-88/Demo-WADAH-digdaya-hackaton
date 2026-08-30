@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import AIMentorWidget from '../../components/AIMentorWidget';
-import { showToast } from '../../utils/toast';
 import { useApp } from '../../context/AppContext';
-import { SKILL_MAPS, DEFAULT_SKILL, getSkillMeta, getNodeUnit } from '../../data/skillMaps';
+import { SKILL_MAPS, DEFAULT_SKILL, getSkillMeta } from '../../data/skillMaps';
+import { formatRupiah } from '../../data/jasaData';
 import { REVIEW_FEEDBACK } from '../../data/reviewFeedback';
 
 const BLUE = '#2b6fff';
@@ -13,35 +13,51 @@ const ORANGE = '#f37219';
 const RED = '#e5484d';
 
 const MAX_REVISIONS = 2;
-const XP_TABLE = { 0: 150, 1: 120, 2: 100 };
-// Deterministic demo script: verdict for the Nth submission (index = revisionCount).
-// First submission always comes back "perlu revisi"; the revision after that is approved.
-const VERDICT_SCRIPT = ['revisi', 'approved'];
+const XP_TABLE = { 0: 200, 1: 150, 2: 120 };
+const EXAM_FEE = 650000;
 
-export default function RinaSubmit() {
+export default function RinaCertification() {
   const navigate = useNavigate();
-  const { checkpointId } = useParams();
-  const { selectedSkill, addExp, setCompletedNodeIds, setVerificationSubmitted } = useApp();
-  const skillId = selectedSkill || DEFAULT_SKILL;
-  const skillMap = SKILL_MAPS[skillId] || SKILL_MAPS[DEFAULT_SKILL];
+  const { skillId: skillIdParam } = useParams();
+  const { addExp, completedNodeIds, certificateEarnedAt, issueCertificate } = useApp();
+  const skillId = SKILL_MAPS[skillIdParam] ? skillIdParam : DEFAULT_SKILL;
+  const skillMap = SKILL_MAPS[skillId];
   const skillMeta = getSkillMeta(skillId);
-  const checkpointNode = skillMap.nodes.find(n => n.id === checkpointId) || skillMap.nodes.find(n => n.type === 'checkpoint');
-  const checklist = checkpointNode?.checklist || skillMap.checklist;
-  const feedback = REVIEW_FEEDBACK[skillId]?.[checkpointNode?.id]
-    || REVIEW_FEEDBACK[skillId]?.['checkpoint-1']
-    || REVIEW_FEEDBACK[DEFAULT_SKILL]['checkpoint-1'];
+  const finalCheckpoint = skillMap.nodes.find(n => n.type === 'checkpoint' && n.isFinalProject);
+  const checklist = finalCheckpoint?.checklist || [];
+  const feedback = REVIEW_FEEDBACK[skillId]?.['checkpoint-3'] || REVIEW_FEEDBACK[DEFAULT_SKILL]['checkpoint-1'];
 
-  // 'form' | 'submitted' | 'revision-feedback' | 'revision-form' | 'approved-celebrating' | 'approved-result' | 'failed'
-  const [view, setView] = useState('form');
+  const alreadyCertified = !!certificateEarnedAt[skillId];
+  // The exam only opens once the skill map's final checkpoint is actually
+  // done — this menu shouldn't even be reachable until then. Already-earned
+  // certificates just go straight to the certificate itself.
+  const eligible = finalCheckpoint && completedNodeIds.includes(`${skillId}:${finalCheckpoint.id}`);
+
+  // 'exam-payment' | 'exam-form' | 'submitted' | 'revision-feedback' | 'revision-form' |
+  // 'approved-celebrating' | 'approved-result' | 'exam-failed'
+  const [view, setView] = useState('exam-payment');
+  const [paying, setPaying] = useState(false);
   const [revisionCount, setRevisionCount] = useState(0);
   const [uploaded, setUploaded] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [checkedItems, setCheckedItems] = useState(new Set());
   const [revisionReminders, setRevisionReminders] = useState(new Set());
-  const [briefExpanded, setBriefExpanded] = useState(false);
-  const [showPrevSubmission, setShowPrevSubmission] = useState(false);
+
+  // Only gate entry at the initial payment gate. Once the user has started
+  // the exam through this page, passing it flips `alreadyCertified` via our
+  // own issueCertificate() call — that must not yank them away from the
+  // celebration/result screen they're already looking at.
+  useEffect(() => {
+    if (view !== 'exam-payment') return;
+    if (alreadyCertified) { navigate(`/rina/sertifikat/${skillId}`, { replace: true }); return; }
+    if (!eligible) navigate('/rina/task', { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [alreadyCertified, eligible, view]);
+
+  if (view === 'exam-payment' && (!eligible || alreadyCertified)) return null;
 
   const allChecked = checkedItems.size === checklist.length;
+  const xpAmount = XP_TABLE[revisionCount] ?? XP_TABLE[MAX_REVISIONS];
 
   function simUploadFile() {
     setUploading(true);
@@ -67,8 +83,12 @@ export default function RinaSubmit() {
     });
   }
 
-  function nsKey() {
-    return `${skillId}:${checkpointNode.id}`;
+  function handlePayAndStartExam() {
+    setPaying(true);
+    setTimeout(() => {
+      setPaying(false);
+      setView('exam-form');
+    }, 1500);
   }
 
   function handleFirstSubmit() {
@@ -88,34 +108,33 @@ export default function RinaSubmit() {
   }
 
   function triggerApproved() {
-    const xpAmount = XP_TABLE[revisionCount] ?? XP_TABLE[MAX_REVISIONS];
     addExp(xpAmount);
-    setCompletedNodeIds(prev => [...prev, nsKey()]);
-    setVerificationSubmitted(true);
+    issueCertificate(skillId);
     setView('approved-celebrating');
     setTimeout(() => setView('approved-result'), 2000);
   }
 
-  function handleSimulateReview() {
-    const verdict = VERDICT_SCRIPT[revisionCount] ?? 'approved';
+  // A real certification exam can end in an outright fail, not just "needs
+  // revision" — the presenter picks the outcome directly for the demo.
+  function handleExamVerdict(verdict) {
     if (verdict === 'approved') {
       triggerApproved();
-    } else if (revisionCount + 1 >= MAX_REVISIONS) {
-      setView('failed');
+    } else if (verdict === 'gagal' || revisionCount + 1 >= MAX_REVISIONS) {
+      setView('exam-failed');
     } else {
       setView('revision-feedback');
     }
   }
 
-  function handleTryAgain() {
-    setView('form');
+  // Failing the paid exam means retaking it — like a real certification,
+  // that means paying the fee again, not just "try again for free".
+  function handleRetakeExam() {
+    setView('exam-payment');
     setRevisionCount(0);
     setUploaded(false);
     setCheckedItems(new Set());
     setRevisionReminders(new Set());
   }
-
-  const xpAmount = XP_TABLE[revisionCount] ?? XP_TABLE[MAX_REVISIONS];
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -129,22 +148,83 @@ export default function RinaSubmit() {
           <span>Peta Misi</span>
         </button>
         <h1 className="text-white text-xs sm:text-sm font-bold font-sora truncate absolute left-1/2 -translate-x-1/2 max-w-[55%] text-center">
-          {skillMeta.label} - Node {checkpointNode?.id} - Tantangan Checkpoint
+          {skillMeta.label} - Ujian Sertifikasi
         </h1>
-        <div className="flex items-center gap-0.5 bg-white border border-rose-300 py-1.5 px-2.5 rounded-full ml-auto">
-          {[...Array(5)].map((_, i) => (
-            <i key={i} className="fa-solid fa-heart text-xs" style={{ color: i < 4 ? '#f43f5e' : '#e5e7eb' }}></i>
-          ))}
-        </div>
       </header>
 
       <main className="flex-1 w-full max-w-[720px] mx-auto px-4 py-8 pb-16">
-        {/* ── FORM: initial submission ── */}
-        {view === 'form' && (
+        {/* ── EXAM GATE: paid certification exam intro ── */}
+        {view === 'exam-payment' && (
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-6">
+            <div className="flex flex-col items-center text-center gap-2 py-2">
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mb-1" style={{ background: '#eef2fe' }}>
+                <i className="fa-solid fa-graduation-cap text-2xl" style={{ color: BLUE }}></i>
+              </div>
+              <h2 className="font-sora font-bold text-2xl" style={{ color: BLUE }}>Ujian Sertifikasi {skillMeta.label}</h2>
+              <p className="text-sm font-inter text-gray-500 max-w-md">
+                Kamu sudah menyelesaikan semua unit — langkah terakhir adalah ujian yang menguji semua yang sudah kamu pelajari dari <strong style={{ color: '#1a1a1a' }}>Unit 1 sampai Unit 3</strong>. Hasilnya menentukan apakah kamu lulus dan dapat Sertifikat Kompetensi resmi.
+              </p>
+            </div>
+
+            <div className="rounded-2xl p-5" style={{ background: '#f5f8fb' }}>
+              <h3 className="font-sora font-bold text-sm mb-3" style={{ color: ORANGE }}>Yang Kamu Dapat</h3>
+              <ul className="space-y-2.5">
+                {[
+                  'Ujian komprehensif lintas Unit 1–3, bukan materi terakhir saja',
+                  'Direview langsung oleh senior specialist, bukan reviewer biasa',
+                  'Sertifikat Kompetensi resmi dari WADAH kalau lulus',
+                  'Badge "Certified" tampil di profil publikmu ke UMKM',
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-2.5 text-sm font-inter text-gray-600">
+                    <i className="fa-solid fa-circle-check mt-0.5" style={{ color: GREEN }}></i>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="rounded-2xl p-6 text-center border-2" style={{ background: '#eef2fe', borderColor: BLUE }}>
+              <div className="text-xs font-inter font-bold uppercase tracking-wide mb-1" style={{ color: BLUE }}>Biaya Ujian Sertifikasi</div>
+              <div className="font-sora font-extrabold text-3xl" style={{ color: BLUE }}>{formatRupiah(EXAM_FEE)}</div>
+              <div className="text-xs font-inter text-gray-500 mt-1">Sekali bayar per percobaan ujian</div>
+            </div>
+
+            <div className="rounded-xl p-4 border-2" style={{ background: '#fff', borderColor: '#e5e9f0' }}>
+              <div className="text-gray-400 text-[11px] font-inter font-bold uppercase tracking-wide mb-1.5">⚡ Demo Mode</div>
+              <p className="text-gray-500 text-xs font-inter">Pembayaran ini simulasi untuk keperluan demo — tidak ada transaksi nyata yang terjadi.</p>
+            </div>
+
+            <button
+              onClick={handlePayAndStartExam}
+              disabled={paying}
+              className="w-full text-white font-bold py-3.5 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              style={{ background: ORANGE }}
+            >
+              {paying ? (
+                <>
+                  <span className="w-4 h-4 border-2 rounded-full animate-spin-fast" style={{ borderColor: '#fff', borderTopColor: 'transparent' }} />
+                  Memproses pembayaran…
+                </>
+              ) : (
+                <>Bayar & Mulai Ujian</>
+              )}
+            </button>
+            <button
+              onClick={() => navigate('/rina/task')}
+              className="w-full font-semibold py-3 rounded-full transition-all text-sm cursor-pointer bg-transparent border-2"
+              style={{ color: BLUE, borderColor: BLUE }}
+            >
+              Kembali ke Peta Misi
+            </button>
+          </motion.div>
+        )}
+
+        {/* ── EXAM FORM ── */}
+        {view === 'exam-form' && (
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-6">
             <div>
-              <h2 className="font-sora font-bold text-xl mb-1" style={{ color: BLUE }}>Kumpulkan Hasil Kerja</h2>
-              <p className="text-sm font-inter font-medium" style={{ color: BLUE }}>Pastikan hasil checkpoint-mu untuk {skillMeta.label} sudah memenuhi semua ketentuan sebelum dikirim ke reviewer.</p>
+              <h2 className="font-sora font-bold text-xl mb-1" style={{ color: BLUE }}>Kumpulkan Hasil Ujian</h2>
+              <p className="text-sm font-inter font-medium" style={{ color: BLUE }}>Pastikan hasil ujian sertifikasi {skillMeta.label}-mu sudah memenuhi semua ketentuan sebelum dikirim ke senior specialist.</p>
             </div>
 
             <div className="rounded-3xl p-6" style={{ background: '#f5f8fb' }}>
@@ -182,7 +262,7 @@ export default function RinaSubmit() {
             </div>
 
             <div>
-              <h3 className="font-sora font-bold text-sm mb-3" style={{ color: ORANGE }}>Upload File Hasil Kerja</h3>
+              <h3 className="font-sora font-bold text-sm mb-3" style={{ color: ORANGE }}>Upload File Hasil Ujian</h3>
 
               {!uploaded && !uploading && (
                 <div
@@ -194,7 +274,7 @@ export default function RinaSubmit() {
                     <i className="fa-solid fa-upload text-lg" style={{ color: '#0052ff' }}></i>
                   </div>
                   <div className="font-semibold font-inter mb-1" style={{ color: '#0052ff' }}>Drag & drop atau klik untuk upload</div>
-                  <div className="text-sm font-inter" style={{ color: '#5b7bb8' }}>Dokumen, gambar, atau video hasil checkpoint</div>
+                  <div className="text-sm font-inter" style={{ color: '#5b7bb8' }}>Dokumen, gambar, atau video hasil ujian</div>
                   <div className="mt-4 inline-block text-white text-xs px-4 py-2 rounded-full font-inter font-semibold" style={{ background: '#0052ff' }}>
                     Pilih File
                   </div>
@@ -212,7 +292,7 @@ export default function RinaSubmit() {
               {uploaded && (
                 <div className="rounded-2xl p-8 text-center border-2 border-dashed" style={{ background: GREEN, borderColor: GREEN }}>
                   <div className="text-white font-bold font-inter">Your Submission has been Uploaded</div>
-                  <div className="text-white/90 text-sm font-inter mt-1">Checkpoint_{skillId}_final.zip</div>
+                  <div className="text-white/90 text-sm font-inter mt-1">Ujian_{skillId}_final.zip</div>
                 </div>
               )}
             </div>
@@ -224,8 +304,8 @@ export default function RinaSubmit() {
                     <i className="fa-solid fa-user text-gray-400"></i>
                   </div>
                   <div>
-                    <div className="font-semibold font-inter text-sm" style={{ color: BLUE }}>Dinilai human reviewer</div>
-                    <div className="text-gray-500 text-xs font-inter">Praktisi industri berpengalaman akan review karyamu dan kasih feedback langsung.</div>
+                    <div className="font-semibold font-inter text-sm" style={{ color: BLUE }}>Dinilai senior specialist</div>
+                    <div className="text-gray-500 text-xs font-inter">Praktisi industri senior akan review hasil ujianmu dan kasih feedback langsung.</div>
                   </div>
                 </div>
                 <button
@@ -245,38 +325,48 @@ export default function RinaSubmit() {
           <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center text-center gap-4 py-10">
             <div className="text-5xl">📬</div>
             <h2 className="font-sora font-bold text-xl" style={{ color: BLUE }}>
-              {revisionCount === 0 ? 'Tantanganmu Sudah Dikirim!' : 'Revisimu Sudah Dikirim!'}
+              {revisionCount === 0 ? 'Hasil Ujianmu Sudah Dikirim!' : 'Revisimu Sudah Dikirim!'}
             </h2>
-            <p className="text-gray-500 text-sm font-inter">Human reviewer akan memeriksa karyamu</p>
+            <p className="text-gray-500 text-sm font-inter">Senior specialist akan memeriksa hasil ujianmu</p>
 
             <div className="w-full rounded-2xl p-5 text-left space-y-2.5 mt-2" style={{ background: '#f5f8fb' }}>
               <div className="flex items-start gap-2.5 text-sm font-inter" style={{ color: '#1a1a1a' }}>
                 <span>⏱</span> Estimasi review: 1 hari kerja
               </div>
               <div className="flex items-start gap-2.5 text-sm font-inter" style={{ color: '#1a1a1a' }}>
-                <span>👤</span> Direview oleh praktisi industri berpengalaman
+                <span>👤</span> Direview oleh senior specialist berpengalaman
               </div>
               <div className="flex items-start gap-2.5 text-sm font-inter" style={{ color: '#1a1a1a' }}>
                 <span>🔔</span> Kamu akan dapat notifikasi setelah review selesai
               </div>
             </div>
 
-            <div className="w-full rounded-xl p-4 text-left border-2" style={{ background: '#eef2fe', borderColor: BLUE }}>
-              <p className="text-sm font-inter leading-relaxed" style={{ color: BLUE }}>
-                ❄️ Streak kamu di-freeze selama menunggu review. Tenang, streak tidak akan putus.
-              </p>
-            </div>
-
             <div className="w-full rounded-xl p-4 mt-2 border-2" style={{ background: '#fff', borderColor: '#e5e9f0' }}>
               <div className="text-gray-400 text-[11px] font-inter font-bold uppercase tracking-wide mb-2">⚡ Demo Mode</div>
-              <p className="text-gray-500 text-xs font-inter mb-3">Dalam demo ini, kita bisa langsung simulasikan hasil review reviewer tanpa menunggu.</p>
-              <button
-                onClick={handleSimulateReview}
-                className="w-full text-white font-bold py-3 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
-                style={{ background: ORANGE }}
-              >
-                Simulasikan Keputusan Reviewer
-              </button>
+              <p className="text-gray-500 text-xs font-inter mb-3">Ini ujian sertifikasi — pilih langsung hasilnya buat demo, kayak ujian sertifikasi profesional yang beneran bisa gagal.</p>
+              <div className="flex flex-col gap-2">
+                <button
+                  onClick={() => handleExamVerdict('approved')}
+                  className="w-full text-white font-bold py-3 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
+                  style={{ background: GREEN }}
+                >
+                  Lulus
+                </button>
+                <button
+                  onClick={() => handleExamVerdict('revisi')}
+                  className="w-full text-white font-bold py-3 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
+                  style={{ background: ORANGE }}
+                >
+                  Perlu Revisi
+                </button>
+                <button
+                  onClick={() => handleExamVerdict('gagal')}
+                  className="w-full text-white font-bold py-3 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
+                  style={{ background: RED }}
+                >
+                  Gagal Ujian
+                </button>
+              </div>
             </div>
 
             <button
@@ -295,14 +385,14 @@ export default function RinaSubmit() {
             <div className="flex items-center gap-3">
               <img src="/reviewer.jpg" alt="Reviewer" className="w-10 h-10 rounded-full object-cover shrink-0" />
               <div className="flex-1">
-                <div className="text-sm font-bold font-inter" style={{ color: BLUE }}>Reviewer - {skillMeta.label} Specialist</div>
+                <div className="text-sm font-bold font-inter" style={{ color: BLUE }}>Senior Specialist - {skillMeta.label}</div>
                 <div className="italic text-xs font-inter font-semibold" style={{ color: BLUE }}>1 hari yang lalu</div>
               </div>
               <span className="text-[10px] font-bold px-2.5 py-1 rounded-full font-inter shrink-0 border-2" style={{ color: RED, borderColor: RED, background: '#fdecec' }}>PERLU REVISI</span>
             </div>
 
             <div className="rounded-2xl p-5" style={{ background: '#f5f8fb' }}>
-              <h3 className="font-sora font-bold text-sm mb-3" style={{ color: ORANGE }}>Feedback dari Reviewer:</h3>
+              <h3 className="font-sora font-bold text-sm mb-3" style={{ color: ORANGE }}>Feedback dari Senior Specialist:</h3>
               <p className="text-sm font-inter leading-relaxed mb-3 text-gray-600">{feedback.intro}</p>
               <ul className="space-y-2">
                 {feedback.points.map((p, i) => (
@@ -320,38 +410,17 @@ export default function RinaSubmit() {
                 <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: GREEN }}></span> Selesaikan dalam 3 hari
               </div>
               <div className="flex items-center gap-2 text-sm font-inter" style={{ color: GREEN }}>
-                <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: GREEN }}></span> Masih bisa dapat +{XP_TABLE[revisionCount + 1] ?? XP_TABLE[MAX_REVISIONS]} XP kalau approved di revisi ini
+                <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: GREEN }}></span> Masih bisa dapat +{XP_TABLE[revisionCount + 1] ?? XP_TABLE[MAX_REVISIONS]} XP kalau lulus di revisi ini
               </div>
             </div>
 
-            <div className="flex flex-col gap-2.5">
-              <button
-                onClick={handleStartRevision}
-                className="w-full text-white font-bold py-3.5 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
-                style={{ background: ORANGE }}
-              >
-                Mulai Revisi
-              </button>
-              <button
-                onClick={() => setShowPrevSubmission(v => !v)}
-                className="w-full text-white font-semibold py-3 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
-                style={{ background: GREEN }}
-              >
-                Lihat Submission Sebelumnya
-              </button>
-            </div>
-
-            {showPrevSubmission && (
-              <div className="rounded-2xl overflow-hidden border-2" style={{ borderColor: '#e5e9f0' }}>
-                <div className="h-32 flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${BLUE}, ${GREEN})` }}>
-                  <div className="text-center">
-                    <div className="text-4xl mb-1">{skillMeta.emoji}</div>
-                    <div className="text-white/90 text-xs font-inter">{checkpointNode?.title}</div>
-                  </div>
-                </div>
-                <div className="p-3 text-xs text-gray-400 font-inter" style={{ background: '#f5f8fb' }}>checkpoint_{skillId}_final (submission awal)</div>
-              </div>
-            )}
+            <button
+              onClick={handleStartRevision}
+              className="w-full text-white font-bold py-3.5 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
+              style={{ background: ORANGE }}
+            >
+              Mulai Revisi
+            </button>
           </motion.div>
         )}
 
@@ -360,31 +429,13 @@ export default function RinaSubmit() {
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-5">
             <div>
               <span className="text-[10px] font-bold px-2.5 py-1 rounded-full font-inter border-2" style={{ color: BLUE, borderColor: BLUE, background: '#eef2fe' }}>
-                SUBMISSION REVISI KE-{revisionCount + 1}
+                REVISI UJIAN KE-{revisionCount + 1}
               </span>
-            </div>
-
-            {/* Collapsed brief, expandable */}
-            <div className="rounded-2xl overflow-hidden border-2" style={{ borderColor: BLUE, background: '#fff' }}>
-              <button
-                onClick={() => setBriefExpanded(v => !v)}
-                className="w-full flex items-center justify-between p-4 bg-transparent border-0 cursor-pointer"
-              >
-                <span className="text-sm font-semibold font-inter" style={{ color: BLUE }}>{checkpointNode?.briefLabel}</span>
-                <i className={`fa-solid fa-chevron-down text-xs transition-transform ${briefExpanded ? 'rotate-180' : ''}`} style={{ color: BLUE }}></i>
-              </button>
-              {briefExpanded && checkpointNode?.briefBullets && (
-                <ul className="px-4 pb-4 space-y-1.5 text-xs text-gray-500 list-disc pl-8 leading-relaxed font-inter">
-                  {checkpointNode.briefBullets.map((b, i) => (
-                    <li key={i}><strong style={{ color: '#1a1a1a' }}>{b.strong}</strong>{b.rest}</li>
-                  ))}
-                </ul>
-              )}
             </div>
 
             {/* Reviewer feedback, always visible */}
             <div className="rounded-2xl p-5" style={{ background: '#f5f8fb' }}>
-              <h3 className="font-sora font-bold text-sm mb-3" style={{ color: ORANGE }}>Feedback dari Reviewer:</h3>
+              <h3 className="font-sora font-bold text-sm mb-3" style={{ color: ORANGE }}>Feedback dari Senior Specialist:</h3>
               <p className="text-sm font-inter leading-relaxed mb-3 text-gray-600">{feedback.intro}</p>
               <ul className="space-y-2">
                 {feedback.points.map((p, i) => (
@@ -434,7 +485,7 @@ export default function RinaSubmit() {
                     <i className="fa-solid fa-upload text-lg" style={{ color: '#0052ff' }}></i>
                   </div>
                   <div className="font-semibold font-inter mb-1" style={{ color: '#0052ff' }}>Drag & drop atau klik untuk upload</div>
-                  <div className="text-sm font-inter" style={{ color: '#5b7bb8' }}>Versi revisi dari hasil checkpoint-mu</div>
+                  <div className="text-sm font-inter" style={{ color: '#5b7bb8' }}>Versi revisi dari hasil ujianmu</div>
                   <div className="mt-4 inline-block text-white text-xs px-4 py-2 rounded-full font-inter font-semibold" style={{ background: '#0052ff' }}>
                     Pilih File
                   </div>
@@ -451,7 +502,7 @@ export default function RinaSubmit() {
               {uploaded && (
                 <div className="rounded-2xl p-8 text-center border-2 border-dashed" style={{ background: GREEN, borderColor: GREEN }}>
                   <div className="text-white font-bold font-inter">Your Submission has been Uploaded</div>
-                  <div className="text-white/90 text-sm font-inter mt-1">checkpoint_{skillId}_revisi{revisionCount + 1}.zip</div>
+                  <div className="text-white/90 text-sm font-inter mt-1">ujian_{skillId}_revisi{revisionCount + 1}.zip</div>
                 </div>
               )}
             </div>
@@ -472,8 +523,11 @@ export default function RinaSubmit() {
         {view === 'approved-result' && (
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-5">
             <div className="flex flex-col items-center text-center gap-2 py-4">
-              <div className="text-5xl mb-1">✅</div>
-              <h2 className="font-sora font-bold text-2xl" style={{ color: BLUE }}>Tantangan Selesai!</h2>
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mb-1" style={{ background: '#eef2fe' }}>
+                <i className="fa-solid fa-graduation-cap text-2xl" style={{ color: BLUE }}></i>
+              </div>
+              <h2 className="font-sora font-bold text-2xl" style={{ color: BLUE }}>Ujian Sertifikasi Lulus!</h2>
+              <p className="text-sm font-inter font-semibold" style={{ color: GREEN }}>Sertifikat Kompetensi {skillMeta.label}-mu sudah terbit</p>
             </div>
 
             <div className="rounded-2xl p-4 flex items-center gap-4 border-2" style={{ background: '#eef2fe', borderColor: BLUE }}>
@@ -482,16 +536,9 @@ export default function RinaSubmit() {
               </div>
               <div>
                 <div className="font-sora font-bold text-base" style={{ color: BLUE }}>
-                  +{xpAmount} XP {revisionCount === 0 ? '(approved langsung)' : `(approved setelah ${revisionCount} revisi)`}
+                  +{xpAmount} XP {revisionCount === 0 ? '(lulus langsung)' : `(lulus setelah ${revisionCount} revisi)`}
                 </div>
-                <div className="text-gray-500 text-xs font-inter">Kerja bagus menyelesaikan checkpoint ini!</div>
-              </div>
-            </div>
-
-            <div className="rounded-2xl p-4 flex items-center gap-3" style={{ background: `linear-gradient(135deg, ${BLUE}, ${GREEN})` }}>
-              <span className="text-2xl">{skillMeta.emoji}</span>
-              <div className="font-sora font-bold text-sm text-white">
-                {skillMeta.label} — Unit {getNodeUnit(checkpointNode.id)} Complete
+                <div className="text-gray-500 text-xs font-inter">Kerja bagus menyelesaikan ujian sertifikasi ini!</div>
               </div>
             </div>
 
@@ -500,7 +547,7 @@ export default function RinaSubmit() {
                 <div className="flex items-center gap-3 mb-3">
                   <img src="/reviewer.jpg" alt="Reviewer" className="w-9 h-9 rounded-full object-cover shrink-0" />
                   <div>
-                    <div className="text-sm font-bold font-inter" style={{ color: BLUE }}>Reviewer - {skillMeta.label} Specialist</div>
+                    <div className="text-sm font-bold font-inter" style={{ color: BLUE }}>Senior Specialist - {skillMeta.label}</div>
                     <div className="italic text-xs font-inter font-semibold" style={{ color: BLUE }}>Baru saja</div>
                   </div>
                 </div>
@@ -508,42 +555,38 @@ export default function RinaSubmit() {
               </div>
             )}
 
-            <div className="rounded-2xl p-5" style={{ background: '#f5f8fb' }}>
-              <div className="flex items-center gap-2 text-sm font-semibold font-inter mb-3" style={{ color: GREEN }}>
-                <i className="fa-solid fa-circle-check"></i>
-                Ditambahkan ke Verified Portfolio kamu
-              </div>
-              <div className="flex items-center gap-3 rounded-xl p-3 bg-white">
-                <div className="w-11 h-11 rounded-lg flex items-center justify-center text-xl shrink-0" style={{ background: '#e1e8f2' }}>{skillMeta.emoji}</div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-xs font-semibold font-inter truncate" style={{ color: '#1a1a1a' }}>{checkpointNode?.title}</div>
-                  <div className="text-gray-400 text-[11px] font-inter">{skillMeta.label} · Human Reviewed</div>
-                </div>
-                <i className="fa-solid fa-circle-check" style={{ color: GREEN }}></i>
-              </div>
+            <div className="flex flex-col gap-2.5">
+              <button
+                onClick={() => navigate(`/rina/sertifikat/${skillId}`)}
+                className="w-full text-white font-bold py-3.5 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
+                style={{ background: `linear-gradient(90deg, ${BLUE}, ${GREEN})` }}
+              >
+                Lihat Sertifikatmu
+              </button>
+              <button
+                onClick={() => navigate('/rina/task')}
+                className="w-full font-semibold py-3 rounded-full transition-all text-sm cursor-pointer bg-transparent border-2"
+                style={{ color: BLUE, borderColor: BLUE }}
+              >
+                Kembali ke Peta Misi
+              </button>
             </div>
-
-            <button
-              onClick={() => navigate('/rina/task')}
-              className="w-full text-white font-bold py-3.5 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
-              style={{ background: GREEN }}
-            >
-              Lanjut ke Peta Misi
-            </button>
           </motion.div>
         )}
 
-        {/* ── STATE 4: GAGAL / MAX REVISIONS ── */}
-        {view === 'failed' && (
+        {/* ── STATE 4: GAGAL UJIAN SERTIFIKASI ── */}
+        {view === 'exam-failed' && (
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-5">
             <div className="flex flex-col items-center text-center gap-2 py-4">
-              <div className="text-5xl mb-1">🔄</div>
-              <h2 className="font-sora font-bold text-xl" style={{ color: BLUE }}>Ulangi Tantangan Ini</h2>
-              <p className="text-gray-500 text-sm font-inter">Tidak apa-apa — ini bagian dari proses belajar</p>
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mb-1" style={{ background: '#fdecec' }}>
+                <i className="fa-solid fa-circle-xmark text-2xl" style={{ color: RED }}></i>
+              </div>
+              <h2 className="font-sora font-bold text-xl" style={{ color: BLUE }}>Belum Lulus Ujian Sertifikasi</h2>
+              <p className="text-gray-500 text-sm font-inter max-w-sm">Tidak apa-apa — banyak profesional juga nggak lulus di percobaan pertama. Pelajari feedback di bawah, lalu coba lagi.</p>
             </div>
 
             <div className="rounded-2xl p-5" style={{ background: '#f5f8fb' }}>
-              <h3 className="font-sora font-bold text-sm mb-3" style={{ color: ORANGE }}>Feedback Final dari Reviewer:</h3>
+              <h3 className="font-sora font-bold text-sm mb-3" style={{ color: ORANGE }}>Feedback dari Senior Specialist:</h3>
               <p className="text-sm font-inter leading-relaxed mb-3 text-gray-600">{feedback.intro}</p>
               <ul className="space-y-2">
                 {feedback.points.map((p, i) => (
@@ -555,35 +598,34 @@ export default function RinaSubmit() {
               </ul>
             </div>
 
-            <div className="rounded-2xl p-4" style={{ background: '#f5f8fb' }}>
-              <p className="text-sm font-inter leading-relaxed text-gray-600">
-                Kamu sudah mencapai batas {MAX_REVISIONS} revisi untuk tantangan ini. Pelajari feedback di atas dan coba lagi dari awal.
+            <div className="rounded-xl p-4 border-2" style={{ background: '#fdecec', borderColor: RED }}>
+              <p className="text-sm font-inter leading-relaxed" style={{ color: RED }}>
+                Ujian ulang butuh pembayaran {formatRupiah(EXAM_FEE)} lagi — sama seperti ujian sertifikasi profesional pada umumnya.
               </p>
             </div>
 
             <div className="flex flex-col gap-2.5">
               <button
-                onClick={handleTryAgain}
+                onClick={handleRetakeExam}
                 className="w-full text-white font-bold py-3.5 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
-                style={{ background: GREEN }}
+                style={{ background: ORANGE }}
               >
-                Coba Lagi
+                Ambil Ujian Ulang ({formatRupiah(EXAM_FEE)})
               </button>
               <button
-                onClick={() => showToast('💬 Yuk, tanya di AI Mentor pojok kanan bawah', 'fa-robot')}
+                onClick={() => navigate('/rina/task')}
                 className="w-full font-semibold py-3 rounded-full transition-all text-sm cursor-pointer bg-transparent border-2"
                 style={{ color: BLUE, borderColor: BLUE }}
               >
-                Tanya AI Mentor tentang feedback ini
+                Kembali ke Peta Misi
               </button>
             </div>
           </motion.div>
         )}
-
       </main>
 
       {/* ── AI MENTOR FLOATING WIDGET ── */}
-      <AIMentorWidget node={checkpointNode} stage="tantangan" skillLabel={skillMeta.label} light />
+      <AIMentorWidget node={finalCheckpoint} stage="sertifikasi" skillLabel={skillMeta.label} light />
 
       {/* ── APPROVED CELEBRATION OVERLAY ── */}
       <AnimatePresence>
@@ -617,7 +659,7 @@ export default function RinaSubmit() {
               className="text-center"
             >
               <div className="text-6xl mb-4">✓</div>
-              <h2 className="font-sora font-extrabold text-4xl" style={{ color: GREEN }}>DISETUJUI! ✓</h2>
+              <h2 className="font-sora font-extrabold text-4xl" style={{ color: GREEN }}>LULUS! ✓</h2>
             </motion.div>
           </motion.div>
         )}

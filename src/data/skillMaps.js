@@ -611,7 +611,7 @@ export const SKILL_MAPS = {
       {
         id: 'checkpoint-3', title: 'Gerbang Akhir: Proyek Sertifikasi', icon: 'fa-graduation-cap', tag: 'PROYEK AKHIR', type: 'checkpoint',
         isFinalProject: true,
-        info: 'Proyek akhir Skill Map Social Media — kelulusan di sini menerbitkan Sertifikat Kompetensi WADAH-mu!',
+        info: 'Proyek akhir Skill Map Social Media — kelulusan di sini membuka akses Ujian Sertifikasi WADAH-mu!',
         briefLabel: 'Brief Mandatori Proyek Akhir:',
         briefBullets: [
           { strong: 'Wajib Kalender Sebulan:', rest: ' rencana konten untuk Instagram & TikTok Roti Bakar Kenangan selama 4 minggu.' },
@@ -624,11 +624,11 @@ export const SKILL_MAPS = {
           points: [
             'Kamu akan direview lewat quiz singkat yang merangkum seluruh Unit 3.',
             'Setelah lulus quiz, kamu masuk ke Proyek Akhir: menyusun strategi konten 1 bulan untuk Roti Bakar Kenangan dengan deadline 10 hari.',
-            'Proyek ini dinilai 100% oleh human reviewer WADAH — kelulusan di sini menerbitkan Sertifikat Kompetensi Social Media-mu, lengkap dengan nomor verifikasi resmi.',
+            'Proyek ini dinilai 100% oleh human reviewer WADAH — kelulusan di sini membuka akses ke Ujian Sertifikasi Social Media berbayar, langkah terakhir sebelum dapat Sertifikat Kompetensi resmi.',
           ],
         },
-        aiIntro: 'Selamat sampai di gerbang terakhir, Rina! Ini bukan sekadar checkpoint biasa — approval di sini menerbitkan sertifikat kompetensi resmi WADAH-mu. Kerjakan sebaik yang kamu bisa.',
-        suggests: [{ id: 'faq-cp-3', text: 'Apa yang terjadi setelah proyek akhir ini disetujui?', answer: 'Kamu akan mendapatkan Sertifikat Kompetensi Social Media resmi dari WADAH — punya nomor verifikasi unik yang bisa dicek siapa saja, dan langsung masuk ke profil publikmu.' }],
+        aiIntro: 'Selamat sampai di gerbang terakhir, Rina! Ini bukan sekadar checkpoint biasa — lulus di sini membuka akses ke Ujian Sertifikasi resmi WADAH. Kerjakan sebaik yang kamu bisa.',
+        suggests: [{ id: 'faq-cp-3', text: 'Apa yang terjadi setelah proyek akhir ini disetujui?', answer: 'Kamu akan membuka akses ke Ujian Sertifikasi Social Media berbayar — begitu lulus, Sertifikat Kompetensi resmi WADAH-mu terbit dan langsung masuk ke profil publikmu.' }],
         instruction: 'Kumpulkan 1 dokumen strategi (kalender konten sebulan + rencana respons + rekomendasi) untuk Roti Bakar Kenangan sesuai brief di atas.',
         deadlineText: '10 hari',
         checklist: [
@@ -1149,7 +1149,7 @@ export const SKILL_MAPS = {
       {
         id: 'checkpoint-3', title: 'Gerbang Akhir: Proyek Sertifikasi', icon: 'fa-graduation-cap', tag: 'PROYEK AKHIR', type: 'checkpoint',
         isFinalProject: true,
-        info: 'Proyek akhir Skill Map Video & Reels — kelulusan di sini menerbitkan Sertifikat Kompetensi WADAH-mu!',
+        info: 'Proyek akhir Skill Map Video & Reels — kelulusan di sini membuka akses Ujian Sertifikasi WADAH-mu!',
         briefLabel: 'Brief Mandatori Proyek Akhir:',
         briefBullets: [
           { strong: 'Wajib 3 Video Konsisten:', rest: ' satu sistem gaya edit & musik diterapkan di ketiga video untuk 3 menu baru.' },
@@ -1162,11 +1162,11 @@ export const SKILL_MAPS = {
           points: [
             'Kamu akan direview lewat quiz singkat yang merangkum seluruh Unit 3.',
             'Setelah lulus quiz, kamu masuk ke Proyek Akhir: menyusun 3 storyboard video untuk Kopi Kilat Ekspres dengan deadline 10 hari.',
-            'Proyek ini dinilai 100% oleh human reviewer WADAH — kelulusan di sini menerbitkan Sertifikat Kompetensi Video & Reels-mu, lengkap dengan nomor verifikasi resmi.',
+            'Proyek ini dinilai 100% oleh human reviewer WADAH — kelulusan di sini membuka akses ke Ujian Sertifikasi Video & Reels berbayar, langkah terakhir sebelum dapat Sertifikat Kompetensi resmi.',
           ],
         },
-        aiIntro: 'Selamat sampai di gerbang terakhir, Rina! Ini bukan sekadar checkpoint biasa — approval di sini menerbitkan sertifikat kompetensi resmi WADAH-mu. Kerjakan sebaik yang kamu bisa.',
-        suggests: [{ id: 'faq-cp-3', text: 'Apa yang terjadi setelah proyek akhir ini disetujui?', answer: 'Kamu akan mendapatkan Sertifikat Kompetensi Video & Reels resmi dari WADAH — punya nomor verifikasi unik yang bisa dicek siapa saja, dan langsung masuk ke profil publikmu.' }],
+        aiIntro: 'Selamat sampai di gerbang terakhir, Rina! Ini bukan sekadar checkpoint biasa — lulus di sini membuka akses ke Ujian Sertifikasi resmi WADAH. Kerjakan sebaik yang kamu bisa.',
+        suggests: [{ id: 'faq-cp-3', text: 'Apa yang terjadi setelah proyek akhir ini disetujui?', answer: 'Kamu akan membuka akses ke Ujian Sertifikasi Video & Reels berbayar — begitu lulus, Sertifikat Kompetensi resmi WADAH-mu terbit dan langsung masuk ke profil publikmu.' }],
         instruction: 'Kumpulkan 1 set (3 storyboard/naskah + rasional konsep) video untuk Kopi Kilat Ekspres sesuai brief di atas.',
         deadlineText: '10 hari',
         checklist: [
@@ -1786,7 +1786,7 @@ export const SKILL_MAPS = {
       {
         id: 'checkpoint-3', title: 'Gerbang Akhir: Proyek Sertifikasi', icon: 'fa-graduation-cap', tag: 'PROYEK AKHIR', type: 'checkpoint',
         isFinalProject: true,
-        info: 'Proyek akhir Skill Map Desain Grafis — kelulusan di sini menerbitkan Sertifikat Kompetensi WADAH-mu!',
+        info: 'Proyek akhir Skill Map Desain Grafis — kelulusan di sini membuka akses Ujian Sertifikasi WADAH-mu!',
         briefLabel: 'Brief Mandatori Proyek Akhir:',
         briefBullets: [
           { strong: 'Wajib 5 Konten Konsisten:', rest: ' satu sistem visual (grid, tipografi, warna) diterapkan di seluruh 5 desain Instagram Feed.' },
@@ -1799,11 +1799,11 @@ export const SKILL_MAPS = {
           points: [
             'Kamu akan direview lewat quiz singkat yang merangkum seluruh Unit 3.',
             'Setelah lulus quiz, kamu masuk ke Proyek Akhir: mengerjakan 5 konten Instagram Feed untuk Toko Batik Nusantara dengan deadline 10 hari.',
-            'Proyek ini dinilai 100% oleh human reviewer WADAH — kelulusan di sini menerbitkan Sertifikat Kompetensi Desain Grafis-mu, lengkap dengan nomor verifikasi resmi.',
+            'Proyek ini dinilai 100% oleh human reviewer WADAH — kelulusan di sini membuka akses ke Ujian Sertifikasi Desain Grafis berbayar, langkah terakhir sebelum dapat Sertifikat Kompetensi resmi.',
           ],
         },
-        aiIntro: 'Selamat sampai di gerbang terakhir, Rina! Ini bukan sekadar checkpoint biasa — approval di sini menerbitkan sertifikat kompetensi resmi WADAH-mu. Kerjakan sebaik yang kamu bisa.',
-        suggests: [{ id: 'faq-cp-3', text: 'Apa yang terjadi setelah proyek akhir ini disetujui?', answer: 'Kamu akan mendapatkan Sertifikat Kompetensi Desain Grafis resmi dari WADAH — punya nomor verifikasi unik yang bisa dicek siapa saja, dan langsung masuk ke profil publikmu.' }],
+        aiIntro: 'Selamat sampai di gerbang terakhir, Rina! Ini bukan sekadar checkpoint biasa — lulus di sini membuka akses ke Ujian Sertifikasi resmi WADAH. Kerjakan sebaik yang kamu bisa.',
+        suggests: [{ id: 'faq-cp-3', text: 'Apa yang terjadi setelah proyek akhir ini disetujui?', answer: 'Kamu akan membuka akses ke Ujian Sertifikasi Desain Grafis berbayar — begitu lulus, Sertifikat Kompetensi resmi WADAH-mu terbit dan langsung masuk ke profil publikmu.' }],
         instruction: 'Kumpulkan 1 set (5 file) konten Instagram Feed untuk Toko Batik Nusantara sesuai brief di atas.',
         deadlineText: '10 hari',
         checklist: [
@@ -2323,7 +2323,7 @@ export const SKILL_MAPS = {
       {
         id: 'checkpoint-3', title: 'Gerbang Akhir: Proyek Sertifikasi', icon: 'fa-graduation-cap', tag: 'PROYEK AKHIR', type: 'checkpoint',
         isFinalProject: true,
-        info: 'Proyek akhir Skill Map E-Commerce — kelulusan di sini menerbitkan Sertifikat Kompetensi WADAH-mu!',
+        info: 'Proyek akhir Skill Map E-Commerce — kelulusan di sini membuka akses Ujian Sertifikasi WADAH-mu!',
         briefLabel: 'Brief Mandatori Proyek Akhir:',
         briefBullets: [
           { strong: 'Wajib Audit Menyeluruh:', rest: ' laporan kondisi toko mencakup listing, branding, CS, dan kebijakan.' },
@@ -2336,11 +2336,11 @@ export const SKILL_MAPS = {
           points: [
             'Kamu akan direview lewat quiz singkat yang merangkum seluruh Unit 3.',
             'Setelah lulus quiz, kamu masuk ke Proyek Akhir: menyusun audit & rencana optimasi toko untuk Toko Elektronik Rumahan Jaya dengan deadline 10 hari.',
-            'Proyek ini dinilai 100% oleh human reviewer WADAH — kelulusan di sini menerbitkan Sertifikat Kompetensi E-Commerce-mu, lengkap dengan nomor verifikasi resmi.',
+            'Proyek ini dinilai 100% oleh human reviewer WADAH — kelulusan di sini membuka akses ke Ujian Sertifikasi E-Commerce berbayar, langkah terakhir sebelum dapat Sertifikat Kompetensi resmi.',
           ],
         },
-        aiIntro: 'Selamat sampai di gerbang terakhir, Rina! Ini bukan sekadar checkpoint biasa — approval di sini menerbitkan sertifikat kompetensi resmi WADAH-mu. Kerjakan sebaik yang kamu bisa.',
-        suggests: [{ id: 'faq-cp-3', text: 'Apa yang terjadi setelah proyek akhir ini disetujui?', answer: 'Kamu akan mendapatkan Sertifikat Kompetensi E-Commerce resmi dari WADAH — punya nomor verifikasi unik yang bisa dicek siapa saja, dan langsung masuk ke profil publikmu.' }],
+        aiIntro: 'Selamat sampai di gerbang terakhir, Rina! Ini bukan sekadar checkpoint biasa — lulus di sini membuka akses ke Ujian Sertifikasi resmi WADAH. Kerjakan sebaik yang kamu bisa.',
+        suggests: [{ id: 'faq-cp-3', text: 'Apa yang terjadi setelah proyek akhir ini disetujui?', answer: 'Kamu akan membuka akses ke Ujian Sertifikasi E-Commerce berbayar — begitu lulus, Sertifikat Kompetensi resmi WADAH-mu terbit dan langsung masuk ke profil publikmu.' }],
         instruction: 'Kumpulkan 1 dokumen audit & rencana optimasi toko untuk Toko Elektronik Rumahan Jaya sesuai brief di atas.',
         deadlineText: '10 hari',
         checklist: [
@@ -2859,7 +2859,7 @@ export const SKILL_MAPS = {
       {
         id: 'checkpoint-3', title: 'Gerbang Akhir: Proyek Sertifikasi', icon: 'fa-graduation-cap', tag: 'PROYEK AKHIR', type: 'checkpoint',
         isFinalProject: true,
-        info: 'Proyek akhir Skill Map Digital Marketing — kelulusan di sini menerbitkan Sertifikat Kompetensi WADAH-mu!',
+        info: 'Proyek akhir Skill Map Digital Marketing — kelulusan di sini membuka akses Ujian Sertifikasi WADAH-mu!',
         briefLabel: 'Brief Mandatori Proyek Akhir:',
         briefBullets: [
           { strong: 'Wajib Riset & Positioning:', rest: ' analisis kompetitor + positioning yang jelas untuk campaign cabang baru.' },
@@ -2872,11 +2872,11 @@ export const SKILL_MAPS = {
           points: [
             'Kamu akan direview lewat quiz singkat yang merangkum seluruh Unit 3.',
             'Setelah lulus quiz, kamu masuk ke Proyek Akhir: menyusun strategi campaign multi-channel untuk Resto Steak Rumahan dengan deadline 10 hari.',
-            'Proyek ini dinilai 100% oleh human reviewer WADAH — kelulusan di sini menerbitkan Sertifikat Kompetensi Digital Marketing-mu, lengkap dengan nomor verifikasi resmi.',
+            'Proyek ini dinilai 100% oleh human reviewer WADAH — kelulusan di sini membuka akses ke Ujian Sertifikasi Digital Marketing berbayar, langkah terakhir sebelum dapat Sertifikat Kompetensi resmi.',
           ],
         },
-        aiIntro: 'Selamat sampai di gerbang terakhir, Rina! Ini bukan sekadar checkpoint biasa — approval di sini menerbitkan sertifikat kompetensi resmi WADAH-mu. Kerjakan sebaik yang kamu bisa.',
-        suggests: [{ id: 'faq-cp-3', text: 'Apa yang terjadi setelah proyek akhir ini disetujui?', answer: 'Kamu akan mendapatkan Sertifikat Kompetensi Digital Marketing resmi dari WADAH — punya nomor verifikasi unik yang bisa dicek siapa saja, dan langsung masuk ke profil publikmu.' }],
+        aiIntro: 'Selamat sampai di gerbang terakhir, Rina! Ini bukan sekadar checkpoint biasa — lulus di sini membuka akses ke Ujian Sertifikasi resmi WADAH. Kerjakan sebaik yang kamu bisa.',
+        suggests: [{ id: 'faq-cp-3', text: 'Apa yang terjadi setelah proyek akhir ini disetujui?', answer: 'Kamu akan membuka akses ke Ujian Sertifikasi Digital Marketing berbayar — begitu lulus, Sertifikat Kompetensi resmi WADAH-mu terbit dan langsung masuk ke profil publikmu.' }],
         instruction: 'Kumpulkan 1 dokumen strategi campaign multi-channel untuk Resto Steak Rumahan sesuai brief di atas.',
         deadlineText: '10 hari',
         checklist: [
@@ -3418,7 +3418,7 @@ export const SKILL_MAPS = {
       {
         id: 'checkpoint-3', title: 'Gerbang Akhir: Proyek Sertifikasi', icon: 'fa-graduation-cap', tag: 'PROYEK AKHIR', type: 'checkpoint',
         isFinalProject: true,
-        info: 'Proyek akhir Skill Map UGC Creator — kelulusan di sini menerbitkan Sertifikat Kompetensi WADAH-mu!',
+        info: 'Proyek akhir Skill Map UGC Creator — kelulusan di sini membuka akses Ujian Sertifikasi WADAH-mu!',
         briefLabel: 'Brief Mandatori Proyek Akhir:',
         briefBullets: [
           { strong: 'Wajib Riset Produk Mendalam:', rest: ' pahami kandungan & klaim resmi sebelum membuat konten.' },
@@ -3431,11 +3431,11 @@ export const SKILL_MAPS = {
           points: [
             'Kamu akan direview lewat quiz singkat yang merangkum seluruh Unit 3.',
             'Setelah lulus quiz, kamu masuk ke Proyek Akhir: menyusun 3 video review untuk Suplemen Herbal Sehat Alami dengan deadline 10 hari.',
-            'Proyek ini dinilai 100% oleh human reviewer WADAH — kelulusan di sini menerbitkan Sertifikat Kompetensi UGC Creator-mu, lengkap dengan nomor verifikasi resmi.',
+            'Proyek ini dinilai 100% oleh human reviewer WADAH — kelulusan di sini membuka akses ke Ujian Sertifikasi UGC Creator berbayar, langkah terakhir sebelum dapat Sertifikat Kompetensi resmi.',
           ],
         },
-        aiIntro: 'Selamat sampai di gerbang terakhir, Rina! Ini bukan sekadar checkpoint biasa — approval di sini menerbitkan sertifikat kompetensi resmi WADAH-mu. Kerjakan sebaik yang kamu bisa.',
-        suggests: [{ id: 'faq-cp-3', text: 'Apa yang terjadi setelah proyek akhir ini disetujui?', answer: 'Kamu akan mendapatkan Sertifikat Kompetensi UGC Creator resmi dari WADAH — punya nomor verifikasi unik yang bisa dicek siapa saja, dan langsung masuk ke profil publikmu.' }],
+        aiIntro: 'Selamat sampai di gerbang terakhir, Rina! Ini bukan sekadar checkpoint biasa — lulus di sini membuka akses ke Ujian Sertifikasi resmi WADAH. Kerjakan sebaik yang kamu bisa.',
+        suggests: [{ id: 'faq-cp-3', text: 'Apa yang terjadi setelah proyek akhir ini disetujui?', answer: 'Kamu akan membuka akses ke Ujian Sertifikasi UGC Creator berbayar — begitu lulus, Sertifikat Kompetensi resmi WADAH-mu terbit dan langsung masuk ke profil publikmu.' }],
         instruction: 'Kumpulkan 1 set (3 video review/naskah) untuk Suplemen Herbal Sehat Alami sesuai brief di atas.',
         deadlineText: '10 hari',
         checklist: [

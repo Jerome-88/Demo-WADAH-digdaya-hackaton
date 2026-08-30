@@ -13,7 +13,7 @@ export default function Navbar() {
   // doesn't have.
   const hasOwnHeader = location.pathname === '/' || location.pathname === '/rina/task' || location.pathname === '/rina/profile'
     || location.pathname.startsWith('/rina/submit') || location.pathname.startsWith('/unit/')
-    || location.pathname.startsWith('/rina/sertifikat/') || location.pathname.startsWith('/verifikasi/')
+    || location.pathname.startsWith('/rina/sertifikat/') || location.pathname.startsWith('/rina/sertifikasi/') || location.pathname.startsWith('/verifikasi/')
     || location.pathname === '/jasa' || location.pathname.startsWith('/portfolio/')
     || location.pathname.startsWith('/jasa/') || location.pathname === '/talenta';
   if (hasOwnHeader) return null;

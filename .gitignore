@@ -28,3 +28,10 @@ dist-ssr
 
 # Claude Code local session state
 .claude/
+
+# Backend (Python)
+backend/.venv/
+backend/.venv_check/
+backend/__pycache__/
+backend/**/__pycache__/
+backend/.env

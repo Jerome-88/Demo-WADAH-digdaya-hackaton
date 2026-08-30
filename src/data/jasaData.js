@@ -68,6 +68,7 @@ export const CURATED_TALENTS = [
     location: 'Jakarta',
     responseTime: '15 menit',
     matchReason: 'Baru menyelesaikan checkpoint Desain Grafis di WADAH · Verified Portfolio aktif · Level 2',
+    certifications: ['Desain Grafis'],
     score: 9.5,
     matchPct: 99,
     bio: 'Talent WADAH yang baru menyelesaikan simulasi kerja Desain Grafis dengan skor tinggi. Portfolio-nya sudah diverifikasi human reviewer dan siap menerima proyek nyata pertamanya.',

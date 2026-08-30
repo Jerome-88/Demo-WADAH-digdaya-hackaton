@@ -21,7 +21,7 @@ const WADY_QUOTES = [
 
 export default function RinaTask() {
   const navigate = useNavigate();
-  const { streak, hearts, selectedSkill, completedNodeIds, activeProject } = useApp();
+  const { streak, hearts, selectedSkill, completedNodeIds, activeProject, certificateEarnedAt } = useApp();
   const { playFail, playClick } = useGameAudio();
 
   // Wady's speech bubble rotates through motivational quotes; stays visible
@@ -59,6 +59,13 @@ export default function RinaTask() {
     if (index === 0) return true;
     return isCompleted(skillMap.nodes[index - 1].id);
   };
+
+  // The paid certification exam only shows up as a menu once the skill map's
+  // final checkpoint is actually done — not before, and not baked into that
+  // checkpoint's own submission flow.
+  const finalCheckpoint = skillMap.nodes.find(n => n.type === 'checkpoint' && n.isFinalProject);
+  const finalCheckpointDone = finalCheckpoint && isCompleted(finalCheckpoint.id);
+  const isCertified = !!certificateEarnedAt[skillId];
 
   // A unit tab unlocks once the previous unit's checkpoint is approved.
   // Units beyond what's been authored for this skill (totalUnits) stay
@@ -280,6 +287,39 @@ export default function RinaTask() {
             })}
           </div>
         </div>
+
+        {/* ── SERTIFIKASI MENU — only shows up once the final checkpoint is done ── */}
+        {finalCheckpointDone && (
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-8 rounded-2xl p-5 sm:p-6 border-2 flex flex-col sm:flex-row items-center justify-between gap-4"
+            style={{ borderColor: '#2b6fff', background: '#eef2fe' }}
+          >
+            <div className="flex items-center gap-3 text-center sm:text-left">
+              <div className="w-12 h-12 rounded-full flex items-center justify-center shrink-0 bg-white">
+                <i className="fa-solid fa-graduation-cap text-xl" style={{ color: '#2b6fff' }}></i>
+              </div>
+              <div>
+                <div className="font-sora font-bold text-sm" style={{ color: '#2b6fff' }}>
+                  {isCertified ? 'Kamu Sudah Certified!' : 'Ujian Sertifikasi Tersedia'}
+                </div>
+                <div className="text-gray-500 text-xs font-inter">
+                  {isCertified
+                    ? `Sertifikat Kompetensi ${skillMeta.label} sudah kamu miliki.`
+                    : 'Kamu sudah menyelesaikan semua unit — saatnya ambil sertifikasi resmi.'}
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={() => navigate(isCertified ? `/rina/sertifikat/${skillId}` : `/rina/sertifikasi/${skillId}`)}
+              className="shrink-0 text-white font-bold py-2.5 px-6 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
+              style={{ background: '#2b6fff' }}
+            >
+              {isCertified ? 'Lihat Sertifikat' : 'Ambil Ujian Sertifikasi'}
+            </button>
+          </motion.div>
+        )}
       </main>
 
       {/* ── WADY SPEECH BUBBLE (sits above the AI Mentor trigger, bottom-right) ── */}

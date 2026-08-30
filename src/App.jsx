@@ -16,6 +16,7 @@ import RinaSubmit       from './pages/rina/RinaSubmit';
 import ProfilePage      from './pages/rina/ProfilePage';
 import SmartMatchPage   from './pages/rina/SmartMatchPage';
 import CertificatePage  from './pages/rina/CertificatePage';
+import RinaCertification from './pages/rina/RinaCertification';
 
 function AppShell() {
   return (
@@ -36,6 +37,7 @@ function AppShell() {
         <Route path="/rina/profile"      element={<ProfilePage />} />
         <Route path="/rina/match"        element={<SmartMatchPage />} />
         <Route path="/rina/sertifikat/:skillId" element={<CertificatePage />} />
+        <Route path="/rina/sertifikasi/:skillId" element={<RinaCertification />} />
       </Routes>
     </div>
   );
