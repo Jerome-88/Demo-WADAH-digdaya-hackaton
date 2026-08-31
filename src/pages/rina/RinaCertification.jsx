@@ -12,8 +12,7 @@ const GREEN = '#00c897';
 const ORANGE = '#f37219';
 const RED = '#e5484d';
 
-const MAX_REVISIONS = 2;
-const XP_TABLE = { 0: 200, 1: 150, 2: 120 };
+const CERT_XP = 200;
 const EXAM_FEE = 650000;
 
 export default function RinaCertification() {
@@ -33,15 +32,12 @@ export default function RinaCertification() {
   // certificates just go straight to the certificate itself.
   const eligible = finalCheckpoint && completedNodeIds.includes(`${skillId}:${finalCheckpoint.id}`);
 
-  // 'exam-payment' | 'exam-form' | 'submitted' | 'revision-feedback' | 'revision-form' |
-  // 'approved-celebrating' | 'approved-result' | 'exam-failed'
+  // 'exam-payment' | 'exam-form' | 'submitted' | 'approved-celebrating' | 'approved-result' | 'exam-failed'
   const [view, setView] = useState('exam-payment');
   const [paying, setPaying] = useState(false);
-  const [revisionCount, setRevisionCount] = useState(0);
   const [uploaded, setUploaded] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [checkedItems, setCheckedItems] = useState(new Set());
-  const [revisionReminders, setRevisionReminders] = useState(new Set());
 
   // Only gate entry at the initial payment gate. Once the user has started
   // the exam through this page, passing it flips `alreadyCertified` via our
@@ -57,7 +53,6 @@ export default function RinaCertification() {
   if (view === 'exam-payment' && (!eligible || alreadyCertified)) return null;
 
   const allChecked = checkedItems.size === checklist.length;
-  const xpAmount = XP_TABLE[revisionCount] ?? XP_TABLE[MAX_REVISIONS];
 
   function simUploadFile() {
     setUploading(true);
@@ -69,14 +64,6 @@ export default function RinaCertification() {
 
   function toggleCheck(i) {
     setCheckedItems(prev => {
-      const next = new Set(prev);
-      next.has(i) ? next.delete(i) : next.add(i);
-      return next;
-    });
-  }
-
-  function toggleReminder(i) {
-    setRevisionReminders(prev => {
       const next = new Set(prev);
       next.has(i) ? next.delete(i) : next.add(i);
       return next;
@@ -95,34 +82,20 @@ export default function RinaCertification() {
     setView('submitted');
   }
 
-  function handleStartRevision() {
-    setUploaded(false);
-    setUploading(false);
-    setView('revision-form');
-  }
-
-  function handleSubmitRevision() {
-    setRevisionCount(c => c + 1);
-    setUploaded(false);
-    setView('submitted');
-  }
-
   function triggerApproved() {
-    addExp(xpAmount);
+    addExp(CERT_XP);
     issueCertificate(skillId);
     setView('approved-celebrating');
     setTimeout(() => setView('approved-result'), 2000);
   }
 
-  // A real certification exam can end in an outright fail, not just "needs
-  // revision" — the presenter picks the outcome directly for the demo.
+  // A real certification exam only has two outcomes — lulus or gagal, no
+  // "needs revision" — the presenter picks the outcome directly for the demo.
   function handleExamVerdict(verdict) {
     if (verdict === 'approved') {
       triggerApproved();
-    } else if (verdict === 'gagal' || revisionCount + 1 >= MAX_REVISIONS) {
-      setView('exam-failed');
     } else {
-      setView('revision-feedback');
+      setView('exam-failed');
     }
   }
 
@@ -130,10 +103,8 @@ export default function RinaCertification() {
   // that means paying the fee again, not just "try again for free".
   function handleRetakeExam() {
     setView('exam-payment');
-    setRevisionCount(0);
     setUploaded(false);
     setCheckedItems(new Set());
-    setRevisionReminders(new Set());
   }
 
   return (
@@ -324,9 +295,7 @@ export default function RinaCertification() {
         {view === 'submitted' && (
           <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center text-center gap-4 py-10">
             <div className="text-5xl">📬</div>
-            <h2 className="font-sora font-bold text-xl" style={{ color: BLUE }}>
-              {revisionCount === 0 ? 'Hasil Ujianmu Sudah Dikirim!' : 'Revisimu Sudah Dikirim!'}
-            </h2>
+            <h2 className="font-sora font-bold text-xl" style={{ color: BLUE }}>Hasil Ujianmu Sudah Dikirim!</h2>
             <p className="text-gray-500 text-sm font-inter">Senior specialist akan memeriksa hasil ujianmu</p>
 
             <div className="w-full rounded-2xl p-5 text-left space-y-2.5 mt-2" style={{ background: '#f5f8fb' }}>
@@ -353,13 +322,6 @@ export default function RinaCertification() {
                   Lulus
                 </button>
                 <button
-                  onClick={() => handleExamVerdict('revisi')}
-                  className="w-full text-white font-bold py-3 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
-                  style={{ background: ORANGE }}
-                >
-                  Perlu Revisi
-                </button>
-                <button
                   onClick={() => handleExamVerdict('gagal')}
                   className="w-full text-white font-bold py-3 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
                   style={{ background: RED }}
@@ -379,146 +341,6 @@ export default function RinaCertification() {
           </motion.div>
         )}
 
-        {/* ── STATE 2A: REVISION REQUESTED ── */}
-        {view === 'revision-feedback' && (
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-5">
-            <div className="flex items-center gap-3">
-              <img src="/reviewer.jpg" alt="Reviewer" className="w-10 h-10 rounded-full object-cover shrink-0" />
-              <div className="flex-1">
-                <div className="text-sm font-bold font-inter" style={{ color: BLUE }}>Senior Specialist - {skillMeta.label}</div>
-                <div className="italic text-xs font-inter font-semibold" style={{ color: BLUE }}>1 hari yang lalu</div>
-              </div>
-              <span className="text-[10px] font-bold px-2.5 py-1 rounded-full font-inter shrink-0 border-2" style={{ color: RED, borderColor: RED, background: '#fdecec' }}>PERLU REVISI</span>
-            </div>
-
-            <div className="rounded-2xl p-5" style={{ background: '#f5f8fb' }}>
-              <h3 className="font-sora font-bold text-sm mb-3" style={{ color: ORANGE }}>Feedback dari Senior Specialist:</h3>
-              <p className="text-sm font-inter leading-relaxed mb-3 text-gray-600">{feedback.intro}</p>
-              <ul className="space-y-2">
-                {feedback.points.map((p, i) => (
-                  <li key={i} className="text-sm font-inter leading-relaxed flex gap-2">
-                    <span className="mt-2 w-1.5 h-1.5 rounded-full shrink-0" style={{ background: BLUE }}></span>
-                    <span className="text-gray-600"><strong style={{ color: BLUE }}>{p.title}</strong> - {p.detail}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="rounded-2xl p-5 space-y-2" style={{ background: '#f5f8fb' }}>
-              <div className="text-sm font-bold font-inter" style={{ color: GREEN }}>Revisi ke {revisionCount + 1} dari maksimal {MAX_REVISIONS}</div>
-              <div className="flex items-center gap-2 text-sm font-inter" style={{ color: GREEN }}>
-                <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: GREEN }}></span> Selesaikan dalam 3 hari
-              </div>
-              <div className="flex items-center gap-2 text-sm font-inter" style={{ color: GREEN }}>
-                <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: GREEN }}></span> Masih bisa dapat +{XP_TABLE[revisionCount + 1] ?? XP_TABLE[MAX_REVISIONS]} XP kalau lulus di revisi ini
-              </div>
-            </div>
-
-            <button
-              onClick={handleStartRevision}
-              className="w-full text-white font-bold py-3.5 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
-              style={{ background: ORANGE }}
-            >
-              Mulai Revisi
-            </button>
-          </motion.div>
-        )}
-
-        {/* ── STATE 2B: REVISION FORM ── */}
-        {view === 'revision-form' && (
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-5">
-            <div>
-              <span className="text-[10px] font-bold px-2.5 py-1 rounded-full font-inter border-2" style={{ color: BLUE, borderColor: BLUE, background: '#eef2fe' }}>
-                REVISI UJIAN KE-{revisionCount + 1}
-              </span>
-            </div>
-
-            {/* Reviewer feedback, always visible */}
-            <div className="rounded-2xl p-5" style={{ background: '#f5f8fb' }}>
-              <h3 className="font-sora font-bold text-sm mb-3" style={{ color: ORANGE }}>Feedback dari Senior Specialist:</h3>
-              <p className="text-sm font-inter leading-relaxed mb-3 text-gray-600">{feedback.intro}</p>
-              <ul className="space-y-2">
-                {feedback.points.map((p, i) => (
-                  <li key={i} className="text-sm font-inter leading-relaxed flex gap-2">
-                    <span className="mt-2 w-1.5 h-1.5 rounded-full shrink-0" style={{ background: BLUE }}></span>
-                    <span className="text-gray-600"><strong style={{ color: BLUE }}>{p.title}</strong> - {p.detail}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Reminder checklist (non-mandatory) */}
-            <div className="rounded-2xl p-5" style={{ background: '#f5f8fb' }}>
-              <h3 className="font-sora font-bold text-xs mb-3 uppercase tracking-wide" style={{ color: ORANGE }}>Reminder Revisi</h3>
-              <div className="space-y-2.5">
-                {feedback.checklist.map((item, i) => (
-                  <label key={i} className="flex items-start gap-3 cursor-pointer group">
-                    <div
-                      onClick={() => toggleReminder(i)}
-                      className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 border-2 transition-all"
-                      style={revisionReminders.has(i) ? { borderColor: GREEN } : { borderColor: BLUE }}
-                    >
-                      {revisionReminders.has(i) && <i className="fa-solid fa-check text-[9px]" style={{ color: GREEN }}></i>}
-                    </div>
-                    <span
-                      className="text-sm font-inter font-medium leading-relaxed"
-                      style={revisionReminders.has(i) ? { color: GREEN, textDecoration: 'line-through' } : { color: BLUE }}
-                    >
-                      {item}
-                    </span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            {/* Upload area — same as first submission */}
-            <div>
-              <h3 className="font-sora font-bold text-sm mb-3" style={{ color: ORANGE }}>Upload File Hasil Revisi</h3>
-
-              {!uploaded && !uploading && (
-                <div
-                  onClick={simUploadFile}
-                  className="rounded-2xl p-10 text-center transition-all cursor-pointer border-[3px] border-dashed"
-                  style={{ background: '#cfddfb', borderColor: '#0052ff' }}
-                >
-                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4 bg-white">
-                    <i className="fa-solid fa-upload text-lg" style={{ color: '#0052ff' }}></i>
-                  </div>
-                  <div className="font-semibold font-inter mb-1" style={{ color: '#0052ff' }}>Drag & drop atau klik untuk upload</div>
-                  <div className="text-sm font-inter" style={{ color: '#5b7bb8' }}>Versi revisi dari hasil ujianmu</div>
-                  <div className="mt-4 inline-block text-white text-xs px-4 py-2 rounded-full font-inter font-semibold" style={{ background: '#0052ff' }}>
-                    Pilih File
-                  </div>
-                </div>
-              )}
-
-              {uploading && (
-                <div className="rounded-2xl p-10 text-center border-[3px] border-dashed" style={{ background: '#cfddfb', borderColor: '#0052ff' }}>
-                  <div className="w-12 h-12 border-4 rounded-full animate-spin-fast mx-auto mb-4" style={{ borderColor: '#0052ff', borderTopColor: 'transparent' }} />
-                  <div className="font-semibold font-inter" style={{ color: '#0052ff' }}>Mengupload file…</div>
-                </div>
-              )}
-
-              {uploaded && (
-                <div className="rounded-2xl p-8 text-center border-2 border-dashed" style={{ background: GREEN, borderColor: GREEN }}>
-                  <div className="text-white font-bold font-inter">Your Submission has been Uploaded</div>
-                  <div className="text-white/90 text-sm font-inter mt-1">ujian_{skillId}_revisi{revisionCount + 1}.zip</div>
-                </div>
-              )}
-            </div>
-
-            {uploaded && (
-              <button
-                onClick={handleSubmitRevision}
-                className="mx-auto text-white font-bold py-3.5 px-10 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
-                style={{ background: GREEN }}
-              >
-                Submit Revisi
-              </button>
-            )}
-          </motion.div>
-        )}
-
         {/* ── STATE 3: APPROVED RESULT ── */}
         {view === 'approved-result' && (
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-5">
@@ -535,25 +357,10 @@ export default function RinaCertification() {
                 <i className="fa-solid fa-bolt" style={{ color: ORANGE }}></i>
               </div>
               <div>
-                <div className="font-sora font-bold text-base" style={{ color: BLUE }}>
-                  +{xpAmount} XP {revisionCount === 0 ? '(lulus langsung)' : `(lulus setelah ${revisionCount} revisi)`}
-                </div>
+                <div className="font-sora font-bold text-base" style={{ color: BLUE }}>+{CERT_XP} XP</div>
                 <div className="text-gray-500 text-xs font-inter">Kerja bagus menyelesaikan ujian sertifikasi ini!</div>
               </div>
             </div>
-
-            {revisionCount > 0 && (
-              <div className="rounded-2xl p-5" style={{ background: '#f5f8fb' }}>
-                <div className="flex items-center gap-3 mb-3">
-                  <img src="/reviewer.jpg" alt="Reviewer" className="w-9 h-9 rounded-full object-cover shrink-0" />
-                  <div>
-                    <div className="text-sm font-bold font-inter" style={{ color: BLUE }}>Senior Specialist - {skillMeta.label}</div>
-                    <div className="italic text-xs font-inter font-semibold" style={{ color: BLUE }}>Baru saja</div>
-                  </div>
-                </div>
-                <p className="text-sm font-inter leading-relaxed italic text-gray-600">"{feedback.approvedComment}"</p>
-              </div>
-            )}
 
             <div className="flex flex-col gap-2.5">
               <button

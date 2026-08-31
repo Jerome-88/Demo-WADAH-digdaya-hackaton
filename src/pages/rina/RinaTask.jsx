@@ -21,7 +21,7 @@ const WADY_QUOTES = [
 
 export default function RinaTask() {
   const navigate = useNavigate();
-  const { streak, hearts, selectedSkill, completedNodeIds, activeProject, certificateEarnedAt } = useApp();
+  const { streak, hearts, selectedSkill, completedNodeIds, setCompletedNodeIds, activeProject, certificateEarnedAt } = useApp();
   const { playFail, playClick } = useGameAudio();
 
   // Wady's speech bubble rotates through motivational quotes; stays visible
@@ -98,6 +98,15 @@ export default function RinaTask() {
     }
     playClick();
     navigate(`/unit/${skillId}-${nodeIdToSlug(node.id)}`);
+  };
+
+  // Demo shortcut: skip the entire skill map (all units + checkpoints) in one
+  // click and jump straight to the certification exam gate — saves having to
+  // click through 14+ nodes manually during a live demo.
+  const handleSkipToCertification = () => {
+    const allIds = skillMap.nodes.map(n => nsKey(n.id));
+    setCompletedNodeIds(prev => Array.from(new Set([...prev, ...allIds])));
+    navigate(`/rina/sertifikasi/${skillId}`);
   };
 
   // Pair each node with its position in the full flat array (unlock logic
@@ -287,6 +296,23 @@ export default function RinaTask() {
             })}
           </div>
         </div>
+
+        {/* ── DEMO SHORTCUT — skip the whole map and jump to the exam gate ── */}
+        {!finalCheckpointDone && (
+          <div className="mt-8 rounded-xl p-4 border-2 flex flex-col sm:flex-row items-center justify-between gap-3" style={{ background: '#fff', borderColor: '#e5e9f0' }}>
+            <div className="text-center sm:text-left">
+              <div className="text-gray-400 text-[11px] font-inter font-bold uppercase tracking-wide mb-1">Demo Mode</div>
+              <p className="text-gray-500 text-xs font-inter">Selesaikan semua unit sekaligus dan langsung buka Ujian Sertifikasi untuk keperluan demo.</p>
+            </div>
+            <button
+              onClick={handleSkipToCertification}
+              className="shrink-0 text-white font-bold py-2.5 px-5 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
+              style={{ background: '#f37219' }}
+            >
+              Selesaikan Semua &amp; ke Sertifikasi
+            </button>
+          </div>
+        )}
 
         {/* ── SERTIFIKASI MENU — only shows up once the final checkpoint is done ── */}
         {finalCheckpointDone && (
