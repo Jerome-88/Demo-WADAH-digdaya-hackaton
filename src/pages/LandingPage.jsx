@@ -149,7 +149,7 @@ export default function LandingPage() {
               animate={{ y: [0, -14, 0] }}
               transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
             />
-            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-0 w-[200px]">
+            <div className="absolute bottom-[95%] left-1/2 -translate-x-[55%] mb-0 w-[200px]">
               <motion.div
                 className="relative bg-white rounded-2xl px-4 py-3 shadow-lg border-2 text-center"
                 style={{ borderColor: BLUE_STRONG }}
