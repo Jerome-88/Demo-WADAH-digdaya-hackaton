@@ -140,7 +140,7 @@ export default function LandingPage() {
         <div className="absolute bottom-0 left-0 w-72 h-72 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" style={{ background: `${BLUE}1a` }} />
 
         {/* Decorative illustrations */}
-        <div className="hidden lg:block absolute left-4 bottom-40 w-48 xl:w-56 z-10">
+        <div className="hidden lg:block absolute left-12 bottom-40 w-48 xl:w-56 z-10">
           <div className="relative">
             <motion.img
               src="/mascot-hero.png"
@@ -149,7 +149,7 @@ export default function LandingPage() {
               animate={{ y: [0, -14, 0] }}
               transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
             />
-            <div className="absolute top-0 left-[40%] -translate-y-[60%] w-[220px]">
+            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-0 w-[200px]">
               <motion.div
                 className="relative bg-white rounded-2xl px-4 py-3 shadow-lg border-2 text-center"
                 style={{ borderColor: BLUE_STRONG }}
@@ -176,7 +176,7 @@ export default function LandingPage() {
                   </AnimatePresence>
                 </div>
                 <div
-                  className="absolute -bottom-2 left-6 w-4 h-4 bg-white border-b-2 border-l-2 rotate-45"
+                  className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-b-2 border-r-2 rotate-45"
                   style={{ borderColor: BLUE_STRONG }}
                 />
               </motion.div>
