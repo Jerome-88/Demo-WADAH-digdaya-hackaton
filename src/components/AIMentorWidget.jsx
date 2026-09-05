@@ -1,9 +1,18 @@
-import { useState } from 'react';
+import { useImperativeHandle, useState, forwardRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { toBackendUnitId } from '../data/skillMaps';
+import { useApp } from '../context/AppContext';
+import { api } from '../lib/api';
 
 const DAILY_LIMIT = 10;
-const QUIZ_REFUSAL = 'Gw bisa bantu jelasin konsepnya, tapi jawaban quiz harus kamu temuin sendiri ya 😊';
 const GREETING = 'Halo! Saya WADDY, AI Mentor-mu. Tanya apapun soal **materi**, atau minta **saran arah** kalau lagi ngerjain checkpoint 😊';
+
+// The backend's PRD-defined stages are materi/quiz/checkpoint — the frontend
+// calls the checkpoint task stage "tantangan" (or "sertifikasi" for the paid
+// exam), so map those onto "checkpoint" before calling the API.
+const BACKEND_STAGE = { materi: 'materi', quiz: 'quiz', tantangan: 'checkpoint', checkpoint: 'checkpoint', sertifikasi: 'checkpoint' };
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 // Shown when the widget is opened from the Skill Map itself (node === null)
 // instead of from a specific unit — general "tentang WADAH" questions rather
@@ -29,18 +38,25 @@ function renderRich(text, accentColor) {
   );
 }
 
-export default function AIMentorWidget({ node, stage, skillLabel, light = false }) {
+const AIMentorWidget = forwardRef(function AIMentorWidget({ node, stage, skillLabel, skillId, light = false }, ref) {
+  const { mode } = useApp();
+  const isReal = mode === 'real';
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [messageCount, setMessageCount] = useState(0);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  // Real mode only — server-authoritative in place of the local counter
+  // above (the demo endpoint has zero real rate limiting, so messageCount
+  // there is cosmetic, deliberately left untouched for the Premium pitch beat).
+  const [serverUsed, setServerUsed] = useState(0);
+  const [serverLimit, setServerLimit] = useState(DAILY_LIMIT); // null once a real response reports premium/unlimited
 
   const contextLabel = node
     ? `Konteks: Unit ${node.id} — ${node.title}`
     : `Konteks: Peta Misi ${skillLabel || ''}`;
 
-  const limitReached = messageCount >= DAILY_LIMIT;
+  const limitReached = isReal ? (serverLimit !== null && serverUsed >= serverLimit) : messageCount >= DAILY_LIMIT;
   const chips = node ? (node.suggests || []) : MAP_SUGGESTS;
 
   function ensureGreeting() {
@@ -54,22 +70,69 @@ export default function AIMentorWidget({ node, stage, skillLabel, light = false 
     });
   }
 
-  function respondTo(text, { fromChip, chipAnswer } = {}) {
+  // Lets a page-level "Konsul ke Wady" button (e.g. the Skill Insight page)
+  // open this floating widget from outside, without lifting its open state.
+  useImperativeHandle(ref, () => ({
+    open: () => { ensureGreeting(); setOpen(true); },
+  }));
+
+  async function respondTo(text, { fromChip, chipAnswer } = {}) {
     setMessages(prev => [...prev, { role: 'user', text }]);
     setMessageCount(prev => prev + 1);
     setIsTyping(true);
 
-    setTimeout(() => {
-      let reply;
-      if (stage === 'quiz' && !fromChip) {
-        reply = QUIZ_REFUSAL;
-      } else if (fromChip && chipAnswer) {
-        reply = chipAnswer;
-      } else {
-        reply = 'Sip! Coba lebih spesifik pertanyaannya ya, atau pilih salah satu chip saran di atas biar saya bisa bantu lebih akurat.';
+    if (fromChip && chipAnswer) {
+      setTimeout(() => {
+        setIsTyping(false);
+        setMessages(prev => [...prev, { role: 'ai', text: chipAnswer }]);
+      }, 900);
+      return;
+    }
+
+    // With a real unit + skill in context, ask the actual Gemini-backed
+    // mentor instead of a canned reply — this is the real system prompt,
+    // quiz/checkpoint behavior included, not a frontend reimplementation of
+    // those rules. Real mode calls the authenticated /mentor/chat (real,
+    // server-tracked rate limit); demo mode keeps calling the auth-free
+    // /mentor/chat-demo twin, unchanged.
+    const backendStage = stage ? BACKEND_STAGE[stage] : null;
+    if (node && skillId && backendStage) {
+      const unitId = toBackendUnitId(skillId, node.id);
+      if (isReal) {
+        try {
+          const data = await api.mentorChat(text, unitId, backendStage);
+          setServerUsed(data.messages_used_today);
+          setServerLimit(data.messages_limit);
+          setIsTyping(false);
+          setMessages(prev => [...prev, { role: 'ai', text: data.response }]);
+        } catch (err) {
+          setIsTyping(false);
+          if (err.status === 429 && serverLimit !== null) setServerUsed(serverLimit);
+          setMessages(prev => [...prev, { role: 'ai', text: `Gagal menghubungi AI Mentor (${err.message}).` }]);
+        }
+        return;
       }
+      try {
+        const history = messages.slice(-6).map(m => ({ role: m.role === 'ai' ? 'assistant' : 'user', content: m.text }));
+        const res = await fetch(`${API_URL}/mentor/chat-demo`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text, unit_id: unitId, unit_stage: backendStage, history }),
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        setIsTyping(false);
+        setMessages(prev => [...prev, { role: 'ai', text: data.response }]);
+      } catch (err) {
+        setIsTyping(false);
+        setMessages(prev => [...prev, { role: 'ai', text: `Gagal connect ke backend AI Mentor (${err.message}). Pastikan backend jalan: cd backend, lalu uvicorn app.main:app --reload` }]);
+      }
+      return;
+    }
+
+    setTimeout(() => {
       setIsTyping(false);
-      setMessages(prev => [...prev, { role: 'ai', text: reply }]);
+      setMessages(prev => [...prev, { role: 'ai', text: 'Sip! Coba lebih spesifik pertanyaannya ya, atau pilih salah satu chip saran di atas biar saya bisa bantu lebih akurat.' }]);
     }, 900);
   }
 
@@ -243,4 +306,6 @@ export default function AIMentorWidget({ node, stage, skillLabel, light = false 
       </motion.button>
     </div>
   );
-}
+});
+
+export default AIMentorWidget;

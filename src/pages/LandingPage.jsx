@@ -73,7 +73,8 @@ const strengths = [
 
 export default function LandingPage() {
   const navigate = useNavigate();
-  const { resetDemo } = useApp();
+  const { resetDemo, mode, authUser } = useApp();
+  const isLoggedIn = mode === 'real' && !!authUser;
   const [wadyMsgIndex, setWadyMsgIndex] = useState(0);
 
   useEffect(() => {
@@ -123,13 +124,15 @@ export default function LandingPage() {
             ))}
           </nav>
 
-          <button
-            onClick={() => navigate('/')}
-            className="text-white font-bold px-6 py-2 rounded-full text-sm font-inter flex-shrink-0"
-            style={{ background: ORANGE }}
-          >
-            Login
-          </button>
+          {!isLoggedIn && (
+            <button
+              onClick={() => navigate('/login')}
+              className="text-white font-bold px-6 py-2 rounded-full text-sm font-inter flex-shrink-0"
+              style={{ background: ORANGE }}
+            >
+              Login
+            </button>
+          )}
         </div>
       </header>
 

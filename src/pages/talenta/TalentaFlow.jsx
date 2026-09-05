@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { ArrowRight, ArrowLeft, CheckCircle, Upload } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import { getSupabase } from '../../lib/supabaseClient';
 import { SKILLS } from '../../data/skillMaps';
 
 const ACTIVATION_CHECKS = [
@@ -10,12 +11,15 @@ const ACTIVATION_CHECKS = [
   'Mengaktifkan checkpoint pertama',
 ];
 const ACTIVATION_DURATION = 2800;
+// Demo mode's fake OTP and this Supabase project's real Email OTP (Auth →
+// Providers → Email → OTP Length) are both set to the 6-digit convention.
 const OTP_LENGTH = 6;
 const STEP_LABELS = ['Data Diri', 'Verifikasi OTP', 'Pilih Skill'];
 
 export default function TalentaFlow() {
   const navigate = useNavigate();
-  const { setSelectedSkill, onboardingComplete, setOnboardingComplete } = useApp();
+  const { setSelectedSkill, onboardingComplete, setOnboardingComplete, mode, setMode, createRealUserRow, hydrateFromBackend } = useApp();
+  const isReal = mode === 'real';
 
   // step: 0=Data Diri, 1=Verifikasi OTP, 2=Pilih Skill, 3=Aktivasi (internal
   // only — not shown as a stepper label, plays automatically once a skill
@@ -24,12 +28,17 @@ export default function TalentaFlow() {
   const [localSkill, setLocalSkill] = useState(null);
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
   const [photoUploading, setPhotoUploading] = useState(false);
   const [photoUploaded, setPhotoUploaded] = useState(false);
   const [sendingOtp, setSendingOtp] = useState(false);
   const [otp, setOtp] = useState(Array(OTP_LENGTH).fill(''));
   const [resendCooldown, setResendCooldown] = useState(0);
   const [barFilled, setBarFilled] = useState(false);
+  const [otpError, setOtpError] = useState(null);
+  const [verifyingOtp, setVerifyingOtp] = useState(false);
+  const [activating, setActivating] = useState(false);
+  const [activationError, setActivationError] = useState(null);
   const otpRefs = useRef([]);
 
   function useDemoProfile() {
@@ -46,14 +55,62 @@ export default function TalentaFlow() {
     }, 1000);
   }
 
-  function handleSendOtp() {
+  // Real mode: requires the Supabase project's "Confirm signup" / "Magic
+  // Link" email templates to include {{ .Token }} — Supabase's own default
+  // templates only have a clickable link, no numeric code, so verifyOtp
+  // below will get "Token has expired or is invalid" until that's added on
+  // the dashboard side (Authentication → Email Templates).
+  async function handleSendOtp() {
     setSendingOtp(true);
+    setOtpError(null);
+    if (isReal) {
+      try {
+        const { error } = await getSupabase().auth.signInWithOtp({ email, options: { shouldCreateUser: true } });
+        if (error) throw error;
+      } catch (err) {
+        setSendingOtp(false);
+        setOtpError(err.message || 'Gagal mengirim OTP');
+        return;
+      }
+      setSendingOtp(false);
+      setOtp(Array(OTP_LENGTH).fill(''));
+      setResendCooldown(30);
+      setStep(1);
+      return;
+    }
     setTimeout(() => {
       setSendingOtp(false);
       setOtp(Array(OTP_LENGTH).fill(''));
       setResendCooldown(30);
       setStep(1);
     }, 900);
+  }
+
+  // One flow for both register and login — the email+OTP step is identical
+  // either way, so branching on "does a profile already exist" right here
+  // (rather than asking the user upfront which one they want) avoids
+  // re-asking a returning user for name/phone/skill they already gave once.
+  async function handleVerifyOtp() {
+    if (!isReal) { setStep(2); return; }
+    setVerifyingOtp(true);
+    setOtpError(null);
+    try {
+      const { error } = await getSupabase().auth.verifyOtp({ email, token: otp.join(''), type: 'email' });
+      if (error) throw error;
+
+      try {
+        await hydrateFromBackend(); // succeeds only if a `users` row already exists
+        navigate('/rina/task'); // returning user — skip Pilih Skill/Aktivasi entirely
+        return;
+      } catch {
+        // No profile yet — genuinely new, continue registration below.
+      }
+      setStep(2);
+    } catch (err) {
+      setOtpError(err.message || 'Kode OTP salah atau kedaluwarsa');
+    } finally {
+      setVerifyingOtp(false);
+    }
   }
 
   function handleOtpChange(i, value) {
@@ -74,9 +131,12 @@ export default function TalentaFlow() {
     setOtp(['1', '2', '3', '4', '5', '6']);
   }
 
-  function handleResendOtp() {
+  async function handleResendOtp() {
     if (resendCooldown > 0) return;
     setResendCooldown(30);
+    if (isReal) {
+      await getSupabase().auth.signInWithOtp({ email, options: { shouldCreateUser: true } }).catch(() => {});
+    }
   }
 
   const otpComplete = otp.every(d => d !== '');
@@ -91,10 +151,24 @@ export default function TalentaFlow() {
   const skillMeta = SKILLS.find(s => s.id === localSkill);
 
   // Picking a skill IS the final action — it commits the skill and drops
-  // straight into the (non-interactive) activation animation below.
-  function handleStartActivation() {
+  // straight into the (non-interactive) activation animation below. In real
+  // mode this is also where the `users` row gets created — it needs `skill`,
+  // which isn't known until now (see backend/README.md's onboarding note:
+  // there's no dedicated "create profile" endpoint, the frontend inserts it
+  // directly with the user's own session).
+  async function handleStartActivation() {
     setSelectedSkill(localSkill);
-    setStep(3);
+    if (!isReal) { setStep(3); return; }
+    setActivating(true);
+    setActivationError(null);
+    try {
+      await createRealUserRow({ name, phone, skill: localSkill });
+      setStep(3);
+    } catch (err) {
+      setActivationError(err.message || 'Gagal membuat akun. Coba lagi.');
+    } finally {
+      setActivating(false);
+    }
   }
 
   // Non-interactive "aktivasi akun" screen — plays for a beat, then drops
@@ -132,6 +206,29 @@ export default function TalentaFlow() {
         >
           Mulai Perjalanan Kariermu
         </h1>
+      )}
+
+      {/* Demo vs Real mode toggle — locked once past Data Diri so switching
+          mid-flow (e.g. after a real OTP was already sent) can't happen. */}
+      {step === 0 && (
+        <div className="flex justify-center px-4">
+          <div className="inline-flex rounded-full p-1 gap-1" style={{ background: '#e1e8f2' }}>
+            <button
+              onClick={() => setMode('demo')}
+              className="px-4 py-1.5 rounded-full text-xs font-bold font-inter transition-all cursor-pointer border-0"
+              style={!isReal ? { background: '#f37219', color: '#fff' } : { color: '#797d85', background: 'transparent' }}
+            >
+              🚀 Demo Cepat
+            </button>
+            <button
+              onClick={() => setMode('real')}
+              className="px-4 py-1.5 rounded-full text-xs font-bold font-inter transition-all cursor-pointer border-0"
+              style={isReal ? { background: '#2b6fff', color: '#fff' } : { color: '#797d85', background: 'transparent' }}
+            >
+              📧 Daftar Asli
+            </button>
+          </div>
+        </div>
       )}
 
       {/* Step circles */}
@@ -174,6 +271,21 @@ export default function TalentaFlow() {
                     style={{ background: '#cfddfb', borderColor: '#0052ff' }}
                   />
                 </div>
+
+                {isReal && (
+                  <div>
+                    <h3 className="font-inter font-bold text-sm uppercase tracking-wide mb-2" style={{ color: '#0052ff' }}>Email</h3>
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={e => setEmail(e.target.value)}
+                      placeholder="kamu@email.com"
+                      className="w-full rounded-2xl px-5 py-4 text-base text-[#1a1a1a] placeholder:text-[#797d85] font-inter border-[3px] border-dashed focus:outline-none"
+                      style={{ background: '#cfddfb', borderColor: '#0052ff' }}
+                    />
+                    <p className="text-xs font-inter mt-1.5" style={{ color: '#797d85' }}>Kode OTP asli dikirim ke email ini.</p>
+                  </div>
+                )}
 
                 <div>
                   <h3 className="font-inter font-bold text-sm uppercase tracking-wide mb-2" style={{ color: '#0052ff' }}>Nomor HP</h3>
@@ -228,14 +340,22 @@ export default function TalentaFlow() {
                 </div>
               </div>
 
-              <button onClick={useDemoProfile} className="self-start text-sm font-inter underline bg-transparent border-0 cursor-pointer" style={{ color: '#f27418' }}>
-              Isi contoh cepat (demo)
-              </button>
+              {!isReal && (
+                <button onClick={useDemoProfile} className="self-start text-sm font-inter underline bg-transparent border-0 cursor-pointer" style={{ color: '#f27418' }}>
+                Isi contoh cepat (demo)
+                </button>
+              )}
             </div>
+
+            {otpError && (
+              <div className="rounded-xl p-3 text-sm font-inter font-semibold text-center" style={{ background: '#fdecec', color: '#e5484d' }}>
+                {otpError}
+              </div>
+            )}
 
             <button
               onClick={handleSendOtp}
-              disabled={!name.trim() || !phone.trim() || sendingOtp}
+              disabled={!name.trim() || !phone.trim() || sendingOtp || (isReal && !email.trim())}
               className="w-full flex items-center justify-center gap-2 text-white font-bold py-3.5 rounded-full transition-all text-sm cursor-pointer border-0 disabled:opacity-40 disabled:cursor-not-allowed font-inter hover:brightness-110"
               style={{ background: '#2b6fff' }}
             >
@@ -256,9 +376,12 @@ export default function TalentaFlow() {
           <div className="animate-fade-in flex flex-col gap-6">
             <div className="rounded-3xl p-6 sm:p-8 flex flex-col items-center gap-6 text-center" style={{ background: '#f5f8fb' }}>
               <div>
-                <h2 className="font-sora font-bold text-2xl sm:text-3xl mb-2" style={{ color: '#0052ff' }}>Verifikasi Nomor HP</h2>
+                <h2 className="font-sora font-bold text-2xl sm:text-3xl mb-2" style={{ color: '#0052ff' }}>Verifikasi {isReal ? 'Email' : 'Nomor HP'}</h2>
                 <p className="font-inter text-base" style={{ color: '#0052ff' }}>
-                  Kode 6 digit sudah dikirim ke <span className="font-bold" style={{ color: '#f27418' }}>+62 {phone || '812-3456-7890'}</span>
+                  Kode {OTP_LENGTH} digit sudah dikirim ke{' '}
+                  <span className="font-bold" style={{ color: '#f27418' }}>
+                    {isReal ? email : `+62 ${phone || '812-3456-7890'}`}
+                  </span>
                 </p>
               </div>
 
@@ -278,9 +401,17 @@ export default function TalentaFlow() {
                 ))}
               </div>
 
-              <button onClick={fillDemoOtp} className="text-sm font-inter underline bg-transparent border-0 cursor-pointer" style={{ color: '#f27418' }}>
-              Isi contoh cepat (demo)
-              </button>
+              {!isReal && (
+                <button onClick={fillDemoOtp} className="text-sm font-inter underline bg-transparent border-0 cursor-pointer" style={{ color: '#f27418' }}>
+                Isi contoh cepat (demo)
+                </button>
+              )}
+
+              {otpError && (
+                <div className="w-full rounded-xl p-3 text-sm font-inter font-semibold text-center" style={{ background: '#fdecec', color: '#e5484d' }}>
+                  {otpError}
+                </div>
+              )}
 
               <div className="text-sm font-inter" style={{ color: '#f27418' }}>
                 <span className="font-bold">Tidak menerima kode?</span>{' '}
@@ -297,12 +428,19 @@ export default function TalentaFlow() {
                 <ArrowLeft size={16} /> Kembali
               </button>
               <button
-                onClick={() => setStep(2)}
-                disabled={!otpComplete}
+                onClick={handleVerifyOtp}
+                disabled={!otpComplete || verifyingOtp}
                 className="flex items-center gap-2 text-white font-bold px-6 py-3 rounded-full transition-all text-sm cursor-pointer border-0 disabled:opacity-40 disabled:cursor-not-allowed font-inter hover:brightness-110"
                 style={{ background: '#2b6fff' }}
               >
-                Verifikasi <ArrowRight size={16} />
+                {verifyingOtp ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin-fast" />
+                    Memverifikasi...
+                  </>
+                ) : (
+                  <>Verifikasi <ArrowRight size={16} /></>
+                )}
               </button>
             </div>
           </div>
@@ -343,17 +481,35 @@ export default function TalentaFlow() {
               </div>
             )}
 
+            {activationError && (
+              <div className="rounded-xl p-3 text-sm font-inter font-semibold text-center" style={{ background: '#fdecec', color: '#e5484d' }}>
+                {activationError}
+                {activationError.includes('Sesi login habis') && (
+                  <button onClick={() => setStep(1)} className="block mx-auto mt-2 underline font-bold bg-transparent border-0 cursor-pointer" style={{ color: '#e5484d' }}>
+                    Kembali ke Verifikasi OTP
+                  </button>
+                )}
+              </div>
+            )}
+
             <div className="flex justify-between">
               <button onClick={() => setStep(1)} className="flex items-center gap-2 font-inter text-sm bg-transparent border-0 cursor-pointer" style={{ color: '#0052ff' }}>
                 <ArrowLeft size={16} /> Kembali
               </button>
               <button
                 onClick={handleStartActivation}
-                disabled={!localSkill}
+                disabled={!localSkill || activating}
                 className="flex items-center gap-2 text-white font-bold px-7 py-3 rounded-full transition-all text-sm cursor-pointer border-0 disabled:opacity-40 disabled:cursor-not-allowed font-inter hover:brightness-110"
                 style={{ background: '#2b6fff' }}
               >
-                Mulai Journey <ArrowRight size={16} />
+                {activating ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin-fast" />
+                    Membuat akun...
+                  </>
+                ) : (
+                  <>Mulai Journey <ArrowRight size={16} /></>
+                )}
               </button>
             </div>
           </div>

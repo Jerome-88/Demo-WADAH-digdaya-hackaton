@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CheckCircle, ArrowLeft, MapPin, Briefcase } from 'lucide-react';
+import { CheckCircle, ArrowLeft, MapPin, Briefcase, Star } from 'lucide-react';
 import ScoreBar from '../../components/ScoreBar';
 import { useApp } from '../../context/AppContext';
 import { SKILL_MAPS, DEFAULT_SKILL, getSkillMeta } from '../../data/skillMaps';
+import { formatRupiah } from '../../data/jasaData';
 
 const PARAMS = [
   { label: 'Skor Performa',   value: 82,  weight: '40%', color: 'indigo' },
@@ -11,10 +12,34 @@ const PARAMS = [
   { label: 'Kecepatan',       value: 88,  weight: '25%', color: 'amber' },
 ];
 
+// UMKM accounts don't exist as a real login in this demo (see backend
+// README non-goals) — this is a fixed trust-signal persona shown for
+// whichever business the demo "UMKM" side posted, same way "Rina
+// Kusumawati" stands in for the one demo talent.
+const UMKM_OWNER = {
+  name: 'Andi Kurniawan',
+  rating: 4.8,
+  projectsPosted: 12,
+  projectsCompleted: 8,
+  totalSpent: 4200000,
+  memberSince: 'Januari 2026',
+};
+
 export default function SmartMatchPage() {
   const navigate = useNavigate();
-  const { activeProject, setProjectAccepted } = useApp();
-  const [accepted, setAccepted] = useState(false);
+  const { activeProject, setProjectAccepted, projectAccepted, selectedSkill } = useApp();
+  // Seeded from context (not always false) so revisiting this page — it's
+  // reachable any time now via TopBar's briefcase icon, not just once right
+  // after accepting — goes straight to the accepted summary instead of
+  // replaying "Terima Proyek?" for a project already said yes to.
+  const [accepted, setAccepted] = useState(projectAccepted);
+  const hasMatch = activeProject?.status === 'open' && activeProject.skillId === selectedSkill;
+  // Skill-mismatch is the #1 reason this page looks "stuck" empty in demo
+  // mode — the UMKM side (/jasa) and the talent side (/talenta) pick skills
+  // completely independently, so it's easy to post a project for a
+  // different skill than whatever the talent actually has. Surfacing both
+  // skills here turns the empty state into a diagnostic instead of a dead end.
+  const postedButMismatched = activeProject?.status === 'open' && activeProject.skillId !== selectedSkill;
 
   const skillId = activeProject?.skillId || DEFAULT_SKILL;
   const skillMeta = getSkillMeta(skillId);
@@ -39,7 +64,39 @@ export default function SmartMatchPage() {
 
   return (
     <div className="animate-fade-in max-w-2xl mx-auto px-4 py-10">
-      {!accepted ? (
+      {!hasMatch && !accepted ? (
+        <>
+          {/* Header */}
+          <button
+            onClick={() => navigate('/rina/profile')}
+            className="flex items-center gap-2 text-gray-500 hover:text-gray-700 font-inter text-sm mb-6"
+          >
+            <ArrowLeft size={16} />
+            Kembali ke Profil
+          </button>
+
+          {/* Empty state — reachable any time via TopBar's briefcase icon now,
+              not just from RinaTask's banner (which only ever appeared once
+              a match already existed), so a visit with no active match needs
+              its own state instead of falling through to fake project data. */}
+          <div className="flex flex-col items-center text-center gap-3 py-20">
+            <Briefcase size={32} className="text-gray-300" />
+            <h1 className="font-sora font-bold text-deep text-lg">Belum Ada Proyek yang Cocok</h1>
+            {postedButMismatched ? (
+              <p className="text-gray-500 font-inter text-sm max-w-sm">
+                Ada proyek yang di-post ({getSkillMeta(activeProject.skillId).label}), tapi skill kamu sekarang{' '}
+                <strong>{getSkillMeta(selectedSkill).label}</strong> — beda skill jadi gak ke-match. Post ulang proyek
+                dari <strong>/jasa</strong> dengan skill <strong>{getSkillMeta(selectedSkill).label}</strong> biar cocok.
+              </p>
+            ) : (
+              <p className="text-gray-500 font-inter text-sm max-w-sm">
+                Begitu ada UMKM yang post proyek sesuai skill kamu ({getSkillMeta(selectedSkill).label}), dashboard ini
+                bakal langsung nunjukin detail matching-nya.
+              </p>
+            )}
+          </div>
+        </>
+      ) : !accepted ? (
         <>
           {/* Header */}
           <button
@@ -111,6 +168,42 @@ export default function SmartMatchPage() {
                     {r}
                   </div>
                 ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Client profile */}
+          <div className="bg-white rounded-2xl border border-gray-200 p-5 mb-5">
+            <div className="text-xs font-semibold text-gray-400 font-inter uppercase tracking-wide mb-3">PROFIL KLIEN</div>
+            <div className="flex items-center gap-3">
+              <div
+                className="w-12 h-12 rounded-full flex items-center justify-center text-white font-sora font-bold text-lg flex-shrink-0"
+                style={{ background: '#2b6fff' }}
+              >
+                {UMKM_OWNER.name.charAt(0)}
+              </div>
+              <div>
+                <div className="font-sora font-bold text-deep text-base">{UMKM_OWNER.name}</div>
+                <div className="text-xs text-gray-500 font-inter">Pemilik {umkmName}</div>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm font-inter text-gray-700 mt-4 pt-4 border-t border-gray-100">
+              <span className="flex items-center gap-1 font-semibold text-amber-500"><Star size={13} className="fill-current" /> {UMKM_OWNER.rating}</span>
+              <span className="text-gray-300">|</span>
+              <span>{UMKM_OWNER.projectsPosted} project posted</span>
+              <span className="text-gray-300">|</span>
+              <span>{UMKM_OWNER.projectsCompleted} completed</span>
+            </div>
+
+            <div className="mt-3 space-y-1.5">
+              <div className="flex justify-between text-sm font-inter">
+                <span className="text-gray-500">Total spent</span>
+                <span className="font-semibold text-gray-800">{formatRupiah(UMKM_OWNER.totalSpent)}</span>
+              </div>
+              <div className="flex justify-between text-sm font-inter">
+                <span className="text-gray-500">Member since</span>
+                <span className="font-semibold text-gray-800">{UMKM_OWNER.memberSince}</span>
               </div>
             </div>
           </div>

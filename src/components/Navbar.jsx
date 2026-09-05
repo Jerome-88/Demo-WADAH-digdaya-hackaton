@@ -11,11 +11,11 @@ export default function Navbar() {
   // duplicate strip above them. "/" also owns its header now (see
   // LandingPage.jsx) since it needs marketing nav links this shared bar
   // doesn't have.
-  const hasOwnHeader = location.pathname === '/' || location.pathname === '/rina/task' || location.pathname === '/rina/profile'
+  const hasOwnHeader = location.pathname === '/' || location.pathname === '/rina/task' || location.pathname === '/rina/profile' || location.pathname === '/rina/insight'
     || location.pathname.startsWith('/rina/submit') || location.pathname.startsWith('/unit/')
     || location.pathname.startsWith('/rina/sertifikat/') || location.pathname.startsWith('/rina/sertifikasi/') || location.pathname.startsWith('/verifikasi/')
     || location.pathname === '/jasa' || location.pathname.startsWith('/portfolio/')
-    || location.pathname.startsWith('/jasa/') || location.pathname === '/talenta';
+    || location.pathname.startsWith('/jasa/') || location.pathname === '/talenta' || location.pathname === '/login';
   if (hasOwnHeader) return null;
 
   return (

@@ -1,0 +1,11 @@
+# Minimal config for the Edge Functions in this repo — `supabase init` was
+# not run here (no local Supabase CLI on this machine), so this only covers
+# what's needed to link + deploy functions to an existing hosted project.
+# Run `supabase link --project-ref <your-project-ref>` before deploying.
+
+[functions.api]
+# Auth is enforced per-route in lib/auth.ts (mirrors the old FastAPI
+# behaviour — public routes like /portfolio and /matching stay public), so
+# the platform-level JWT gate must be off, or every request (including
+# public ones) gets rejected before our own code ever runs.
+verify_jwt = false

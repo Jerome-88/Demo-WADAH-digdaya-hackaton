@@ -62,6 +62,42 @@ export function nodeIdToSlug(nodeId) {
   return /^\d+\.\d+$/.test(nodeId) ? nodeId.replace('.', '-') : nodeId;
 }
 
+// Mirrors backend/scripts/sync_units_from_frontend.mjs's skill-prefix map —
+// must stay in sync with it, since both sides need to agree on unit_id shape.
+const BACKEND_SKILL_PREFIX = { social: 'sm', video: 've', desain: 'dg', ecommerce: 'ec', marketing: 'mk', ugc: 'ugc' };
+
+// Converts a frontend node id ("1.1", "checkpoint-3") into the backend's
+// unit_id format ("dg-1-1", "dg-3-cp3") for calling the AI Mentor API.
+export function toBackendUnitId(skillId, nodeId) {
+  const prefix = BACKEND_SKILL_PREFIX[skillId] || skillId;
+  const quizMatch = /^(\d+)\.(\d+)$/.exec(nodeId);
+  if (quizMatch) return `${prefix}-${quizMatch[1]}-${quizMatch[2]}`;
+  const cpMatch = /^checkpoint-(\d+)$/.exec(nodeId);
+  if (cpMatch) return `${prefix}-${cpMatch[1]}-cp${cpMatch[1]}`;
+  return `${prefix}-${nodeId}`;
+}
+
+const BACKEND_SKILL_PREFIX_REV = Object.fromEntries(
+  Object.entries(BACKEND_SKILL_PREFIX).map(([skillId, prefix]) => [prefix, skillId])
+);
+
+// Inverse of toBackendUnitId — used to hydrate completedNodeIds/openedNodeIds
+// from the backend's GET /progress rows after a real-mode page reload.
+// Returns null for an unrecognized prefix/shape.
+export function fromBackendUnitId(unitId) {
+  const cpMatch = /^([a-z]+)-\d+-cp(\d+)$/.exec(unitId);
+  if (cpMatch) {
+    const skillId = BACKEND_SKILL_PREFIX_REV[cpMatch[1]];
+    return skillId ? { skillId, nodeId: `checkpoint-${cpMatch[2]}` } : null;
+  }
+  const quizMatch = /^([a-z]+)-(\d+)-(\d+)$/.exec(unitId);
+  if (quizMatch) {
+    const skillId = BACKEND_SKILL_PREFIX_REV[quizMatch[1]];
+    return skillId ? { skillId, nodeId: `${quizMatch[2]}.${quizMatch[3]}` } : null;
+  }
+  return null;
+}
+
 // Parses a "/unit/:unitParam" segment (e.g. "desain-1-1") back into
 // { skillId, nodeId }. Returns null if the skill prefix isn't recognized.
 export function parseUnitParam(unitParam) {
@@ -1214,6 +1250,7 @@ export const SKILL_MAPS = {
         ],
         questions: [
           {
+            concept_tag: 'canvas_dimensions',
             question: 'Berapakah resolusi & dimensi kanvas paling tepat untuk mematuhi brief klien di atas?',
             options: [
               '1080 x 1920 piksel (Rasio 9:16)',
@@ -1225,6 +1262,7 @@ export const SKILL_MAPS = {
             explanation: 'Resolusi 1080x1080px (Rasio 1:1) adalah standar Instagram Feed — cukup tinggi resolusinya dan tidak terpotong di grid utama profil.',
           },
           {
+            concept_tag: 'canvas_dimensions',
             question: 'Kenapa penting menyisakan "safe zone" di tepi kanvas?',
             options: [
               'Supaya ukuran file lebih kecil',
@@ -1236,6 +1274,7 @@ export const SKILL_MAPS = {
             explanation: 'Beberapa platform sedikit meng-crop gambar saat merender thumbnail — elemen yang terlalu mepet ke tepi berisiko terpotong atau hilang.',
           },
           {
+            concept_tag: 'canvas_dimensions',
             question: 'Warung Pak Budi juga sesekali posting ke Instagram Story. Kenapa story TIDAK boleh pakai kanvas 1:1 yang sama dengan feed?',
             options: [
               'Story pakai rasio vertikal 9:16 penuh layar — kanvas 1:1 akan menyisakan area kosong besar di atas-bawah',
@@ -1268,6 +1307,7 @@ export const SKILL_MAPS = {
         ],
         questions: [
           {
+            concept_tag: 'typography',
             question: 'Bagaimana urutan prioritas ukuran font yang benar dari yang terbesar sampai yang terkecil?',
             options: [
               'Headline Promo ➔ Call to Action ➔ Detail/Syarat Ketentuan',
@@ -1279,6 +1319,7 @@ export const SKILL_MAPS = {
             explanation: 'Headline harus paling menonjol karena itu yang menjawab "apa untungnya buat saya" dalam sekejap mata — CTA dan detail menyusul sesuai urutan kepentingan.',
           },
           {
+            concept_tag: 'typography',
             question: 'Kenapa Headline sebaiknya diletakkan di area atas poster?',
             options: [
               'Supaya tidak menutupi logo brand',
@@ -1290,6 +1331,7 @@ export const SKILL_MAPS = {
             explanation: 'Pola scan mata manusia dimulai dari kiri-atas — menaruh headline di posisi itu membuatnya paling cepat tertangkap sebelum orang melanjutkan scroll.',
           },
           {
+            concept_tag: 'typography',
             question: 'Teks "DISKON 50%" berwarna abu-abu tua di atas background cokelat gelap. Apa masalah utamanya?',
             options: [
               'Tidak masalah selama ukuran fontnya besar',
@@ -1319,6 +1361,7 @@ export const SKILL_MAPS = {
         suggests: [{ id: 'faq-1.3-1', text: 'Apa psikologi warna cokelat?', answer: 'Warna cokelat hangat memberikan rasa kehangatan, keakraban, ketenangan, serta aroma rasa tanah/organik. Sangat pas untuk niche kafe atau UMKM kopi.' }],
         questions: [
           {
+            concept_tag: 'color_psychology',
             question: 'Warna apa yang paling cocok untuk UMKM kopi tradisional yang ingin menonjolkan kehangatan & keakraban?',
             options: [
               'Biru terang',
@@ -1330,6 +1373,7 @@ export const SKILL_MAPS = {
             explanation: 'Cokelat hangat identik dengan aroma kopi/tanah dan memberi kesan akrab — pas untuk kafe tradisional seperti Kopi Senja.',
           },
           {
+            concept_tag: 'color_psychology',
             question: 'Sebuah brand skincare organik ingin kesan "alami & menenangkan". Warna dominan yang paling tepat?',
             options: [
               'Merah menyala',
@@ -1341,6 +1385,7 @@ export const SKILL_MAPS = {
             explanation: 'Hijau secara psikologis terasosiasi dengan alam dan ketenangan — cocok untuk positioning produk organik.',
           },
           {
+            concept_tag: 'color_psychology',
             question: 'Kenapa warna yang salah bisa merusak persepsi brand meski produknya bagus?',
             options: [
               'Karena warna memengaruhi biaya cetak',
@@ -1372,6 +1417,7 @@ export const SKILL_MAPS = {
         ],
         questions: [
           {
+            concept_tag: 'brief_interpretation',
             question: 'Dari brief informal Pak Budi di atas, mana yang termasuk requirement WAJIB (must-have)?',
             options: [
               'Diskon terlihat jelas & logo tercantum',
@@ -1383,6 +1429,7 @@ export const SKILL_MAPS = {
             explanation: '"Yang penting keliatan diskon-nya" dan "jangan lupa logo" adalah dua permintaan eksplisit — itu must-have, sisanya adalah interpretasi/gaya.',
           },
           {
+            concept_tag: 'brief_interpretation',
             question: 'Brief bilang "warnanya yang biasa aja kayak sebelumnya" — apa langkah paling tepat sebagai desainer?',
             options: [
               'Bebas memilih warna sesuai selera pribadi',
@@ -1394,6 +1441,7 @@ export const SKILL_MAPS = {
             explanation: '"Kayak sebelumnya" adalah instruksi implisit untuk konsistensi brand — mengecek karya lama adalah langkah paling aman dan akurat.',
           },
           {
+            concept_tag: 'brief_interpretation',
             question: 'Kenapa mencatat asumsi secara eksplisit penting saat brief ambigu?',
             options: [
               'Supaya terlihat lebih profesional saja',
@@ -1452,6 +1500,7 @@ export const SKILL_MAPS = {
         suggests: [{ id: 'faq-2.1-1', text: 'Kenapa grid/margin harus sama persis di semua desain?', answer: 'Kalau margin berubah-ubah antar desain, feed jadi terasa "goyang" saat di-scroll — padahal detail sekecil itu yang bikin sebuah akun terasa profesional dan terkurasi.' }],
         questions: [
           {
+            concept_tag: 'layout_composition',
             question: 'Kopi Senja mau posting 3 desain berbeda minggu ini (promo, testimoni, produk baru). Apa yang PALING menjaga ketiganya terasa "satu keluarga" di grid feed?',
             options: [
               'Menggunakan margin, grid, dan alignment yang sama persis di ketiganya meski isi kontennya beda',
@@ -1463,6 +1512,7 @@ export const SKILL_MAPS = {
             explanation: 'Konsistensi sistem (grid, margin, alignment) adalah yang membuat konten yang berbeda-beda tetap terasa berasal dari brand yang sama.',
           },
           {
+            concept_tag: 'layout_composition',
             question: 'Kenapa "alignment rata kiri di semua desain" lebih baik daripada alignment yang berubah-ubah tiap posting?',
             options: [
               'Rata kiri secara teknis lebih mudah dikerjakan di software',
@@ -1491,6 +1541,7 @@ export const SKILL_MAPS = {
         suggests: [{ id: 'faq-2.2-1', text: 'Kalau elemen dominannya beda, apa dong yang harus tetap sama?', answer: 'Font family, skala ukuran (headline selalu 2x lebih besar dari body misalnya), dan posisi logo — itu semua yang menjaga desain tetap terasa satu sistem meski isinya beda-beda.' }],
         questions: [
           {
+            concept_tag: 'visual_hierarchy',
             question: 'Untuk desain post "Testimoni Pelanggan", elemen apa yang paling masuk akal jadi paling dominan/besar?',
             options: [
               'Logo brand dibuat sebesar mungkin',
@@ -1502,6 +1553,7 @@ export const SKILL_MAPS = {
             explanation: 'Testimoni menjual lewat kata-kata pelanggan asli — kutipan itu sendiri yang harus jadi pusat perhatian, bukan elemen dekoratif.',
           },
           {
+            concept_tag: 'visual_hierarchy',
             question: 'Manakah yang HARUS tetap konsisten di ketiga desain (promo, testimoni, produk baru) meski elemen dominannya berbeda?',
             options: [
               'Elemen dominan harus selalu sama di semua desain',
@@ -1530,6 +1582,7 @@ export const SKILL_MAPS = {
         suggests: [{ id: 'faq-2.3-1', text: 'Berapa banyak warna yang idealnya ada di sebuah brand guideline mini?', answer: 'Cukup 3: 1 warna utama/dominan, 1 warna aksen untuk CTA atau highlight, dan 1 warna netral untuk teks/background. Lebih dari itu biasanya bikin desain terasa tidak terkontrol.' }],
         questions: [
           {
+            concept_tag: 'brand_consistency',
             question: 'Apa manfaat utama menetapkan posisi logo yang BAKU (selalu di tempat yang sama) di setiap desain?',
             options: [
               'Supaya proses desain lebih cepat tanpa mikir ulang tiap kali, dan audiens langsung mengenali pola brand',
@@ -1541,6 +1594,7 @@ export const SKILL_MAPS = {
             explanation: 'Posisi logo yang konsisten mempercepat proses desain (tidak perlu menebak ulang) dan membangun pola visual yang dikenali audiens dari waktu ke waktu.',
           },
           {
+            concept_tag: 'brand_consistency',
             question: 'Kopi Senja punya warna cokelat sebagai warna utama. Apa peran warna aksen dalam sistem ini?',
             options: [
               'Menggantikan warna utama supaya tidak monoton',
@@ -1570,6 +1624,7 @@ export const SKILL_MAPS = {
         suggests: [{ id: 'faq-2.4-1', text: 'Gimana kalau feedbacknya tetap ambigu setelah ditanya ulang?', answer: 'Tunjukkan 2 opsi visual konkret (bukan tanya terbuka lagi) — klien biasanya lebih mudah memilih "yang ini atau itu" daripada mendeskripsikan dari nol.' }],
         questions: [
           {
+            concept_tag: 'brief_interpretation',
             question: 'Klien bilang desainnya "kurang nendang". Langkah PALING tepat sebagai desainer profesional?',
             options: [
               'Mendesain ulang dari nol dengan konsep yang sama sekali berbeda',
@@ -1581,6 +1636,7 @@ export const SKILL_MAPS = {
             explanation: '"Kurang nendang" paling sering berakar dari kontras atau hierarki yang lemah — itu titik awal paling masuk akal untuk diperbaiki sebelum redesain total.',
           },
           {
+            concept_tag: 'brief_interpretation',
             question: 'Klien bilang "kurang related sama brand kita" tapi tidak menjelaskan detail. Pertanyaan balik apa yang paling membantu?',
             options: [
               '"Mau saya desain ulang total?"',
@@ -1640,6 +1696,7 @@ export const SKILL_MAPS = {
         suggests: [{ id: 'faq-3.1-1', text: 'Gimana caranya "tradisional tapi modern" tidak jadi dua kesan yang tabrakan?', answer: 'Biarkan motif batik tetap otentik/asli sebagai elemen utama, lalu modernkan lewat elemen di sekitarnya — layout minimalis, tipografi kontemporer, whitespace yang cukup. Jangan mengubah motifnya sendiri.' }],
         questions: [
           {
+            concept_tag: 'visual_research',
             question: 'Brief "tradisional tapi modern" untuk Toko Batik Nusantara paling tepat diterjemahkan sebagai...',
             options: [
               'Menghapus motif batik sepenuhnya supaya terlihat modern',
@@ -1651,6 +1708,7 @@ export const SKILL_MAPS = {
             explanation: 'Kesan "modern" datang dari elemen di sekitar motif (layout, tipografi, whitespace) — bukan dari mengubah/menghapus motif batik itu sendiri.',
           },
           {
+            concept_tag: 'visual_research',
             question: 'Kenapa membuat moodboard sebelum mendesain 5 konten sekaligus itu penting?',
             options: [
               'Supaya proses desain terlihat lebih formal',
@@ -1680,6 +1738,7 @@ export const SKILL_MAPS = {
         suggests: [{ id: 'faq-3.2-1', text: 'Kenapa nggak boleh asal stretch desain Feed ke ukuran Story?', answer: 'Stretch/tarik paksa mengubah rasio asli elemen — logo dan teks jadi terlihat gepeng atau melar, yang justru merusak kesan profesional yang susah payah dibangun.' }],
         questions: [
           {
+            concept_tag: 'layout_composition',
             question: 'Kenapa desain Feed (1:1) tidak boleh sekadar di-stretch untuk dipakai di Story (9:16)?',
             options: [
               'Karena Instagram melarang secara teknis',
@@ -1691,6 +1750,7 @@ export const SKILL_MAPS = {
             explanation: 'Stretch memaksa rasio elemen berubah non-proporsional — visual jadi terdistorsi dan terlihat tidak profesional, walau secara teknis "cepat".',
           },
           {
+            concept_tag: 'layout_composition',
             question: 'Apa yang SEBAIKNYA tetap sama saat satu desain diadaptasi dari Feed ke Story?',
             options: [
               'Ukuran kanvas harus dipaksa identik',
@@ -1720,6 +1780,7 @@ export const SKILL_MAPS = {
         suggests: [{ id: 'faq-3.3-1', text: 'Kenapa font tipis/dekoratif kurang cocok di atas motif batik?', answer: 'Motif batik sudah punya banyak detail visual — font yang tipis atau terlalu dekoratif akan "tenggelam" dan sulit terbaca, beda dengan font tegas berbobot (bold) yang tetap menonjol di atas keramaian visual.' }],
         questions: [
           {
+            concept_tag: 'typography',
             question: 'Kenapa font sans-serif bold lebih disarankan dibanding font tipis di atas motif batik yang ramai?',
             options: [
               'Font bold lebih murah lisensinya',
@@ -1731,6 +1792,7 @@ export const SKILL_MAPS = {
             explanation: 'Kepadatan visual motif batik butuh "lawan" tipografi yang tegas supaya teks tetap menjadi fokus, bukan justru hilang di antara detail motif.',
           },
           {
+            concept_tag: 'typography',
             question: 'Klien minta harga & nama produk tetap terbaca jelas walau di atas motif ramai. Solusi paling tepat?',
             options: [
               'Menghapus motif batik di area teks',
@@ -1760,6 +1822,7 @@ export const SKILL_MAPS = {
         suggests: [{ id: 'faq-3.4-1', text: 'Apa isi minimal dari presentasi rasional desain ke klien?', answer: 'Cukup 2-3 kalimat per keputusan besar (kenapa pilih warna ini, kenapa layout ini) yang mengaitkan balik ke brief awal klien — tidak perlu dokumen panjang, yang penting klien paham alasan di baliknya.' }],
         questions: [
           {
+            concept_tag: 'client_presentation',
             question: 'Kenapa menjelaskan RASIONAL desain (bukan cuma mengirim file) penting di proyek sebesar ini?',
             options: [
               'Supaya terlihat sibuk dan effort',
@@ -1771,6 +1834,7 @@ export const SKILL_MAPS = {
             explanation: 'Klien yang memahami alasan di balik desain akan lebih percaya diri menyetujui — presentasi rasional mengubah "menerima pasrah" jadi "setuju dengan yakin".',
           },
           {
+            concept_tag: 'client_presentation',
             question: 'Saat presentasi 5 konten sekaligus ke klien, hal apa yang paling penting ditonjolkan?',
             options: [
               'Menunjukkan tiap konten satu-satu tanpa menyebut hubungan antar konten',

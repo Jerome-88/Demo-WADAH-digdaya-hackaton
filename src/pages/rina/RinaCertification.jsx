@@ -6,6 +6,7 @@ import { useApp } from '../../context/AppContext';
 import { SKILL_MAPS, DEFAULT_SKILL, getSkillMeta } from '../../data/skillMaps';
 import { formatRupiah } from '../../data/jasaData';
 import { REVIEW_FEEDBACK } from '../../data/reviewFeedback';
+import { pickVariantIndex, resolveCheckpointBrief, resolveCheckpointFeedback } from '../../utils/checkpointVariant';
 
 const BLUE = '#2b6fff';
 const GREEN = '#00c897';
@@ -18,13 +19,23 @@ const EXAM_FEE = 650000;
 export default function RinaCertification() {
   const navigate = useNavigate();
   const { skillId: skillIdParam } = useParams();
-  const { addExp, completedNodeIds, certificateEarnedAt, issueCertificate } = useApp();
+  const { addExp, completedNodeIds, certificateEarnedAt, issueCertificate, checkpointVariantIndex, setCheckpointVariantIndex } = useApp();
   const skillId = SKILL_MAPS[skillIdParam] ? skillIdParam : DEFAULT_SKILL;
   const skillMap = SKILL_MAPS[skillId];
   const skillMeta = getSkillMeta(skillId);
   const finalCheckpoint = skillMap.nodes.find(n => n.type === 'checkpoint' && n.isFinalProject);
-  const checklist = finalCheckpoint?.checklist || [];
-  const feedback = REVIEW_FEEDBACK[skillId]?.['checkpoint-3'] || REVIEW_FEEDBACK[DEFAULT_SKILL]['checkpoint-1'];
+
+  // The exam gets its own variant slot (separate from the checkpoint's own
+  // regular submission) — retaking a failed exam re-rolls it, so a second
+  // attempt doesn't feel like a rerun of the exact same brief.
+  const variantKey = `${skillId}:exam`;
+  const variantIdx = checkpointVariantIndex[variantKey] ?? 0;
+  const brief = resolveCheckpointBrief(skillId, finalCheckpoint?.id, variantIdx, {
+    info: finalCheckpoint?.info, instruction: finalCheckpoint?.instruction, briefBullets: finalCheckpoint?.briefBullets, checklist: finalCheckpoint?.checklist,
+  });
+  const checklist = brief.checklist || [];
+  const feedback = resolveCheckpointFeedback(skillId, finalCheckpoint?.id, variantIdx,
+    REVIEW_FEEDBACK[skillId]?.['checkpoint-3'] || REVIEW_FEEDBACK[DEFAULT_SKILL]['checkpoint-1']);
 
   const alreadyCertified = !!certificateEarnedAt[skillId];
   // The exam only opens once the skill map's final checkpoint is actually
@@ -49,6 +60,13 @@ export default function RinaCertification() {
     if (!eligible) navigate('/rina/task', { replace: true });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [alreadyCertified, eligible, view]);
+
+  useEffect(() => {
+    if (checkpointVariantIndex[variantKey] === undefined) {
+      setCheckpointVariantIndex(prev => ({ ...prev, [variantKey]: pickVariantIndex(skillId, finalCheckpoint?.id) }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [variantKey]);
 
   if (view === 'exam-payment' && (!eligible || alreadyCertified)) return null;
 
@@ -105,6 +123,7 @@ export default function RinaCertification() {
     setView('exam-payment');
     setUploaded(false);
     setCheckedItems(new Set());
+    setCheckpointVariantIndex(prev => ({ ...prev, [variantKey]: pickVariantIndex(skillId, finalCheckpoint?.id) }));
   }
 
   return (
@@ -432,7 +451,7 @@ export default function RinaCertification() {
       </main>
 
       {/* ── AI MENTOR FLOATING WIDGET ── */}
-      <AIMentorWidget node={finalCheckpoint} stage="sertifikasi" skillLabel={skillMeta.label} light />
+      <AIMentorWidget node={finalCheckpoint} stage="sertifikasi" skillLabel={skillMeta.label} skillId={skillId} light />
 
       {/* ── APPROVED CELEBRATION OVERLAY ── */}
       <AnimatePresence>

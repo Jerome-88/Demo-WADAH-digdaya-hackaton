@@ -21,7 +21,7 @@ const WADY_QUOTES = [
 
 export default function RinaTask() {
   const navigate = useNavigate();
-  const { streak, hearts, selectedSkill, completedNodeIds, setCompletedNodeIds, activeProject, certificateEarnedAt } = useApp();
+  const { streak, hearts, selectedSkill, completedNodeIds, setCompletedNodeIds, activeProject, setActiveProject, certificateEarnedAt } = useApp();
   const { playFail, playClick } = useGameAudio();
 
   // Wady's speech bubble rotates through motivational quotes; stays visible
@@ -67,6 +67,36 @@ export default function RinaTask() {
   const finalCheckpointDone = finalCheckpoint && isCompleted(finalCheckpoint.id);
   const isCertified = !!certificateEarnedAt[skillId];
 
+  // Auto-fires a "match notification" once the final checkpoint is actually
+  // done — mirrors the "Smart Matching Terbuka" unlock below (prove
+  // yourself through the whole skill map first), instead of requiring a
+  // presenter to separately walk through /jasa and line up its skillId with
+  // whatever skill this talent happens to have (that cross-flow dependency,
+  // two independent skill pickers sharing one session, was too easy to get
+  // out of sync). Guarded on activeProject.status === null so it only ever
+  // fires once, and never overwrites a project a presenter deliberately
+  // posted for real via /jasa.
+  useEffect(() => {
+    if (!selectedSkill || !finalCheckpointDone || activeProject?.status !== null) return;
+    const t = setTimeout(() => {
+      setActiveProject({
+        id: `${selectedSkill}-toko-sepatu-aneka`,
+        umkm: 'Toko Sepatu Aneka',
+        location: 'Bandung',
+        skillId: selectedSkill,
+        skill: skillMeta.label,
+        budget: 500000,
+        budgetNegotiated: null,
+        durasi: '2 Minggu',
+        desc: `Butuh talenta ${skillMeta.label} buat bantu ${skillMeta.tagline.toLowerCase()} di toko kami.`,
+        status: 'open',
+      });
+      showToast('✨ Ada proyek yang cocok masuk!', 'fa-briefcase');
+    }, 2000);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedSkill, finalCheckpointDone]);
+
   // A unit tab unlocks once the previous unit's checkpoint is approved.
   // Units beyond what's been authored for this skill (totalUnits) stay
   // permanently locked as "segera hadir".
@@ -100,13 +130,21 @@ export default function RinaTask() {
     navigate(`/unit/${skillId}-${nodeIdToSlug(node.id)}`);
   };
 
-  // Demo shortcut: skip the entire skill map (all units + checkpoints) in one
-  // click and jump straight to the certification exam gate — saves having to
-  // click through 14+ nodes manually during a live demo.
+  // Demo shortcut: skip straight to the last checkpoint (everything else —
+  // all regular nodes plus every earlier checkpoint — marked done), leaving
+  // the final checkpoint itself for a manual walkthrough instead of also
+  // auto-completing it and jumping straight to the certification gate. Stays
+  // on the map (activeUnit's own init logic already lands on Unit 3, the
+  // first with an incomplete checkpoint).
   const handleSkipToCertification = () => {
-    const allIds = skillMap.nodes.map(n => nsKey(n.id));
+    const allIds = skillMap.nodes
+      .filter(n => n.id !== finalCheckpoint?.id)
+      .map(n => nsKey(n.id));
     setCompletedNodeIds(prev => Array.from(new Set([...prev, ...allIds])));
-    navigate(`/rina/sertifikasi/${skillId}`);
+    // activeUnit only computes its initial value once on mount — nudge it to
+    // the final checkpoint's unit now, since completedNodeIds changing alone
+    // won't re-trigger that lazy initializer.
+    if (finalCheckpoint) setActiveUnit(getNodeUnit(finalCheckpoint.id));
   };
 
   // Pair each node with its position in the full flat array (unlock logic
@@ -297,21 +335,49 @@ export default function RinaTask() {
           </div>
         </div>
 
-        {/* ── DEMO SHORTCUT — skip the whole map and jump to the exam gate ── */}
+        {/* ── DEMO SHORTCUT — skip to right before the final checkpoint, leaving
+             it for a manual walkthrough instead of also auto-completing it ── */}
         {!finalCheckpointDone && (
           <div className="mt-8 rounded-xl p-4 border-2 flex flex-col sm:flex-row items-center justify-between gap-3" style={{ background: '#fff', borderColor: '#e5e9f0' }}>
             <div className="text-center sm:text-left">
               <div className="text-gray-400 text-[11px] font-inter font-bold uppercase tracking-wide mb-1">Demo Mode</div>
-              <p className="text-gray-500 text-xs font-inter">Selesaikan semua unit sekaligus dan langsung buka Ujian Sertifikasi untuk keperluan demo.</p>
+              <p className="text-gray-500 text-xs font-inter">Selesaikan semua unit sampai sebelum checkpoint terakhir, biar kamu bisa coba checkpoint terakhirnya sendiri.</p>
             </div>
             <button
               onClick={handleSkipToCertification}
               className="shrink-0 text-white font-bold py-2.5 px-5 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
               style={{ background: '#f37219' }}
             >
-              Selesaikan Semua &amp; ke Sertifikasi
+              Selesaikan Sampai Checkpoint Terakhir
             </button>
           </div>
+        )}
+
+        {/* ── SMART MATCHING UNLOCK — persistent entry point once the final checkpoint is done ── */}
+        {finalCheckpointDone && (
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-8 rounded-2xl p-5 sm:p-6 border-2 flex flex-col sm:flex-row items-center justify-between gap-4"
+            style={{ borderColor: '#00c897', background: 'rgba(0,200,151,0.06)' }}
+          >
+            <div className="flex items-center gap-3 text-center sm:text-left">
+              <div className="w-12 h-12 rounded-full flex items-center justify-center shrink-0 bg-white text-xl">🎯</div>
+              <div>
+                <div className="font-sora font-bold text-sm" style={{ color: '#00c897' }}>Smart Matching Terbuka</div>
+                <div className="text-gray-500 text-xs font-inter">
+                  Profil {skillMeta.label}-mu sekarang bisa di-match otomatis dengan proyek UMKM yang cocok.
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={() => navigate('/rina/match')}
+              className="shrink-0 text-white font-bold py-2.5 px-6 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
+              style={{ background: '#00c897' }}
+            >
+              Lihat Smart Matching
+            </button>
+          </motion.div>
         )}
 
         {/* ── SERTIFIKASI MENU — only shows up once the final checkpoint is done ── */}

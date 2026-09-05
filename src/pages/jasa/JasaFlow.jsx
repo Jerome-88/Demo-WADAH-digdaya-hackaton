@@ -18,7 +18,7 @@ const MATCH_LINES = [
 export default function JasaFlow() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { setActiveProject } = useApp();
+  const { activeProject, setActiveProject } = useApp();
 
   // step: 0=Pilih Skill, 1=Detail Bisnis, 2=Mencari (matching animation),
   // 3=Hasil (talent results).
@@ -52,9 +52,13 @@ export default function JasaFlow() {
   }
 
   function fillDemo() {
-    const skillId = 'desain';
+    // Step 0's "Next" already requires a skill to be picked before this
+    // button is even reachable — silently forcing it back to 'desain' here
+    // discarded that choice, which is exactly what broke the cross-side
+    // "Ada proyek yang cocok" match whenever the demo talent (Rina) picked
+    // any skill other than Desain Grafis in /talenta.
+    const skillId = selectedSkill || 'desain';
     const desc = 'Saya punya toko sepatu kecil di Pasar Baru, Bandung. Mau bikin desain poster untuk promosi sneakers edisi spesial Lebaran. Talentnya bisa dari mana saja, asalkan hasil kerjanya rapi dan sesuai dengan gaya anak muda zaman sekarang.';
-    setSelectedSkill(skillId);
     setUmkmName('SepatuKu');
     setDescription(desc);
     setBudgetValue('500000');
@@ -70,19 +74,29 @@ export default function JasaFlow() {
 
   function goToResults() {
     const skillMeta = getSkillMeta(selectedSkill);
-    setActiveProject({
-      id: `${selectedSkill}-${umkmName.toLowerCase().replace(/\s+/g, '-')}`,
-      umkm: umkmName,
-      location: 'Indonesia',
-      skillId: selectedSkill,
-      skill: skillMeta.label,
-      budget: Number(budgetValue) || 0,
-      budgetNegotiated: null,
-      durasi: 'Fleksibel', // negotiated later in chat, not chosen in Step 1
-      desc: description,
-      scope: scopeItems,
-      status: 'open',
-    });
+    // Don't clobber a match the talent already has — this flow's own
+    // results screen (step 3) shows a fixed CURATED_TALENTS_DISPLAY list
+    // regardless of activeProject, so setActiveProject only ever exists to
+    // notify the talent side. Overwriting it unconditionally here used to
+    // silently erase whatever match RinaTask's own checkpoint-completion
+    // notification had already set (often for a different skill than
+    // whatever's picked in this independent UMKM-side flow), which looked
+    // like the talent's notification "disappeared" for no reason.
+    if (!activeProject || activeProject.status === null) {
+      setActiveProject({
+        id: `${selectedSkill}-${umkmName.toLowerCase().replace(/\s+/g, '-')}`,
+        umkm: umkmName,
+        location: 'Indonesia',
+        skillId: selectedSkill,
+        skill: skillMeta.label,
+        budget: Number(budgetValue) || 0,
+        budgetNegotiated: null,
+        durasi: 'Fleksibel', // negotiated later in chat, not chosen in Step 1
+        desc: description,
+        scope: scopeItems,
+        status: 'open',
+      });
+    }
     setStep(3);
   }
 

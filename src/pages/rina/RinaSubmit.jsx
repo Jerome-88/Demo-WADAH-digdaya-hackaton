@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import AIMentorWidget from '../../components/AIMentorWidget';
 import { showToast } from '../../utils/toast';
 import { useApp } from '../../context/AppContext';
-import { SKILL_MAPS, DEFAULT_SKILL, getSkillMeta, getNodeUnit } from '../../data/skillMaps';
+import { SKILL_MAPS, DEFAULT_SKILL, getSkillMeta, getNodeUnit, toBackendUnitId } from '../../data/skillMaps';
 import { REVIEW_FEEDBACK } from '../../data/reviewFeedback';
+import { resolveCheckpointBrief, resolveCheckpointFeedback } from '../../utils/checkpointVariant';
 
 const BLUE = '#2b6fff';
 const GREEN = '#00c897';
@@ -21,15 +22,20 @@ const VERDICT_SCRIPT = ['revisi', 'approved'];
 export default function RinaSubmit() {
   const navigate = useNavigate();
   const { checkpointId } = useParams();
-  const { selectedSkill, addExp, setCompletedNodeIds, setVerificationSubmitted } = useApp();
+  const {
+    selectedSkill, addExp, setCompletedNodeIds, setVerificationSubmitted, checkpointVariantIndex,
+    mode, submitCheckpoint, refreshSubmissions, refreshUser,
+  } = useApp();
+  const isReal = mode === 'real';
   const skillId = selectedSkill || DEFAULT_SKILL;
   const skillMap = SKILL_MAPS[skillId] || SKILL_MAPS[DEFAULT_SKILL];
   const skillMeta = getSkillMeta(skillId);
   const checkpointNode = skillMap.nodes.find(n => n.id === checkpointId) || skillMap.nodes.find(n => n.type === 'checkpoint');
-  const checklist = checkpointNode?.checklist || skillMap.checklist;
-  const feedback = REVIEW_FEEDBACK[skillId]?.[checkpointNode?.id]
-    || REVIEW_FEEDBACK[skillId]?.['checkpoint-1']
-    || REVIEW_FEEDBACK[DEFAULT_SKILL]['checkpoint-1'];
+  const variantIdx = checkpointVariantIndex[`${skillId}:${checkpointNode?.id}`] ?? 0;
+  const brief = resolveCheckpointBrief(skillId, checkpointNode?.id, variantIdx, {
+    info: checkpointNode?.info, instruction: checkpointNode?.instruction, briefBullets: checkpointNode?.briefBullets, checklist: checkpointNode?.checklist,
+  });
+  const checklist = brief.checklist || skillMap.checklist;
 
   // 'form' | 'submitted' | 'revision-feedback' | 'revision-form' | 'approved-celebrating' | 'approved-result' | 'failed'
   const [view, setView] = useState('form');
@@ -41,14 +47,48 @@ export default function RinaSubmit() {
   const [briefExpanded, setBriefExpanded] = useState(false);
   const [showPrevSubmission, setShowPrevSubmission] = useState(false);
 
+  // Real mode only — the demo's fake-review state machine below never
+  // touches these.
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [contentText, setContentText] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
+  const [checkingStatus, setCheckingStatus] = useState(false);
+  const [realSubmission, setRealSubmission] = useState(null); // latest GET /submission/my row for this checkpoint
+  const fileInputRef = useRef(null);
+
+  // Real mode's single free-text reviewer_notes field replaces the canned
+  // REVIEW_FEEDBACK copy — same shape (`intro`/`points`/`checklist`/
+  // `approvedComment`) so every existing bit of JSX below renders unchanged
+  // regardless of which one is active.
+  const feedback = isReal
+    ? { intro: realSubmission?.reviewer_notes || 'Reviewer belum menuliskan catatan.', points: [], checklist: [], approvedComment: null }
+    : resolveCheckpointFeedback(skillId, checkpointNode?.id, variantIdx,
+        REVIEW_FEEDBACK[skillId]?.[checkpointNode?.id]
+          || REVIEW_FEEDBACK[skillId]?.['checkpoint-1']
+          || REVIEW_FEEDBACK[DEFAULT_SKILL]['checkpoint-1']);
+
   const allChecked = checkedItems.size === checklist.length;
 
   function simUploadFile() {
+    if (isReal) {
+      fileInputRef.current?.click();
+      return;
+    }
     setUploading(true);
     setTimeout(() => {
       setUploading(false);
       setUploaded(true);
     }, 1800);
+  }
+
+  // Real mode only — nothing has actually been uploaded yet at this point,
+  // just chosen; the real network call happens on submit.
+  function handleFilePicked(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setSelectedFile(file);
+    setUploaded(true);
   }
 
   function toggleCheck(i) {
@@ -71,17 +111,44 @@ export default function RinaSubmit() {
     return `${skillId}:${checkpointNode.id}`;
   }
 
+  async function submitReal() {
+    setSubmitting(true);
+    setSubmitError(null);
+    try {
+      const res = await submitCheckpoint(skillId, checkpointNode.id, contentText, selectedFile);
+      setRealSubmission(res);
+      setRevisionCount(res.revision_count);
+      setUploaded(false);
+      setSelectedFile(null);
+      setView('submitted');
+    } catch (err) {
+      // The backend auto-flips the previous row to 'failed' server-side and
+      // 400s with this exact message once max revisions is hit — that's a
+      // real terminal state, not a generic error to retry.
+      if (err.message === 'Maksimal revisi tercapai — ulangi unit dari awal') {
+        setView('failed');
+      } else {
+        setSubmitError(err.message || 'Gagal mengirim submission');
+      }
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
   function handleFirstSubmit() {
+    if (isReal) { submitReal(); return; }
     setView('submitted');
   }
 
   function handleStartRevision() {
     setUploaded(false);
     setUploading(false);
+    setSelectedFile(null);
     setView('revision-form');
   }
 
   function handleSubmitRevision() {
+    if (isReal) { submitReal(); return; }
     setRevisionCount(c => c + 1);
     setUploaded(false);
     setView('submitted');
@@ -107,15 +174,61 @@ export default function RinaSubmit() {
     }
   }
 
+  // Real mode only — there's no reviewer-approval API by design (a human
+  // flips the row's status directly in Supabase Studio), so this polls
+  // GET /submission/my instead of picking a scripted verdict.
+  async function handleCheckStatus() {
+    setCheckingStatus(true);
+    try {
+      const rows = await refreshSubmissions();
+      const backendUnitId = toBackendUnitId(skillId, checkpointNode.id);
+      const row = rows.find(r => r.unit_id === backendUnitId);
+      if (!row) return;
+      setRealSubmission(row);
+      setRevisionCount(row.revision_count);
+      if (row.status === 'pending') {
+        showToast('Masih dalam review — cek lagi nanti', 'fa-hourglass-half');
+      } else if (row.status === 'revision_requested') {
+        setView('revision-feedback');
+      } else if (row.status === 'approved') {
+        await refreshUser(); // syncs XP — the DB trigger already credited it
+        setCompletedNodeIds(prev => (prev.includes(nsKey()) ? prev : [...prev, nsKey()]));
+        setVerificationSubmitted(true);
+        setView('approved-celebrating');
+        setTimeout(() => setView('approved-result'), 2000);
+      } else if (row.status === 'failed') {
+        setView('failed');
+      }
+    } catch (err) {
+      showToast(`Gagal cek status: ${err.message}`, 'fa-triangle-exclamation');
+    } finally {
+      setCheckingStatus(false);
+    }
+  }
+
+  // Real mode: check once on landing on 'submitted' in case review already
+  // happened elsewhere in the meantime (not full polling, just avoids a
+  // stale screen after navigating away and back).
+  useEffect(() => {
+    if (!(isReal && view === 'submitted')) return;
+    const t = setTimeout(() => { handleCheckStatus(); }, 0);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [view]);
+
   function handleTryAgain() {
     setView('form');
     setRevisionCount(0);
     setUploaded(false);
+    setSelectedFile(null);
+    setContentText('');
     setCheckedItems(new Set());
     setRevisionReminders(new Set());
   }
 
-  const xpAmount = XP_TABLE[revisionCount] ?? XP_TABLE[MAX_REVISIONS];
+  const xpAmount = isReal && realSubmission?.xp_earned != null
+    ? realSubmission.xp_earned
+    : XP_TABLE[revisionCount] ?? XP_TABLE[MAX_REVISIONS];
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -139,6 +252,11 @@ export default function RinaSubmit() {
       </header>
 
       <main className="flex-1 w-full max-w-[720px] mx-auto px-4 py-8 pb-16">
+        {/* Hidden real-file input — shared by the 'form' and 'revision-form'
+            upload dropzones below, both of which just call simUploadFile()
+            which .click()s this in real mode instead of faking a delay. */}
+        <input ref={fileInputRef} type="file" onChange={handleFilePicked} className="hidden" />
+
         {/* ── FORM: initial submission ── */}
         {view === 'form' && (
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-6">
@@ -181,6 +299,19 @@ export default function RinaSubmit() {
               )}
             </div>
 
+            {isReal && (
+              <div>
+                <h3 className="font-sora font-bold text-sm mb-3" style={{ color: ORANGE }}>Catatan untuk Reviewer (opsional)</h3>
+                <textarea
+                  value={contentText}
+                  onChange={e => setContentText(e.target.value)}
+                  placeholder="Ceritakan pendekatan atau konteks tambahan soal hasil kerjamu..."
+                  className="w-full rounded-2xl p-4 text-sm font-inter resize-none border-2 focus:outline-none"
+                  style={{ borderColor: BLUE, minHeight: 90 }}
+                />
+              </div>
+            )}
+
             <div>
               <h3 className="font-sora font-bold text-sm mb-3" style={{ color: ORANGE }}>Upload File Hasil Kerja</h3>
 
@@ -212,10 +343,16 @@ export default function RinaSubmit() {
               {uploaded && (
                 <div className="rounded-2xl p-8 text-center border-2 border-dashed" style={{ background: GREEN, borderColor: GREEN }}>
                   <div className="text-white font-bold font-inter">Your Submission has been Uploaded</div>
-                  <div className="text-white/90 text-sm font-inter mt-1">Checkpoint_{skillId}_final.zip</div>
+                  <div className="text-white/90 text-sm font-inter mt-1">{isReal && selectedFile ? selectedFile.name : `Checkpoint_${skillId}_final.zip`}</div>
                 </div>
               )}
             </div>
+
+            {submitError && (
+              <div className="rounded-xl p-3 text-sm font-inter font-semibold text-center" style={{ background: '#fdecec', color: RED }}>
+                {submitError}
+              </div>
+            )}
 
             {uploaded && (
               <div className="flex flex-col gap-4">
@@ -230,10 +367,12 @@ export default function RinaSubmit() {
                 </div>
                 <button
                   onClick={handleFirstSubmit}
-                  className="mx-auto text-white font-bold py-3.5 px-10 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
+                  disabled={submitting}
+                  className="mx-auto text-white font-bold py-3.5 px-10 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110 disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2"
                   style={{ background: GREEN }}
                 >
-                  Kumpulkan Sekarang
+                  {submitting && <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin-fast" />}
+                  {submitting ? 'Mengirim...' : 'Kumpulkan Sekarang'}
                 </button>
               </div>
             )}
@@ -267,17 +406,33 @@ export default function RinaSubmit() {
               </p>
             </div>
 
-            <div className="w-full rounded-xl p-4 mt-2 border-2" style={{ background: '#fff', borderColor: '#e5e9f0' }}>
-              <div className="text-gray-400 text-[11px] font-inter font-bold uppercase tracking-wide mb-2">⚡ Demo Mode</div>
-              <p className="text-gray-500 text-xs font-inter mb-3">Dalam demo ini, kita bisa langsung simulasikan hasil review reviewer tanpa menunggu.</p>
-              <button
-                onClick={handleSimulateReview}
-                className="w-full text-white font-bold py-3 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
-                style={{ background: ORANGE }}
-              >
-                Simulasikan Keputusan Reviewer
-              </button>
-            </div>
+            {isReal ? (
+              <div className="w-full rounded-xl p-4 mt-2 border-2" style={{ background: '#fff', borderColor: '#e5e9f0' }}>
+                <div className="text-gray-400 text-[11px] font-inter font-bold uppercase tracking-wide mb-2">Review Sungguhan</div>
+                <p className="text-gray-500 text-xs font-inter mb-3">Reviewer manusia perlu buka Supabase Studio dan ubah status submission ini secara manual — belum ada tombol approve otomatis. Cek lagi setelah itu terjadi.</p>
+                <button
+                  onClick={handleCheckStatus}
+                  disabled={checkingStatus}
+                  className="w-full text-white font-bold py-3 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  style={{ background: ORANGE }}
+                >
+                  {checkingStatus && <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin-fast" />}
+                  {checkingStatus ? 'Mengecek...' : 'Cek Status Review'}
+                </button>
+              </div>
+            ) : (
+              <div className="w-full rounded-xl p-4 mt-2 border-2" style={{ background: '#fff', borderColor: '#e5e9f0' }}>
+                <div className="text-gray-400 text-[11px] font-inter font-bold uppercase tracking-wide mb-2">⚡ Demo Mode</div>
+                <p className="text-gray-500 text-xs font-inter mb-3">Dalam demo ini, kita bisa langsung simulasikan hasil review reviewer tanpa menunggu.</p>
+                <button
+                  onClick={handleSimulateReview}
+                  className="w-full text-white font-bold py-3 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
+                  style={{ background: ORANGE }}
+                >
+                  Simulasikan Keputusan Reviewer
+                </button>
+              </div>
+            )}
 
             <button
               onClick={() => navigate('/rina/task')}
@@ -373,9 +528,9 @@ export default function RinaSubmit() {
                 <span className="text-sm font-semibold font-inter" style={{ color: BLUE }}>{checkpointNode?.briefLabel}</span>
                 <i className={`fa-solid fa-chevron-down text-xs transition-transform ${briefExpanded ? 'rotate-180' : ''}`} style={{ color: BLUE }}></i>
               </button>
-              {briefExpanded && checkpointNode?.briefBullets && (
+              {briefExpanded && brief.briefBullets && (
                 <ul className="px-4 pb-4 space-y-1.5 text-xs text-gray-500 list-disc pl-8 leading-relaxed font-inter">
-                  {checkpointNode.briefBullets.map((b, i) => (
+                  {brief.briefBullets.map((b, i) => (
                     <li key={i}><strong style={{ color: '#1a1a1a' }}>{b.strong}</strong>{b.rest}</li>
                   ))}
                 </ul>
@@ -451,18 +606,28 @@ export default function RinaSubmit() {
               {uploaded && (
                 <div className="rounded-2xl p-8 text-center border-2 border-dashed" style={{ background: GREEN, borderColor: GREEN }}>
                   <div className="text-white font-bold font-inter">Your Submission has been Uploaded</div>
-                  <div className="text-white/90 text-sm font-inter mt-1">checkpoint_{skillId}_revisi{revisionCount + 1}.zip</div>
+                  <div className="text-white/90 text-sm font-inter mt-1">
+                    {isReal && selectedFile ? selectedFile.name : `checkpoint_${skillId}_revisi${revisionCount + 1}.zip`}
+                  </div>
                 </div>
               )}
             </div>
 
+            {submitError && (
+              <div className="rounded-xl p-3 text-sm font-inter font-semibold text-center" style={{ background: '#fdecec', color: RED }}>
+                {submitError}
+              </div>
+            )}
+
             {uploaded && (
               <button
                 onClick={handleSubmitRevision}
-                className="mx-auto text-white font-bold py-3.5 px-10 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
+                disabled={submitting}
+                className="mx-auto text-white font-bold py-3.5 px-10 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110 disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2"
                 style={{ background: GREEN }}
               >
-                Submit Revisi
+                {submitting && <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin-fast" />}
+                {submitting ? 'Mengirim...' : 'Submit Revisi'}
               </button>
             )}
           </motion.div>
@@ -495,7 +660,32 @@ export default function RinaSubmit() {
               </div>
             </div>
 
-            {revisionCount > 0 && (
+            {/* Smart Matching unlock — only fires once, right when the skill map's
+                final project checkpoint gets approved (not every checkpoint). */}
+            {checkpointNode?.isFinalProject && (
+              <motion.button
+                onClick={() => navigate('/rina/match')}
+                initial={{ opacity: 0, scale: 0.9, y: 8 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ delay: 0.4, type: 'spring', bounce: 0.45 }}
+                className="w-full text-left rounded-2xl p-4 flex items-center gap-4 border-2 cursor-pointer transition-all hover:brightness-105"
+                style={{ background: 'rgba(0,200,151,0.08)', borderColor: GREEN }}
+              >
+                <div className="w-11 h-11 rounded-full flex items-center justify-center shrink-0 bg-white text-xl">🎯</div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-sora font-bold text-sm" style={{ color: GREEN }}>Smart Matching Terbuka!</span>
+                    <span className="text-[9px] font-extrabold tracking-wide px-2 py-0.5 rounded-full text-white" style={{ background: GREEN }}>BARU</span>
+                  </div>
+                  <div className="text-gray-500 text-xs font-inter mt-0.5">
+                    Skill map {skillMeta.label} kamu selesai — profilmu sekarang bisa di-match otomatis ke proyek UMKM yang cocok.
+                  </div>
+                </div>
+                <i className="fa-solid fa-chevron-right text-sm shrink-0" style={{ color: GREEN }}></i>
+              </motion.button>
+            )}
+
+            {revisionCount > 0 && feedback.approvedComment && (
               <div className="rounded-2xl p-5" style={{ background: '#f5f8fb' }}>
                 <div className="flex items-center gap-3 mb-3">
                   <img src="/reviewer.jpg" alt="Reviewer" className="w-9 h-9 rounded-full object-cover shrink-0" />
@@ -583,7 +773,7 @@ export default function RinaSubmit() {
       </main>
 
       {/* ── AI MENTOR FLOATING WIDGET ── */}
-      <AIMentorWidget node={checkpointNode} stage="tantangan" skillLabel={skillMeta.label} light />
+      <AIMentorWidget node={checkpointNode} stage="tantangan" skillLabel={skillMeta.label} skillId={skillId} light />
 
       {/* ── APPROVED CELEBRATION OVERLAY ── */}
       <AnimatePresence>

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useApp } from '../context/AppContext';
+import { showToast } from '../utils/toast';
 
 // Small count-up so XP gains feel like they landed, not just snapped to a new number.
 function useCountUp(value, duration = 600) {
@@ -30,8 +31,28 @@ function useCountUp(value, duration = 600) {
 
 export default function TopBar({ mapTitle, streak, hearts, light = false }) {
   const navigate = useNavigate();
-  const { level, exp } = useApp();
+  const { level, exp, mode, realUserName, selectedSkill, activeProject, projectAccepted } = useApp();
   const displayExp = useCountUp(exp);
+  const isReal = mode === 'real';
+  const displayName = isReal ? realUserName || 'Talent' : 'Rina Kusumawati';
+  // Unseen match badge — same condition RinaTask's own inline banner uses
+  // for "Ada proyek yang cocok untukmu!". Once accepted, projectAccepted
+  // flips true and the dot goes away even though activeProject.status stays
+  // 'open' (there's no separate "matched" project-list to clear it from).
+  const hasUnseenMatch = activeProject?.status === 'open' && activeProject.skillId === selectedSkill && !projectAccepted;
+  // Locked until a project actually exists (RinaTask's own effect flips
+  // status to 'open' a few seconds after landing on the Skill Map) — stays
+  // unlocked from then on even if it's a skill mismatch, so SmartMatchPage's
+  // own diagnostic message is still reachable.
+  const matchLocked = activeProject?.status !== 'open';
+
+  function handleMatchClick() {
+    if (matchLocked) {
+      showToast('Dashboard Proyek masih terkunci — nunggu ada proyek yang cocok dulu', 'fa-lock');
+      return;
+    }
+    navigate('/rina/match');
+  }
 
   return (
     <header
@@ -51,12 +72,35 @@ export default function TopBar({ mapTitle, streak, hearts, light = false }) {
           <i className="fa-solid fa-house text-sm"></i>
         </button>
         <button
+          onClick={handleMatchClick}
+          title={matchLocked ? 'Dashboard Proyek (terkunci)' : 'Dashboard Proyek'}
+          className={`relative w-8 h-8 rounded-full flex items-center justify-center transition-colors bg-transparent border-0 cursor-pointer ${
+            matchLocked
+              ? (light ? 'text-white/40 hover:text-white/60' : 'text-white/25 hover:text-white/40')
+              : (light ? 'text-white/70 hover:text-white hover:bg-white/15' : 'text-white/50 hover:text-white hover:bg-white/10')
+          }`}
+        >
+          <i className={`fa-solid ${matchLocked ? 'fa-lock text-xs' : 'fa-briefcase text-sm'}`}></i>
+          {hasUnseenMatch && (
+            <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-rose-500 animate-pulse-dot" />
+          )}
+        </button>
+        <button
           onClick={() => navigate('/rina/profile')}
           className="flex items-center gap-2.5 hover:opacity-80 transition-opacity bg-transparent border-0 cursor-pointer"
         >
-          <img src="/rina.jpg" className={`w-8 h-8 rounded-full object-cover border ${light ? 'border-white/40' : 'border-white/10'}`} alt="Rina" />
+          {isReal ? (
+            <div
+              className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold font-sora shrink-0 border ${light ? 'border-white/40' : 'border-white/10'}`}
+              style={{ background: '#f37219', color: '#fff' }}
+            >
+              {displayName.charAt(0).toUpperCase()}
+            </div>
+          ) : (
+            <img src="/rina.jpg" className={`w-8 h-8 rounded-full object-cover border ${light ? 'border-white/40' : 'border-white/10'}`} alt="Rina" />
+          )}
           <div className="text-left hidden sm:block leading-none">
-            <div className="text-white text-xs font-semibold font-inter">Rina Kusumawati</div>
+            <div className="text-white text-xs font-semibold font-inter">{displayName}</div>
             <div className={`text-[10px] font-inter mt-1 ${light ? 'text-white/70' : 'text-white/50'}`}>Level {level}</div>
           </div>
         </button>

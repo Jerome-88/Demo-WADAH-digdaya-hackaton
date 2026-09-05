@@ -1,0 +1,2252 @@
+[
+  {
+    "unit_id": "sm-1-1",
+    "title": "Format Konten Short-Video",
+    "type": "materi",
+    "content": "Di media sosial, format konten menentukan seberapa jauh jangkauannya sebelum orang sempat baca isinya.\n\n- Video pendek dengan elemen sensori (suara, tekstur) punya retention lebih tinggi dari foto statis di Reels/TikTok.\n- Algoritma kedua platform ini secara aktif mendorong (boost) format video dibanding foto tunggal.\n- Konten teknis/statistik panjang cocok untuk laporan internal, bukan untuk feed yang di-scroll cepat.\n\nBrief: \"Halo! Warung Kopi Abadi butuh admin buat pegang akun Instagram & TikTok kami. Minggu ini fokusnya bikin 1 konten yang ngajak orang dateng nyobain menu baru kita, Es Kopi Gula Aren.\"",
+    "quiz": [
+      {
+        "question": "Format konten apa yang paling pas buat promosi menu baru dengan target nongkrong anak muda di Instagram & TikTok?",
+        "options": [
+          "Foto produk tunggal dengan caption panjang berisi detail teknis kopi",
+          "Video singkat 15 detik proses penyajian + suara ASMR tuang kopi",
+          "Infografis statistik penjualan kopi nasional",
+          "Video tutorial menyeduh kopi durasi 5 menit penuh"
+        ],
+        "answer": 1,
+        "explanation": "Target audiens muda di Reels/TikTok lebih responsif ke video singkat yang engaging — bukan teks panjang, data, atau video yang kelamaan."
+      }
+    ],
+    "next_unit_id": "sm-1-2"
+  },
+  {
+    "unit_id": "sm-1-2",
+    "title": "Ritme Jadwal Posting",
+    "type": "materi",
+    "content": "Konsistensi jadwal jauh lebih penting daripada frekuensi tinggi asal-asalan.\n\n- Posting di jam yang sama membuat follower \"belajar\" kapan harus cek akun kita.\n- Overposting di jam acak justru bikin follower merasa spam dan mute/unfollow akun.\n\nBrief: Owner Warung Kopi Abadi nanya, sebaiknya kapan & seberapa sering posting biar konsisten dilihat pelanggan tanpa bikin followers bosan atau mute akunnya.",
+    "quiz": [
+      {
+        "question": "Strategi jadwal posting mana yang paling sehat untuk membangun kebiasaan follower checking konten kita?",
+        "options": [
+          "Posting 5-6x sehari di jam acak biar keliatan aktif",
+          "Posting 3-4x seminggu di jam konsisten (makan siang & jam pulang kerja)",
+          "Posting sekali sebulan saja biar hemat effort",
+          "Posting hanya saat ada promo besar-besaran"
+        ],
+        "answer": 1,
+        "explanation": "Overposting di jam acak bikin followers merasa spam, sementara posting terlalu jarang bikin akun terlupakan. Konsistensi jadwal-lah yang membangun kebiasaan checking."
+      }
+    ],
+    "next_unit_id": "sm-1-3"
+  },
+  {
+    "unit_id": "sm-1-3",
+    "title": "Elemen Caption Engaging",
+    "type": "materi",
+    "content": "Caption yang bagus bukan cuma soal jualan — ada unsur psikologi interaksi yang bikin orang mau komentar dan bertindak.\n\n- Pertanyaan ringan ke followers memicu komentar reflek, yang menaikkan jangkauan konten di algoritma.\n- Call-to-action yang jelas (DM/kunjungi) mengubah \"lihat\" jadi \"tindakan nyata\".\n\nBrief: Sebelum posting, cek dulu unsur apa aja yang bikin sebuah caption Instagram/TikTok UMKM kuliner benar-benar \"nyantol\" di pembaca — bukan sekadar jualan.",
+    "quiz": [
+      {
+        "question": "Elemen apa yang paling penting supaya caption mengajak interaksi, bukan sekadar jualan?",
+        "options": [
+          "Harga produk ditulis besar-besar di awal caption",
+          "Pertanyaan ringan ke followers + call-to-action yang jelas",
+          "Hashtag sebanyak-banyaknya tanpa konteks",
+          "Emoji di setiap kata supaya ramai"
+        ],
+        "answer": 1,
+        "explanation": "Pertanyaan ringan memicu komentar, dan CTA jelas mengarahkan follower ke tindakan konkret — kombinasi ini yang bikin caption terasa personal, bukan cuma jualan."
+      }
+    ],
+    "next_unit_id": "sm-1-4"
+  },
+  {
+    "unit_id": "sm-1-4",
+    "title": "Membaca Brief & Interpretasi Klien",
+    "type": "materi",
+    "content": "Brief UMKM jarang serapi dokumen resmi — tugas kamu menerjemahkan bahasa sehari-hari jadi requirement konten yang jelas.\n\n- Pisahkan permintaan eksplisit (must-have) dari gaya bahasa santai di sekitarnya.\n- Kalau ada bagian ambigu (\"yang rame yang liat\"), catat asumsi kamu (mis. pakai hook + jam posting strategis) sebelum eksekusi.\n\nBrief: \"Kak tolong bikinin konten buat weekend ini ya, yang penting rame yang liat, terus jangan lupa sebut promo beli 2 gratis 1.\" — Owner Warung Kopi Abadi",
+    "quiz": [
+      {
+        "question": "Dari brief WhatsApp di atas, mana yang termasuk requirement WAJIB (must-have)?",
+        "options": [
+          "Promo \"beli 2 gratis 1\" harus disebutkan di konten",
+          "Konten harus direkam di hari Sabtu pagi",
+          "Warna konten harus berbeda dari biasanya",
+          "Video harus berdurasi tepat 30 detik"
+        ],
+        "answer": 0,
+        "explanation": "\"Jangan lupa sebut promo beli 2 gratis 1\" adalah permintaan eksplisit — itu must-have. Sisanya (\"yang rame yang liat\") adalah tujuan, bukan instruksi teknis spesifik."
+      }
+    ],
+    "next_unit_id": "sm-1-cp1"
+  },
+  {
+    "unit_id": "sm-1-cp1",
+    "title": "Kastil Checkpoint 1",
+    "type": "checkpoint",
+    "content": "Ini adalah ujian Checkpoint — gabungan dari semua yang sudah kamu pelajari di Unit 1.\n\n- Kamu akan direview lewat quiz singkat yang merangkum 4 topik sebelumnya.\n- Setelah lulus quiz, kamu masuk ke Tantangan Nyata: mengerjakan deliverable asli dengan deadline 7 hari.\n- Tantangan dinilai 100% oleh human reviewer, bukan skor otomatis.\n\nInstruksi: Kumpulkan 1 caption + rencana visual konten sesuai brief di atas.\n\nDeadline: 7 hari\n\nChecklist:\n- Format video 9:16 (portrait), durasi 15-30 detik\n- Hook kuat di 2 detik pertama\n- Caption punya CTA jelas + ajakan interaksi\n- Jadwal & tone bahasa sesuai brief Warung Kopi Abadi",
+    "quiz": [],
+    "next_unit_id": "sm-2-1"
+  },
+  {
+    "unit_id": "sm-2-1",
+    "title": "Kalender & Pilar Konten",
+    "type": "materi",
+    "content": "Posting konsisten butuh sistem, bukan mikir ide dari nol tiap hari — di sinilah \"pilar konten\" dan kalender berperan.\n\n- Pilar konten membagi ide jadi beberapa kategori tetap (mis. promo, edukasi, testimoni, behind-the-scenes) — supaya tidak kehabisan ide dan variasinya seimbang.\n- Kalender konten (rencana 1-2 minggu ke depan) mencegah posting dadakan yang kualitasnya asal jadi.\n\nBrief: \"Sekarang Warung Kopi Abadi mau posting rutin, nggak cuma pas ada promo doang. Tapi bingung tiap hari mau posting apa.\"",
+    "quiz": [
+      {
+        "question": "Warung Kopi Abadi bingung mau posting apa tiap hari. Solusi sistemnya?",
+        "options": [
+          "Posting apa saja yang kepikiran saat itu juga",
+          "Bikin pilar konten (promo/edukasi/testimoni/BTS) + kalender rencana 1-2 minggu",
+          "Cuma posting kalau ada promo besar",
+          "Menunggu ide viral dari akun lain"
+        ],
+        "answer": 1,
+        "explanation": "Pilar konten + kalender memberi struktur supaya ide tidak monoton dan posting tetap konsisten tanpa mendadak."
+      },
+      {
+        "question": "Kenapa kalender konten mencegah \"posting dadakan asal jadi\"?",
+        "options": [
+          "Karena kalender otomatis membuat desain",
+          "Karena kontennya sudah direncanakan lebih dulu, ada waktu untuk eksekusi matang",
+          "Kalender tidak ada hubungannya dengan kualitas",
+          "Karena kalender mengurangi jumlah followers"
+        ],
+        "answer": 1,
+        "explanation": "Rencana di muka memberi waktu produksi yang cukup, beda dengan konten yang dibuat mendadak di menit terakhir."
+      }
+    ],
+    "next_unit_id": "sm-2-2"
+  },
+  {
+    "unit_id": "sm-2-2",
+    "title": "Konsistensi Tone of Voice",
+    "type": "materi",
+    "content": "Tone of voice adalah \"kepribadian tertulis\" brand — kalau berubah-ubah, followers susah mengenali karakter brand.\n\n- Tentukan 2-3 kata sifat yang mewakili karakter brand (mis. hangat, santai, akrab) sebagai acuan tiap nulis caption.\n- Tone boleh menyesuaikan konteks (promo vs edukasi) tapi \"kepribadian dasarnya\" harus tetap sama.\n\nBrief: \"Kadang caption kita formal, kadang terlalu santai sampe kayak bukan Warung Kopi Abadi. Owner minta biar 'kedengeran' sama tiap post.\"",
+    "quiz": [
+      {
+        "question": "Owner komplain caption kadang formal kadang santai. Solusi paling tepat?",
+        "options": [
+          "Ganti admin sosmed tiap minggu",
+          "Tentukan 2-3 kata sifat acuan tone brand, pakai sebagai filter tiap caption",
+          "Biarkan saja, audiens tidak peduli",
+          "Selalu pakai bahasa formal supaya aman"
+        ],
+        "answer": 1,
+        "explanation": "Kata sifat acuan (hangat, santai, dst) jadi filter konsisten meski topik caption berbeda-beda."
+      },
+      {
+        "question": "Apakah tone of voice boleh berubah sama sekali tergantung jenis konten?",
+        "options": [
+          "Boleh berubah total, tidak masalah",
+          "Boleh menyesuaikan konteks tapi kepribadian dasarnya harus tetap sama",
+          "Tidak boleh berubah sama sekali walau konteksnya beda",
+          "Tone hanya berlaku untuk konten promo"
+        ],
+        "answer": 1,
+        "explanation": "Nuansa boleh sedikit menyesuaikan (lebih serius saat edukasi, lebih ceria saat promo) tapi karakter dasarnya tetap harus dikenali sebagai brand yang sama."
+      }
+    ],
+    "next_unit_id": "sm-2-3"
+  },
+  {
+    "unit_id": "sm-2-3",
+    "title": "Community Management & Respons Cepat",
+    "type": "materi",
+    "content": "Respons cepat & tepat di komentar/DM adalah bagian dari layanan pelanggan — bukan cuma soal posting konten.\n\n- Respons dalam hitungan jam (bukan hari) menjaga calon pembeli tidak kabur ke kompetitor.\n- Balasan personal (menyebut nama/pertanyaan spesifik) terasa lebih dipercaya dibanding template copy-paste.\n\nBrief: \"Makin banyak yang komen & DM sekarang, tapi kita suka telat bales jadi orang kayaknya kabur duluan.\"",
+    "quiz": [
+      {
+        "question": "Warung Kopi Abadi sering telat balas komentar/DM. Dampak paling langsung?",
+        "options": [
+          "Tidak ada dampak berarti",
+          "Calon pembeli bisa kabur ke kompetitor yang responsnya lebih cepat",
+          "Followers otomatis bertambah",
+          "Algoritma akan memprioritaskan akun ini"
+        ],
+        "answer": 1,
+        "explanation": "Respons lambat membuat calon pembeli kehilangan momentum minat dan beralih ke opsi lain yang lebih responsif."
+      },
+      {
+        "question": "Kenapa balasan personal lebih efektif dibanding template copy-paste?",
+        "options": [
+          "Balasan personal lebih cepat diketik",
+          "Template selalu salah ejaan",
+          "Balasan personal terasa lebih dipercaya karena merespons pertanyaan spesifik",
+          "Tidak ada bedanya sama sekali"
+        ],
+        "answer": 2,
+        "explanation": "Balasan yang menyebut detail spesifik pertanyaan pelanggan terasa lebih manusiawi dan meyakinkan dibanding template generik."
+      }
+    ],
+    "next_unit_id": "sm-2-4"
+  },
+  {
+    "unit_id": "sm-2-4",
+    "title": "Menerjemahkan Feedback Revisi",
+    "type": "materi",
+    "content": "Sama seperti desain visual, feedback konten sosial media juga sering berupa perasaan (\"kurang nendang\") bukan instruksi teknis.\n\n- \"Kurang nendang\" di konten sosmed biasanya berarti hook 2 detik pertama lemah atau CTA kurang tegas.\n- \"Kurang related\" berarti tone of voice menyimpang dari karakter brand yang sudah disepakati di 2.2.\n\nBrief: \"Kontennya udah oke tapi kayaknya kurang 'nendang' buat bikin orang stop scroll deh. Terus captionnya kurang related sama gaya kita.\" — Owner Warung Kopi Abadi, revisi ronde 1",
+    "quiz": [
+      {
+        "question": "Feedback \"kurang nendang\" pada konten sosmed paling sering berakar dari apa?",
+        "options": [
+          "Warna konten yang terlalu terang",
+          "Hook 2 detik pertama yang lemah atau CTA yang kurang tegas",
+          "Jumlah hashtag yang sedikit",
+          "Waktu posting yang salah"
+        ],
+        "answer": 1,
+        "explanation": "Sama seperti desain, \"kurang nendang\" di konten sosmed biasanya soal hook awal yang lemah atau CTA yang tidak cukup mengajak bertindak."
+      },
+      {
+        "question": "\"Kurang related sama gaya kita\" mengacu ke elemen apa yang perlu dicek ulang?",
+        "options": [
+          "Jumlah followers",
+          "Tone of voice yang sudah disepakati sebelumnya",
+          "Ukuran font caption",
+          "Jam posting"
+        ],
+        "answer": 1,
+        "explanation": "Kalau konten terasa \"bukan gaya brand\", itu tanda tone of voice menyimpang dari karakter yang sudah ditetapkan — perlu dicek ulang ke acuan tone."
+      }
+    ],
+    "next_unit_id": "sm-2-cp2"
+  },
+  {
+    "unit_id": "sm-2-cp2",
+    "title": "Kastil Checkpoint 2",
+    "type": "checkpoint",
+    "content": "Ini adalah ujian Checkpoint Unit 2 — gabungan dari semua yang sudah kamu pelajari soal sistem konten mingguan.\n\n- Kamu akan direview lewat quiz singkat yang merangkum 4 topik Unit 2.\n- Setelah lulus quiz, kamu masuk ke Tantangan Nyata: menyusun 1 set (3 konten) untuk Warung Kopi Abadi dengan deadline 7 hari.\n- Tantangan dinilai 100% oleh human reviewer, bukan skor otomatis.\n\nInstruksi: Kumpulkan 1 set (3 caption + rencana visual) untuk Warung Kopi Abadi sesuai brief di atas.\n\nDeadline: 7 hari\n\nChecklist:\n- Tiga pilar konten berbeda (promo/edukasi/testimoni) tercakup\n- Tone of voice konsisten di ketiganya\n- Kalender posting 1 minggu disertakan\n- Contoh respons komentar disiapkan",
+    "quiz": [],
+    "next_unit_id": "sm-3-1"
+  },
+  {
+    "unit_id": "sm-3-1",
+    "title": "Riset Audiens & Positioning Konten",
+    "type": "materi",
+    "content": "Proyek skala besar kayak gini butuh riset dulu sebelum eksekusi — siapa target audiensnya, dan gimana posisi brand dibanding kompetitor sejenis.\n\n- Audiens 3 cabang beda kota bisa punya kebiasaan beda — riset dulu pola interaksi tiap cabang sebelum bikin 1 strategi pukul rata.\n- Positioning menentukan \"kenapa orang harus pilih Roti Bakar Kenangan\" dibanding roti bakar lain — ini jadi benang merah semua konten sebulan.\n\nBrief: \"Roti Bakar Kenangan ada di 3 cabang kota beda-beda. Kami mau kelola sosmed pusat tapi kontennya tetep relevan buat semua cabang. Dari mana mulainya?\"",
+    "quiz": [
+      {
+        "question": "Roti Bakar Kenangan punya 3 cabang beda kota. Langkah pertama sebelum bikin strategi konten sebulan?",
+        "options": [
+          "Langsung posting sebanyak mungkin",
+          "Riset pola audiens tiap cabang + tentukan positioning brand yang jadi benang merah",
+          "Menyalin strategi kompetitor persis sama",
+          "Fokus 1 cabang saja, abaikan yang lain"
+        ],
+        "answer": 1,
+        "explanation": "Riset audiens dan positioning yang jelas jadi fondasi sebelum eksekusi konten skala besar dan multi-cabang."
+      },
+      {
+        "question": "Apa fungsi \"positioning brand\" dalam kampanye sebulan ini?",
+        "options": [
+          "Menentukan harga produk",
+          "Jadi benang merah alasan orang harus pilih brand ini dibanding kompetitor",
+          "Menentukan jumlah cabang baru",
+          "Mengatur jadwal karyawan"
+        ],
+        "answer": 1,
+        "explanation": "Positioning adalah alasan diferensiasi brand yang harus konsisten muncul di semua konten sepanjang kampanye."
+      }
+    ],
+    "next_unit_id": "sm-3-2"
+  },
+  {
+    "unit_id": "sm-3-2",
+    "title": "Kalender Konten Lintas Platform",
+    "type": "materi",
+    "content": "Mengelola 2 platform sekaligus butuh sistem, bukan bikin konten dobel dari nol untuk masing-masing.\n\n- 1 ide konten inti bisa diadaptasi jadi format berbeda per platform (mis. behind-the-scenes jadi Reels + carousel IG) — bukan bikin 2 ide terpisah.\n- Kalender lintas platform mencegah 2 tim/akun saling tumpang tindih jadwal posting atau malah kosong di hari yang sama.\n\nBrief: \"Kita mau aktif di Instagram DAN TikTok bulan ini, tapi tim kecil. Gimana biar nggak keteteran bikin dua-duanya?\"",
+    "quiz": [
+      {
+        "question": "Tim kecil mau aktif di IG dan TikTok bulan ini. Pendekatan paling efisien?",
+        "options": [
+          "Bikin ide konten terpisah total untuk masing-masing platform",
+          "Ambil 1 ide inti, adaptasi format sesuai kebiasaan tiap platform",
+          "Fokus 1 platform saja dan abaikan yang lain",
+          "Posting konten yang sama persis tanpa penyesuaian format"
+        ],
+        "answer": 1,
+        "explanation": "1 ide inti yang diadaptasi formatnya jauh lebih efisien untuk tim kecil dibanding membuat ide terpisah untuk tiap platform."
+      },
+      {
+        "question": "Kenapa kalender lintas platform penting saat mengelola lebih dari 1 akun?",
+        "options": [
+          "Supaya kontennya boleh sama persis semua",
+          "Mencegah jadwal tumpang tindih atau justru kosong di hari yang sama",
+          "Kalender hanya berguna untuk 1 platform saja",
+          "Tidak penting selama ada admin yang pegang"
+        ],
+        "answer": 1,
+        "explanation": "Kalender terpusat memastikan kedua platform tetap aktif terjadwal tanpa bentrok atau kekosongan konten."
+      }
+    ],
+    "next_unit_id": "sm-3-3"
+  },
+  {
+    "unit_id": "sm-3-3",
+    "title": "Menangani Komentar Negatif & Krisis Kecil",
+    "type": "materi",
+    "content": "Krisis kecil di kolom komentar bisa membesar kalau direspons defensif atau diabaikan — perlu pendekatan yang tenang dan transparan.\n\n- Jangan hapus/abaikan komentar negatif yang valid — itu justru terlihat menyembunyikan masalah dan memicu kecurigaan lebih besar.\n- Respons publik singkat + ajak lanjut ke DM untuk detail — ini menunjukkan brand serius menangani tapi tidak membuka drama panjang di ruang publik.\n\nBrief: \"Kemarin ada yang komplain rasa roti beda dari biasanya, komentarnya rame di post kita. Gimana cara jawabnya biar nggak makin panas?\"",
+    "quiz": [
+      {
+        "question": "Ada komplain rasa produk yang rame di kolom komentar. Respons paling tepat?",
+        "options": [
+          "Hapus komentarnya supaya tidak makin rame",
+          "Diamkan saja sampai reda sendiri",
+          "Balas singkat secara publik dengan tenang + ajak lanjut ke DM untuk detail",
+          "Balas dengan nada defensif membela produk"
+        ],
+        "answer": 2,
+        "explanation": "Respons publik yang tenang menunjukkan brand terbuka menangani masalah, sementara DM menjaga detail sensitif tidak jadi drama publik berkepanjangan."
+      },
+      {
+        "question": "Kenapa menghapus komentar komplain yang valid berisiko bagi brand?",
+        "options": [
+          "Karena melanggar aturan platform secara otomatis",
+          "Karena terlihat menyembunyikan masalah dan bisa memicu kecurigaan lebih besar",
+          "Karena komentar yang dihapus akan muncul lagi otomatis",
+          "Tidak ada risiko sama sekali"
+        ],
+        "answer": 1,
+        "explanation": "Publik cenderung curiga kalau komentar komplain \"hilang\" begitu saja — itu bisa dianggap brand menutupi masalah, bukan menyelesaikannya."
+      }
+    ],
+    "next_unit_id": "sm-3-4"
+  },
+  {
+    "unit_id": "sm-3-4",
+    "title": "Laporan Performa & Rekomendasi",
+    "type": "materi",
+    "content": "Proyek besar tidak berakhir di \"konten sudah posting\" — laporan performa membuktikan strategi bekerja dan memberi arah bulan berikutnya.\n\n- Laporan yang baik menghubungkan hasil (engagement/reach) balik ke tujuan awal kampanye, bukan cuma angka mentah tanpa konteks.\n- Rekomendasi lanjutan berdasarkan data yang sudah ada (mis. \"konten edukasi paling tinggi engagement, perbanyak format ini\") menunjukkan kerja yang terukur, bukan tebakan.\n\nBrief: \"Udah sebulan jalan, owner mau tau hasilnya gimana dan rekomendasi buat bulan depan apa.\" — Owner Roti Bakar Kenangan",
+    "quiz": [
+      {
+        "question": "Owner minta laporan hasil sebulan + rekomendasi. Elemen paling penting dalam laporan yang baik?",
+        "options": [
+          "Daftar semua post yang pernah diunggah",
+          "Menghubungkan hasil ke tujuan awal kampanye + rekomendasi berbasis data",
+          "Jumlah total karakter caption yang ditulis",
+          "Warna-warna yang paling sering dipakai"
+        ],
+        "answer": 1,
+        "explanation": "Laporan yang baik memberi makna pada angka dengan mengaitkannya ke tujuan awal, lalu memberi rekomendasi konkret untuk langkah berikutnya."
+      },
+      {
+        "question": "Rekomendasi \"perbanyak konten edukasi bulan depan\" seharusnya didasarkan pada apa?",
+        "options": [
+          "Perasaan atau tebakan pribadi",
+          "Data performa konten edukasi dibanding pilar lain di bulan ini",
+          "Permintaan kompetitor",
+          "Jumlah followers baru saja"
+        ],
+        "answer": 1,
+        "explanation": "Rekomendasi yang kredibel harus berbasis data performa nyata, bukan sekadar asumsi atau kesukaan pribadi."
+      }
+    ],
+    "next_unit_id": "sm-3-cp3"
+  },
+  {
+    "unit_id": "sm-3-cp3",
+    "title": "Gerbang Akhir: Proyek Sertifikasi",
+    "type": "checkpoint",
+    "content": "Ini adalah Gerbang Akhir Skill Map Social Media — proyek paling kompleks yang pernah kamu kerjakan di WADAH.\n\n- Kamu akan direview lewat quiz singkat yang merangkum seluruh Unit 3.\n- Setelah lulus quiz, kamu masuk ke Proyek Akhir: menyusun strategi konten 1 bulan untuk Roti Bakar Kenangan dengan deadline 10 hari.\n- Proyek ini dinilai 100% oleh human reviewer WADAH — kelulusan di sini menerbitkan Sertifikat Kompetensi Social Media-mu, lengkap dengan nomor verifikasi resmi.\n\nInstruksi: Kumpulkan 1 dokumen strategi (kalender konten sebulan + rencana respons + rekomendasi) untuk Roti Bakar Kenangan sesuai brief di atas.\n\nDeadline: 10 hari\n\nChecklist:\n- Kalender konten 4 minggu untuk IG & TikTok tersusun\n- Tone of voice & positioning konsisten di seluruh rencana\n- Rencana respons komentar positif & negatif disertakan\n- Laporan & rekomendasi lanjutan disertakan",
+    "quiz": [],
+    "next_unit_id": null
+  },
+  {
+    "unit_id": "ve-1-1",
+    "title": "Rasio & Durasi Video",
+    "type": "materi",
+    "content": "Format teknis video menentukan apakah video-mu ditonton full-screen atau terpotong bar hitam.\n\n- Rasio 9:16 portrait itu native untuk TikTok/Reels — full-layar tanpa bar hitam.\n- Durasi 15-30 detik punya peluang ditonton penuh (full watch) jauh lebih tinggi daripada video panjang.\n\nBrief: \"Kedai Mie Legenda mau bikin video pendek buat TikTok & Reels ngiklanin menu Mie Nyemek Pedas kita. Videonya harus enak ditonton sampai habis, jangan bikin orang skip.\"",
+    "quiz": [
+      {
+        "question": "Format video apa yang paling optimal untuk ditonton penuh (full-screen) di TikTok & Instagram Reels?",
+        "options": [
+          "1920x1080 (16:9) landscape",
+          "1080x1920 (9:16) portrait, durasi 15-30 detik",
+          "1080x1080 (1:1) square, durasi 3 menit",
+          "1080x1920 (9:16) portrait, durasi 10 menit"
+        ],
+        "answer": 1,
+        "explanation": "Rasio 9:16 portrait itu native buat TikTok/Reels, dan durasi pendek (15-30 detik) menjaga retention agar video ditonton sampai habis."
+      }
+    ],
+    "next_unit_id": "ve-1-2"
+  },
+  {
+    "unit_id": "ve-1-2",
+    "title": "Posisi Hook Video",
+    "type": "materi",
+    "content": "Hook adalah momen paling menarik yang menentukan penonton lanjut nonton atau langsung swipe.\n\n- Algoritma & kebiasaan scroll user cuma kasih 1-2 detik pertama untuk memutuskan lanjut atau skip.\n- Hook yang ditaruh di akhir sebagai \"reward\" nyaris tidak pernah terlihat — penonton sudah keburu pindah.\n\nBrief: Produser lokal bilang video kuliner sering di-skip di detik pertama. Kedai Mie Legenda pengen video mereka nggak kena skip.",
+    "quiz": [
+      {
+        "question": "Di mana seharusnya \"hook\" (momen paling menarik) diletakkan dalam video promosi 15 detik?",
+        "options": [
+          "Di detik 0-2, sebelum orang sempat scroll",
+          "Di detik terakhir sebagai kejutan penutup",
+          "Di tengah-tengah video, setelah intro logo",
+          "Tidak perlu hook selama produk terlihat jelas"
+        ],
+        "answer": 0,
+        "explanation": "Kebiasaan scroll cepat bikin mayoritas penonton keburu geser sebelum sempat sampai ke tengah atau akhir video — hook harus di detik 0-2."
+      }
+    ],
+    "next_unit_id": "ve-1-3"
+  },
+  {
+    "unit_id": "ve-1-3",
+    "title": "Teknik Hook Kuliner",
+    "type": "materi",
+    "content": "Ada teknik-teknik visual yang terbukti ampuh khusus untuk konten kuliner.\n\n- Close-up tekstur makanan (kuah mendidih, keju melted) adalah hook visual sensori yang kuat.\n- Teks overlay pertanyaan provokatif memicu rasa penasaran dan menahan penonton untuk tidak skip.\n\nBrief: Tim kreatif Kedai Mie Legenda pengen tau teknik apa aja yang paling ampuh bikin video kuliner mereka berhenti di-scroll.",
+    "quiz": [
+      {
+        "question": "Teknik hook mana yang paling efektif untuk video kuliner pendek?",
+        "options": [
+          "Intro logo brand selama 5 detik di awal",
+          "Close-up tekstur makanan + teks overlay pertanyaan provokatif",
+          "Voice over penjelasan sejarah resep selama 1 menit",
+          "Layar hitam dengan teks \"Loading...\" sebelum video mulai"
+        ],
+        "answer": 1,
+        "explanation": "Visual sensori kuat (close-up tekstur) dan teks provokatif sama-sama bekerja di 1-2 detik pertama untuk menahan perhatian penonton."
+      }
+    ],
+    "next_unit_id": "ve-1-4"
+  },
+  {
+    "unit_id": "ve-1-4",
+    "title": "Membaca Brief & Interpretasi Klien",
+    "type": "materi",
+    "content": "Brief video dari UMKM biasanya berupa \"feeling\" (mis. \"biar penasaran\"), bukan instruksi teknis siap pakai.\n\n- Terjemahkan \"biar penasaran\" jadi elemen teknis konkret: close-up visual + teks provokatif.\n- Detail administratif (harga, alamat) sering disebut belakangan tapi tetap wajib — jangan sampai terlewat.\n\nBrief: \"Bang tolong bikin video yang nunjukin pedesnya menu baru kita, biar orang penasaran. Jangan lupa harga sama alamat kedai kelihatan ya.\" — Owner Kedai Mie Legenda",
+    "quiz": [
+      {
+        "question": "Dari brief di atas, elemen mana yang WAJIB ada di video meski disebut belakangan?",
+        "options": [
+          "Harga menu dan alamat kedai",
+          "Wawancara dengan pemilik kedai",
+          "Testimoni 5 pelanggan berbeda",
+          "Behind-the-scenes proses memasak"
+        ],
+        "answer": 0,
+        "explanation": "\"Jangan lupa harga sama alamat kelihatan\" adalah instruksi eksplisit meski ditulis di akhir kalimat — tetap masuk kategori wajib."
+      }
+    ],
+    "next_unit_id": "ve-1-cp1"
+  },
+  {
+    "unit_id": "ve-1-cp1",
+    "title": "Kastil Checkpoint 1",
+    "type": "checkpoint",
+    "content": "Ini adalah ujian Checkpoint — gabungan dari semua yang sudah kamu pelajari di Unit 1.\n\n- Kamu akan direview lewat quiz singkat yang merangkum 4 topik sebelumnya.\n- Setelah lulus quiz, kamu masuk ke Tantangan Nyata: mengerjakan deliverable asli dengan deadline 7 hari.\n- Tantangan dinilai 100% oleh human reviewer, bukan skor otomatis.\n\nInstruksi: Kumpulkan 1 storyboard/naskah video pendek sesuai brief di atas.\n\nDeadline: 7 hari\n\nChecklist:\n- Format 9:16 portrait, durasi 15-30 detik\n- Hook visual kuat di detik 0-2\n- Teks overlay harga & lokasi tercantum\n- Pace & musik sesuai tren short-video",
+    "quiz": [],
+    "next_unit_id": "ve-2-1"
+  },
+  {
+    "unit_id": "ve-2-1",
+    "title": "Storyboard Sebelum Syuting",
+    "type": "materi",
+    "content": "Storyboard sederhana sebelum syuting menghemat waktu produksi dan memastikan hasil sesuai rencana, bukan improvisasi di lokasi.\n\n- Storyboard tidak perlu gambar detail — cukup sketsa kasar + catatan shot (close-up, wide, dst) per adegan.\n- Merencanakan urutan shot dulu mencegah bolak-balik setup kamera yang buang waktu produksi.\n\nBrief: \"Kita mau bikin beberapa video sekaligus minggu ini, tapi kalau syuting asal jalan suka buang waktu take ulang. Ada cara biar lebih efisien?\"",
+    "quiz": [
+      {
+        "question": "Tim mau syuting beberapa video sekaligus minggu ini. Cara paling efisien mencegah buang waktu take ulang?",
+        "options": [
+          "Langsung syuting tanpa perencanaan, improvisasi di lokasi",
+          "Bikin storyboard sederhana + urutan shot sebelum syuting",
+          "Syuting semua adegan berkali-kali sampai puas",
+          "Menunggu ide muncul saat kamera sudah nyala"
+        ],
+        "answer": 1,
+        "explanation": "Storyboard sederhana memastikan urutan shot jelas sebelum syuting, mengurangi bolak-balik setup yang buang waktu."
+      },
+      {
+        "question": "Apa isi minimal sebuah storyboard produksi video pendek?",
+        "options": [
+          "Gambar detail berwarna tiap frame",
+          "Sketsa kasar + catatan jenis shot (close-up/wide) per adegan",
+          "Daftar lagu yang akan dipakai saja",
+          "Nama-nama crew produksi"
+        ],
+        "answer": 1,
+        "explanation": "Storyboard produksi cukup berupa sketsa kasar dan catatan jenis shot — bukan karya seni, tapi panduan praktis di lokasi syuting."
+      }
+    ],
+    "next_unit_id": "ve-2-2"
+  },
+  {
+    "unit_id": "ve-2-2",
+    "title": "Konsistensi Gaya Edit & Transisi",
+    "type": "materi",
+    "content": "Sama seperti desain visual, video juga butuh \"sistem\" — gaya edit yang konsisten bikin series video terasa satu identitas.\n\n- Tentukan 1-2 jenis transisi/efek yang jadi \"ciri khas\" dan pakai berulang di semua video series.\n- Kecepatan potongan (pace) yang konsisten dengan genre konten (cepat untuk hype, lambat untuk storytelling) menjaga rasa video tetap seragam.\n\nBrief: \"Video-video kita kemarin gaya editnya beda-beda, ada yang transisi cepat ada yang lambat. Owner bilang jadi kayak bukan dari 1 akun.\"",
+    "quiz": [
+      {
+        "question": "Video-video terasa beda gaya edit satu sama lain. Solusi paling tepat?",
+        "options": [
+          "Ganti editor tiap video biar variatif",
+          "Tentukan 1-2 gaya transisi ciri khas, pakai konsisten di semua video series",
+          "Pakai semua jenis transisi yang tersedia di software",
+          "Tidak masalah, penonton tidak memperhatikan"
+        ],
+        "answer": 1,
+        "explanation": "Membatasi ke 1-2 gaya transisi ciri khas dan memakainya konsisten adalah cara membangun identitas visual series video."
+      },
+      {
+        "question": "Kenapa pace (kecepatan potongan) perlu konsisten dengan genre konten?",
+        "options": [
+          "Supaya durasi video selalu sama persis",
+          "Karena pace yang sesuai genre (cepat untuk hype, lambat untuk storytelling) menjaga rasa video tetap seragam",
+          "Pace tidak berpengaruh ke apapun",
+          "Supaya file lebih ringan"
+        ],
+        "answer": 1,
+        "explanation": "Pace yang konsisten dengan genre kontennya menjaga \"rasa\" series video tetap seragam dan mudah dikenali penonton."
+      }
+    ],
+    "next_unit_id": "ve-2-3"
+  },
+  {
+    "unit_id": "ve-2-3",
+    "title": "Musik yang Konsisten dengan Brand",
+    "type": "materi",
+    "content": "Musik bukan sekadar ikut tren — musik yang tepat memperkuat mood brand, musik yang salah bisa merusak kesan meski visualnya bagus.\n\n- Pilih musik yang mood-nya sesuai karakter brand (energik untuk kedai ramai, santai untuk kafe tenang) — bukan sekadar ikut tren viral tanpa filter.\n- Konsistensi genre musik antar video (walau lagunya beda-beda) membantu series terasa \"senada\".\n\nBrief: \"Musik video kita kadang tren TikTok random, kadang nggak nyambung sama vibe kedai. Ada cara milih musik yang lebih terarah?\"",
+    "quiz": [
+      {
+        "question": "Musik video sering asal ikut tren TikTok tanpa mempertimbangkan kecocokan. Risiko utamanya?",
+        "options": [
+          "Video jadi lebih viral otomatis",
+          "Mood musik bisa tidak nyambung dengan karakter brand, merusak kesan meski visual bagus",
+          "Tidak ada risiko sama sekali",
+          "Durasi video jadi lebih pendek"
+        ],
+        "answer": 1,
+        "explanation": "Musik yang tidak cocok mood-nya dengan brand bisa merusak kesan keseluruhan video, walau secara visual sudah bagus."
+      },
+      {
+        "question": "Bagaimana cara menjaga series video \"senada\" meski memakai lagu berbeda-beda tiap video?",
+        "options": [
+          "Pakai lagu yang identik persis setiap video",
+          "Konsisten di genre/mood musik yang sesuai karakter brand",
+          "Musik tidak perlu diperhatikan sama sekali",
+          "Ganti genre musik total di setiap video"
+        ],
+        "answer": 1,
+        "explanation": "Konsistensi genre/mood musik (walau lagu berbeda) menjaga series terasa senada dan mencerminkan karakter brand yang sama."
+      }
+    ],
+    "next_unit_id": "ve-2-4"
+  },
+  {
+    "unit_id": "ve-2-4",
+    "title": "Menerjemahkan Feedback Revisi",
+    "type": "materi",
+    "content": "Sama seperti Unit 1, feedback video sering berupa perasaan — sekarang levelnya soal SERIES, bukan cuma 1 video.\n\n- \"Kurang nendang di awal\" tetap soal hook — tapi sekarang cek juga apakah hook-nya konsisten kuat di SEMUA video series, bukan cuma 1.\n- \"Kurang related sama gaya kedai\" berarti gaya edit/musik menyimpang dari sistem yang sudah dibangun di 2.2/2.3.\n\nBrief: \"Videonya udah bagus tapi kayaknya kurang 'nendang' di awal. Terus rasanya kurang related sama gaya kedai kita.\" — Owner Kedai Mie Legenda, revisi ronde 1",
+    "quiz": [
+      {
+        "question": "Feedback \"kurang nendang di awal\" untuk SERIES video (bukan 1 video) perlu dicek di mana?",
+        "options": [
+          "Hanya di video pertama saja",
+          "Konsistensi kekuatan hook di SEMUA video dalam series",
+          "Hanya di video terakhir",
+          "Tidak perlu dicek ulang, cukup 1 video representatif"
+        ],
+        "answer": 1,
+        "explanation": "Untuk series, feedback hook perlu dicek konsistensinya di semua video — bukan cuma sampel satu video saja."
+      },
+      {
+        "question": "\"Kurang related sama gaya kedai\" pada level series mengacu ke elemen apa?",
+        "options": [
+          "Jumlah penonton video",
+          "Gaya edit/musik yang menyimpang dari sistem yang sudah dibangun sebelumnya",
+          "Warna baju talent",
+          "Nama file video"
+        ],
+        "answer": 1,
+        "explanation": "Di level series, \"kurang related\" berarti gaya edit atau musik sudah menyimpang dari sistem konsisten yang dibangun di topik-topik sebelumnya."
+      }
+    ],
+    "next_unit_id": "ve-2-cp2"
+  },
+  {
+    "unit_id": "ve-2-cp2",
+    "title": "Kastil Checkpoint 2",
+    "type": "checkpoint",
+    "content": "Ini adalah ujian Checkpoint Unit 2 — gabungan dari semua yang sudah kamu pelajari soal konsistensi series video.\n\n- Kamu akan direview lewat quiz singkat yang merangkum 4 topik Unit 2.\n- Setelah lulus quiz, kamu masuk ke Tantangan Nyata: menyusun 1 set (3 storyboard) untuk Kedai Mie Legenda dengan deadline 7 hari.\n- Tantangan dinilai 100% oleh human reviewer, bukan skor otomatis.\n\nInstruksi: Kumpulkan 1 set (3 storyboard/naskah) video series untuk Kedai Mie Legenda sesuai brief di atas.\n\nDeadline: 7 hari\n\nChecklist:\n- Storyboard tersedia untuk ketiga video\n- Gaya edit & transisi konsisten di ketiganya\n- Mood musik senada di seluruh series\n- Hook kuat & konsisten di semua video",
+    "quiz": [],
+    "next_unit_id": "ve-3-1"
+  },
+  {
+    "unit_id": "ve-3-1",
+    "title": "Riset Tren & Hook Multi-Video",
+    "type": "materi",
+    "content": "Proyek besar butuh riset tren dulu — supaya tiap video punya hook yang segar & berbeda, bukan formula yang itu-itu saja diulang 3 kali.\n\n- Riset video-video sejenis yang sedang tren membantu menemukan variasi teknik hook (pertanyaan, visual mengejutkan, suara ASMR, dst).\n- 3 video untuk 3 menu beda perlu 3 pendekatan hook berbeda supaya tidak terasa formula yang diulang-ulang.\n\nBrief: \"Kopi Kilat Ekspres mau kampanye video buat launching 3 menu baru sekaligus. Kami pengen tiap video punya hook yang kuat tapi nggak keliatan sama semua.\"",
+    "quiz": [
+      {
+        "question": "Kopi Kilat Ekspres mau 3 video untuk 3 menu baru. Kenapa hook-nya harus berbeda pendekatan?",
+        "options": [
+          "Supaya lebih susah dibuat",
+          "Supaya tidak terasa formula yang diulang-ulang saat ditonton berurutan",
+          "Aturan platform mewajibkan variasi",
+          "Tidak ada alasan khusus"
+        ],
+        "answer": 1,
+        "explanation": "Variasi pendekatan hook mencegah kesan \"formula yang sama diulang\" saat ketiga video ditonton berurutan oleh audiens yang sama."
+      },
+      {
+        "question": "Apa manfaat riset tren sebelum produksi 3 video sekaligus?",
+        "options": [
+          "Supaya bisa menjiplak video kompetitor persis sama",
+          "Menemukan variasi teknik hook yang relevan dan sedang efektif",
+          "Riset tren tidak ada manfaatnya untuk produksi",
+          "Supaya proses produksi lebih lama"
+        ],
+        "answer": 1,
+        "explanation": "Riset tren membantu menemukan variasi teknik hook yang benar-benar efektif saat ini, bukan asal tebak."
+      }
+    ],
+    "next_unit_id": "ve-3-2"
+  },
+  {
+    "unit_id": "ve-3-2",
+    "title": "Adaptasi 1 Konsep ke Banyak Platform",
+    "type": "materi",
+    "content": "Meski formatnya mirip (semua vertical short video), tiap platform punya kebiasaan audiens berbeda yang perlu disesuaikan.\n\n- Struktur inti (hook-isi-CTA) bisa sama, tapi durasi ideal & gaya caption sedikit berbeda antar TikTok/Reels/Shorts.\n- Adaptasi bukan berarti bikin ulang dari nol — cukup sesuaikan bagian intro/outro & teks caption per platform.\n\nBrief: \"Video-video ini mau kita taruh di TikTok, Reels, sama YouTube Shorts. Apa perlu bikin beda-beda tiap platform?\"",
+    "quiz": [
+      {
+        "question": "Video yang sama mau ditaruh di TikTok, Reels, dan YouTube Shorts. Pendekatan paling tepat?",
+        "options": [
+          "Bikin ulang total dari nol untuk tiap platform",
+          "Pakai struktur inti yang sama, sesuaikan durasi & caption per platform",
+          "Upload video identik tanpa penyesuaian apapun",
+          "Pilih hanya 1 platform saja supaya tidak ribet"
+        ],
+        "answer": 1,
+        "explanation": "Struktur inti bisa dipakai ulang, cukup adaptasi durasi dan caption sesuai kebiasaan tiap platform — lebih efisien daripada membuat ulang total."
+      },
+      {
+        "question": "Kenapa adaptasi platform TIDAK sama dengan membuat video benar-benar baru?",
+        "options": [
+          "Karena keduanya sebenarnya sama saja",
+          "Karena adaptasi cukup menyesuaikan bagian tertentu (intro/outro/caption), bukan mengubah keseluruhan konsep",
+          "Karena platform tidak mempengaruhi apapun",
+          "Karena video baru selalu lebih baik"
+        ],
+        "answer": 1,
+        "explanation": "Adaptasi mempertahankan konsep inti dan hanya menyesuaikan elemen yang benar-benar berbeda kebiasaannya antar platform."
+      }
+    ],
+    "next_unit_id": "ve-3-3"
+  },
+  {
+    "unit_id": "ve-3-3",
+    "title": "Directing Talent & Koordinasi Tim Kecil",
+    "type": "materi",
+    "content": "Mengarahkan talent non-profesional (karyawan, bukan aktor) butuh pendekatan berbeda dari mengarahkan aktor — fokus ke kenyamanan supaya hasilnya tetap natural.\n\n- Beri arahan sederhana & konkret (bukan istilah teknis film) supaya talent non-profesional mudah mengikuti.\n- Syuting beberapa video dalam 1 hari perlu urutan yang efisien (kelompokkan shot dengan setup/lokasi yang sama) supaya tidak bolak-balik.\n\nBrief: \"Kali ini kita syuting pake talent/karyawan kedai buat 3 video sekaligus dalam 1 hari. Gimana biar efisien dan hasilnya tetap natural?\"",
+    "quiz": [
+      {
+        "question": "Syuting 3 video sekaligus dalam 1 hari pakai karyawan kedai sebagai talent. Arahan yang paling tepat?",
+        "options": [
+          "Gunakan istilah teknis film yang detail supaya profesional",
+          "Beri arahan sederhana & konkret, fokus bikin talent nyaman",
+          "Biarkan talent improvisasi total tanpa arahan sama sekali",
+          "Ganti talent dengan aktor profesional saja"
+        ],
+        "answer": 1,
+        "explanation": "Talent non-profesional lebih mudah mengikuti arahan sederhana dan konkret — kenyamanan mereka menentukan seberapa natural hasilnya."
+      },
+      {
+        "question": "Cara paling efisien syuting 3 video dalam 1 hari?",
+        "options": [
+          "Syuting video 1 sampai selesai total, baru pindah ke video 2",
+          "Kelompokkan shot berdasarkan setup/lokasi yang sama meski beda video",
+          "Syuting semua secara acak tanpa urutan",
+          "Menyuruh talent syuting sendiri tanpa pengawasan"
+        ],
+        "answer": 1,
+        "explanation": "Mengelompokkan shot dengan setup/lokasi yang sama (meski untuk video berbeda) menghindari bolak-balik setup yang buang waktu."
+      }
+    ],
+    "next_unit_id": "ve-3-4"
+  },
+  {
+    "unit_id": "ve-3-4",
+    "title": "Presentasi Konsep ke Klien",
+    "type": "materi",
+    "content": "Proyek besar butuh persetujuan konsep SEBELUM produksi — supaya revisi terjadi di tahap murah (konsep), bukan tahap mahal (syuting ulang).\n\n- Presentasi konsep berisi: storyboard singkat, referensi hook, dan alasan pemilihan gaya untuk tiap video.\n- Mendapat sign-off klien sebelum syuting mencegah revisi besar setelah produksi selesai — jauh lebih murah memperbaiki di tahap konsep.\n\nBrief: \"Sebelum kita syuting semua, boleh liat dulu konsepnya kayak gimana? Biar aku bisa kasih masukan sebelum mulai produksi.\" — Owner Kopi Kilat Ekspres",
+    "quiz": [
+      {
+        "question": "Kenapa penting mendapat persetujuan konsep SEBELUM syuting, bukan setelahnya?",
+        "options": [
+          "Supaya proses terlihat lebih formal",
+          "Revisi di tahap konsep jauh lebih murah dan cepat dibanding syuting ulang",
+          "Klien selalu setuju di tahap manapun",
+          "Tidak ada bedanya, revisi bisa kapan saja"
+        ],
+        "answer": 1,
+        "explanation": "Mengubah storyboard jauh lebih murah dan cepat dibanding mengulang syuting yang sudah selesai — makanya sign-off konsep dilakukan di awal."
+      },
+      {
+        "question": "Apa isi minimal presentasi konsep video ke klien sebelum produksi?",
+        "options": [
+          "Hanya judul video saja",
+          "Storyboard singkat + referensi hook + alasan pemilihan gaya",
+          "Daftar harga jasa produksi",
+          "Nama-nama crew yang terlibat"
+        ],
+        "answer": 1,
+        "explanation": "Storyboard singkat, referensi, dan alasan pemilihan gaya sudah cukup untuk klien memahami arah konsep sebelum memberi persetujuan."
+      }
+    ],
+    "next_unit_id": "ve-3-cp3"
+  },
+  {
+    "unit_id": "ve-3-cp3",
+    "title": "Gerbang Akhir: Proyek Sertifikasi",
+    "type": "checkpoint",
+    "content": "Ini adalah Gerbang Akhir Skill Map Video & Reels — proyek paling kompleks yang pernah kamu kerjakan di WADAH.\n\n- Kamu akan direview lewat quiz singkat yang merangkum seluruh Unit 3.\n- Setelah lulus quiz, kamu masuk ke Proyek Akhir: menyusun 3 storyboard video untuk Kopi Kilat Ekspres dengan deadline 10 hari.\n- Proyek ini dinilai 100% oleh human reviewer WADAH — kelulusan di sini menerbitkan Sertifikat Kompetensi Video & Reels-mu, lengkap dengan nomor verifikasi resmi.\n\nInstruksi: Kumpulkan 1 set (3 storyboard/naskah + rasional konsep) video untuk Kopi Kilat Ekspres sesuai brief di atas.\n\nDeadline: 10 hari\n\nChecklist:\n- Ketiga storyboard menerapkan satu sistem gaya edit & musik\n- Hook tiap video pakai pendekatan berbeda\n- Storyboard siap diadaptasi ke TikTok/Reels/Shorts\n- Rasional konsep (alasan pemilihan hook & gaya) disertakan",
+    "quiz": [],
+    "next_unit_id": null
+  },
+  {
+    "unit_id": "dg-1-1",
+    "title": "Canvas Dimensions & Safe Zones",
+    "type": "materi",
+    "content": "Sebelum desain apapun, kanvas yang benar adalah fondasi paling dasar. Salah ukuran berarti kerja ulang total.\n\n- Instagram Feed pakai rasio 1:1 (persegi) — di luar rasio ini otomatis terpotong di grid profil.\n- Selalu sisakan \"safe zone\" ±50px dari tepi kanvas supaya elemen penting tidak kepotong saat platform meng-crop otomatis.\n- Warung Makan Pak Budi minta poster feed harian — berarti kanvas wajib 1080x1080px, bukan ukuran story atau landscape.\n\nBrief: \"Halo! Saya butuh dibuatkan poster promosi Instagram Feed harian (Rasio 1:1) yang bersih agar tidak terpotong saat dipajang di grid utama profil kami.\"",
+    "quiz": [
+      {
+        "concept_tag": "canvas_dimensions",
+        "question": "Berapakah resolusi & dimensi kanvas paling tepat untuk mematuhi brief klien di atas?",
+        "options": [
+          "1080 x 1920 piksel (Rasio 9:16)",
+          "1080 x 1080 piksel (Rasio 1:1)",
+          "1920 x 1080 piksel (Rasio 16:9)",
+          "800 x 800 piksel, resolusi rendah"
+        ],
+        "answer": 1,
+        "explanation": "Resolusi 1080x1080px (Rasio 1:1) adalah standar Instagram Feed — cukup tinggi resolusinya dan tidak terpotong di grid utama profil."
+      },
+      {
+        "concept_tag": "canvas_dimensions",
+        "question": "Kenapa penting menyisakan \"safe zone\" di tepi kanvas?",
+        "options": [
+          "Supaya ukuran file lebih kecil",
+          "Supaya elemen penting tidak terpotong saat platform meng-crop otomatis",
+          "Supaya warna terlihat lebih cerah",
+          "Tidak ada alasan khusus, murni estetika"
+        ],
+        "answer": 1,
+        "explanation": "Beberapa platform sedikit meng-crop gambar saat merender thumbnail — elemen yang terlalu mepet ke tepi berisiko terpotong atau hilang."
+      },
+      {
+        "concept_tag": "canvas_dimensions",
+        "question": "Warung Pak Budi juga sesekali posting ke Instagram Story. Kenapa story TIDAK boleh pakai kanvas 1:1 yang sama dengan feed?",
+        "options": [
+          "Story pakai rasio vertikal 9:16 penuh layar — kanvas 1:1 akan menyisakan area kosong besar di atas-bawah",
+          "Story tidak mendukung gambar persegi sama sekali",
+          "Ukuran file untuk story dibatasi lebih kecil dari feed",
+          "Tidak masalah, rasio apapun bisa dipakai untuk story"
+        ],
+        "answer": 0,
+        "explanation": "Story tampil full-screen vertikal (9:16). Memakai kanvas 1:1 di story menyisakan banyak area kosong dan bikin konten terlihat kecil di tengah layar."
+      }
+    ],
+    "next_unit_id": "dg-1-2"
+  },
+  {
+    "unit_id": "dg-1-2",
+    "title": "Tipografi & Prinsip 2 Detik",
+    "type": "materi",
+    "content": "Orang scroll Instagram dalam hitungan detik. Kalau pesan utama tidak tertangkap di 2 detik pertama, poster kamu akan di-skip.\n\n- Susun hierarki ukuran font: Headline promo paling besar → Call to Action → Detail/syarat ketentuan paling kecil.\n- Manusia membaca pola Z (kiri-atas ke kanan-bawah) — taruh info terpenting di jalur itu.\n- Kontras teks vs background minimal 4.5:1 supaya tetap terbaca di layar kecil HP.\n\nBrief: Audiens media sosial rata-rata hanya meluangkan waktu 2 detik untuk memperhatikan poster promo. Pengaturan visual teks harus sangat berurutan agar pesan diskon langsung ditangkap.",
+    "quiz": [
+      {
+        "concept_tag": "typography",
+        "question": "Bagaimana urutan prioritas ukuran font yang benar dari yang terbesar sampai yang terkecil?",
+        "options": [
+          "Headline Promo ➔ Call to Action ➔ Detail/Syarat Ketentuan",
+          "Syarat Ketentuan ➔ Headline Promo ➔ Call to Action",
+          "Call to Action ➔ Detail ➔ Headline Promo",
+          "Semua elemen teks berukuran sama rata"
+        ],
+        "answer": 0,
+        "explanation": "Headline harus paling menonjol karena itu yang menjawab \"apa untungnya buat saya\" dalam sekejap mata — CTA dan detail menyusul sesuai urutan kepentingan."
+      },
+      {
+        "concept_tag": "typography",
+        "question": "Kenapa Headline sebaiknya diletakkan di area atas poster?",
+        "options": [
+          "Supaya tidak menutupi logo brand",
+          "Karena pola baca Z-pattern menangkap area atas lebih dulu",
+          "Karena software desain defaultnya begitu",
+          "Tidak ada alasan khusus, hanya kebiasaan"
+        ],
+        "answer": 1,
+        "explanation": "Pola scan mata manusia dimulai dari kiri-atas — menaruh headline di posisi itu membuatnya paling cepat tertangkap sebelum orang melanjutkan scroll."
+      },
+      {
+        "concept_tag": "typography",
+        "question": "Teks \"DISKON 50%\" berwarna abu-abu tua di atas background cokelat gelap. Apa masalah utamanya?",
+        "options": [
+          "Tidak masalah selama ukuran fontnya besar",
+          "Kontrasnya kemungkinan di bawah 4.5:1 sehingga sulit dibaca di layar kecil",
+          "Warna abu-abu dianggap tidak sesuai tren desain",
+          "Ukuran file gambar jadi lebih besar"
+        ],
+        "answer": 1,
+        "explanation": "Dua warna gelap yang berdekatan biasanya gagal memenuhi standar kontras minimum 4.5:1, membuat teks seolah menyatu (blend) dengan background."
+      }
+    ],
+    "next_unit_id": "dg-1-3"
+  },
+  {
+    "unit_id": "dg-1-3",
+    "title": "Psikologi Warna Industri",
+    "type": "materi",
+    "content": "Warna bukan dekorasi — warna adalah sinyal psikologis yang memengaruhi keputusan beli konsumen dalam hitungan detik.\n\n- Cokelat hangat = kehangatan, keakraban, aroma organik → cocok untuk kafe/UMKM kopi.\n- Hijau pastel = alami, sehat, tenang → cocok untuk produk organik/kesehatan.\n- Salah pilih warna bisa bikin audiens merasa brand \"nggak nyambung\" meski produknya bagus.\n\nBrief: Hubungkan warna yang sesuai dengan karakter industri klien berikut untuk membuktikan keahlian desain Anda.",
+    "quiz": [
+      {
+        "concept_tag": "color_psychology",
+        "question": "Warna apa yang paling cocok untuk UMKM kopi tradisional yang ingin menonjolkan kehangatan & keakraban?",
+        "options": [
+          "Biru terang",
+          "Cokelat hangat",
+          "Pink neon",
+          "Abu-abu netral"
+        ],
+        "answer": 1,
+        "explanation": "Cokelat hangat identik dengan aroma kopi/tanah dan memberi kesan akrab — pas untuk kafe tradisional seperti Kopi Senja."
+      },
+      {
+        "concept_tag": "color_psychology",
+        "question": "Sebuah brand skincare organik ingin kesan \"alami & menenangkan\". Warna dominan yang paling tepat?",
+        "options": [
+          "Merah menyala",
+          "Hijau pastel",
+          "Hitam pekat",
+          "Oranye terang"
+        ],
+        "answer": 1,
+        "explanation": "Hijau secara psikologis terasosiasi dengan alam dan ketenangan — cocok untuk positioning produk organik."
+      },
+      {
+        "concept_tag": "color_psychology",
+        "question": "Kenapa warna yang salah bisa merusak persepsi brand meski produknya bagus?",
+        "options": [
+          "Karena warna memengaruhi biaya cetak",
+          "Karena warna adalah sinyal emosional pertama yang ditangkap otak sebelum membaca teks",
+          "Karena software desain membatasi pilihan warna",
+          "Warna tidak berpengaruh sama sekali pada persepsi"
+        ],
+        "answer": 1,
+        "explanation": "Otak memproses warna lebih cepat daripada teks — warna yang tidak sesuai ekspektasi niche bisa bikin audiens ragu sebelum sempat membaca copy-nya."
+      }
+    ],
+    "next_unit_id": "dg-1-4"
+  },
+  {
+    "unit_id": "dg-1-4",
+    "title": "Membaca Brief & Interpretasi SOP",
+    "type": "materi",
+    "content": "Brief klien jarang ditulis serapi dokumen resmi — tugasmu adalah menerjemahkan kalimat sehari-hari menjadi requirement teknis yang jelas.\n\n- Pisahkan brief jadi kategori: wajib ada (must-have), nice-to-have, dan batasan/larangan.\n- Kalau brief ambigu, catat asumsimu secara eksplisit sebelum mulai kerja — jangan menebak sembarangan.\n- SOP checkpoint biasanya berisi 3 hal: elemen wajib tampil, identitas visual (warna/logo), dan batas teknis (ukuran/format).\n\nBrief: \"Tolong bikinin poster promo, yang penting keliatan diskon-nya, terus jangan lupa logo kita ya, warnanya yang biasa aja kayak sebelumnya.\" — Pak Budi, WhatsApp jam 22.14",
+    "quiz": [
+      {
+        "concept_tag": "brief_interpretation",
+        "question": "Dari brief informal Pak Budi di atas, mana yang termasuk requirement WAJIB (must-have)?",
+        "options": [
+          "Diskon terlihat jelas & logo tercantum",
+          "Warna harus baru dan berbeda dari sebelumnya",
+          "Poster harus dicetak fisik dan ditempel",
+          "Tidak ada requirement yang jelas sama sekali"
+        ],
+        "answer": 0,
+        "explanation": "\"Yang penting keliatan diskon-nya\" dan \"jangan lupa logo\" adalah dua permintaan eksplisit — itu must-have, sisanya adalah interpretasi/gaya."
+      },
+      {
+        "concept_tag": "brief_interpretation",
+        "question": "Brief bilang \"warnanya yang biasa aja kayak sebelumnya\" — apa langkah paling tepat sebagai desainer?",
+        "options": [
+          "Bebas memilih warna sesuai selera pribadi",
+          "Mengecek desain/poster sebelumnya sebagai referensi warna brand yang konsisten",
+          "Menanyakan warna kesukaan pribadi klien di luar konteks brand",
+          "Mengabaikan instruksi warna sepenuhnya"
+        ],
+        "answer": 1,
+        "explanation": "\"Kayak sebelumnya\" adalah instruksi implisit untuk konsistensi brand — mengecek karya lama adalah langkah paling aman dan akurat."
+      },
+      {
+        "concept_tag": "brief_interpretation",
+        "question": "Kenapa mencatat asumsi secara eksplisit penting saat brief ambigu?",
+        "options": [
+          "Supaya terlihat lebih profesional saja",
+          "Supaya ada dasar klarifikasi kalau hasil akhir dianggap tidak sesuai ekspektasi klien",
+          "Brief ambigu sebenarnya boleh diabaikan begitu saja",
+          "Supaya pekerjaan selesai lebih cepat tanpa perlu berpikir"
+        ],
+        "answer": 1,
+        "explanation": "Kalau asumsi dicatat dan dikonfirmasi di awal, revisi besar di akhir proyek bisa dihindari — ini melindungi kamu dan klien dari miskomunikasi."
+      }
+    ],
+    "next_unit_id": "dg-1-cp1"
+  },
+  {
+    "unit_id": "dg-1-cp1",
+    "title": "Kastil Checkpoint 1",
+    "type": "checkpoint",
+    "content": "Ini adalah ujian Checkpoint — gabungan dari semua yang sudah kamu pelajari di Unit 1: kanvas, tipografi, warna, dan cara membaca brief.\n\n- Kamu akan direview lewat quiz singkat yang merangkum ke-4 topik sebelumnya.\n- Setelah lulus quiz, kamu masuk ke Tantangan Nyata: mengerjakan poster asli dengan deadline 7 hari.\n- Tantangan dinilai 100% oleh human reviewer, bukan skor otomatis.\n\nInstruksi: Kumpulkan 1 file poster promosi (JPG/PNG) sesuai brief di atas.\n\nDeadline: 7 hari\n\nChecklist:\n- Ukuran 1080x1080px (format Instagram Feed)\n- Warna brand konsisten (merah bata & kuning emas)\n- Logo & headline promo terbaca jelas dalam 2 detik\n- Kontras teks minimal 4.5:1 sudah dicek",
+    "quiz": [],
+    "next_unit_id": "dg-2-1"
+  },
+  {
+    "unit_id": "dg-2-1",
+    "title": "Sistem Grid & Alignment",
+    "type": "materi",
+    "content": "Satu poster yang bagus itu mudah. Yang lebih sulit adalah bikin banyak poster berbeda yang tetap terasa satu keluarga saat dilihat berjajar di grid profil.\n\n- Grid/margin yang sama di setiap desain (misal margin 60px di semua sisi) bikin mata pembaca \"terbiasa\" dan tidak perlu beradaptasi ulang tiap geser.\n- Alignment yang konsisten (semua headline rata kiri, atau semua rata tengah) adalah sinyal visual bahwa konten-konten ini berasal dari brand yang sama.\n\nBrief: \"Kopi Senja mau posting rutin 3x seminggu sekarang, bukan cuma sesekali. Tolong bantu biar feed kita keliatan rapi as a set, jangan berantakan kayak asal comot template.\"",
+    "quiz": [
+      {
+        "concept_tag": "layout_composition",
+        "question": "Kopi Senja mau posting 3 desain berbeda minggu ini (promo, testimoni, produk baru). Apa yang PALING menjaga ketiganya terasa \"satu keluarga\" di grid feed?",
+        "options": [
+          "Menggunakan margin, grid, dan alignment yang sama persis di ketiganya meski isi kontennya beda",
+          "Membuat tiap desain sebebas-bebasnya sesuai mood masing-masing",
+          "Memakai template gratis yang berbeda-beda dari internet",
+          "Mengganti logo di tiap desain supaya lebih variatif"
+        ],
+        "answer": 0,
+        "explanation": "Konsistensi sistem (grid, margin, alignment) adalah yang membuat konten yang berbeda-beda tetap terasa berasal dari brand yang sama."
+      },
+      {
+        "concept_tag": "layout_composition",
+        "question": "Kenapa \"alignment rata kiri di semua desain\" lebih baik daripada alignment yang berubah-ubah tiap posting?",
+        "options": [
+          "Rata kiri secara teknis lebih mudah dikerjakan di software",
+          "Alignment yang konsisten adalah sinyal visual bawah sadar bahwa konten berasal dari brand yang sama",
+          "Rata kiri satu-satunya alignment yang didukung Instagram",
+          "Tidak ada bedanya sama sekali secara persepsi audiens"
+        ],
+        "answer": 1,
+        "explanation": "Alignment yang konsisten membangun \"bahasa visual\" brand — audiens belajar mengenali konten kita bahkan sebelum membaca isinya."
+      }
+    ],
+    "next_unit_id": "dg-2-2"
+  },
+  {
+    "unit_id": "dg-2-2",
+    "title": "Hierarki di Multi-Aset",
+    "type": "materi",
+    "content": "Hierarki visual di Unit 1 mengajarkan \"apa yang paling besar di 1 poster\". Di sini, tantangannya lebih jauh: elemen dominan boleh beda tiap desain, tapi sistemnya (ukuran heading, jenis font, dst) harus tetap satu.\n\n- Elemen dominan menyesuaikan tujuan konten: diskon → angka diskon paling besar; testimoni → kutipan pelanggan paling besar; produk baru → foto produk paling besar.\n- Yang TIDAK boleh berubah antar desain: font family, skala ukuran heading vs body, dan posisi logo — itu yang menjaga sistemnya tetap satu.\n\nBrief: \"Untuk 3 post minggu ini: satu buat promo diskon, satu testimoni pelanggan, satu produk baru. Tapi jangan sampai fokusnya sama semua — kan pesannya beda-beda.\"",
+    "quiz": [
+      {
+        "concept_tag": "visual_hierarchy",
+        "question": "Untuk desain post \"Testimoni Pelanggan\", elemen apa yang paling masuk akal jadi paling dominan/besar?",
+        "options": [
+          "Logo brand dibuat sebesar mungkin",
+          "Kutipan/quote testimoni pelanggan",
+          "Harga menu yang tidak dibahas di testimoni",
+          "Background pattern dekoratif"
+        ],
+        "answer": 1,
+        "explanation": "Testimoni menjual lewat kata-kata pelanggan asli — kutipan itu sendiri yang harus jadi pusat perhatian, bukan elemen dekoratif."
+      },
+      {
+        "concept_tag": "visual_hierarchy",
+        "question": "Manakah yang HARUS tetap konsisten di ketiga desain (promo, testimoni, produk baru) meski elemen dominannya berbeda?",
+        "options": [
+          "Elemen dominan harus selalu sama di semua desain",
+          "Font family, skala hierarki ukuran, dan posisi logo",
+          "Warna background harus identik pixel-perfect",
+          "Semua desain harus punya foto produk"
+        ],
+        "answer": 1,
+        "explanation": "Font, skala hierarki, dan posisi logo adalah \"tulang punggung\" sistem — itu yang bikin variasi konten tetap terasa satu brand."
+      }
+    ],
+    "next_unit_id": "dg-2-3"
+  },
+  {
+    "unit_id": "dg-2-3",
+    "title": "Brand Guideline Mini",
+    "type": "materi",
+    "content": "Brand guideline \"mini\" bukan dokumen 50 halaman ala perusahaan besar — cukup 3-4 aturan simpel yang konsisten dipakai ulang di setiap desain baru.\n\n- Aturan logo: satu posisi baku (misal selalu pojok kanan atas) + satu ukuran minimum supaya tetap terbaca di thumbnail kecil.\n- Aturan warna: 1 warna utama (dominan), 1 warna aksen (untuk CTA/highlight), maksimal 1 warna netral (background/teks) — bukan bebas pilih warna tiap kali.\n\nBrief: \"Jujur aja kadang gw bingung logo Kopi Senja taruh di mana, terus warnanya kadang beda-beda tiap post. Ada standar bakunya nggak sih?\"",
+    "quiz": [
+      {
+        "concept_tag": "brand_consistency",
+        "question": "Apa manfaat utama menetapkan posisi logo yang BAKU (selalu di tempat yang sama) di setiap desain?",
+        "options": [
+          "Supaya proses desain lebih cepat tanpa mikir ulang tiap kali, dan audiens langsung mengenali pola brand",
+          "Supaya file desain berukuran lebih kecil",
+          "Karena software desain mewajibkan posisi logo tetap",
+          "Tidak ada manfaat nyata, hanya soal selera"
+        ],
+        "answer": 0,
+        "explanation": "Posisi logo yang konsisten mempercepat proses desain (tidak perlu menebak ulang) dan membangun pola visual yang dikenali audiens dari waktu ke waktu."
+      },
+      {
+        "concept_tag": "brand_consistency",
+        "question": "Kopi Senja punya warna cokelat sebagai warna utama. Apa peran warna aksen dalam sistem ini?",
+        "options": [
+          "Menggantikan warna utama supaya tidak monoton",
+          "Menonjolkan elemen penting seperti tombol CTA atau info diskon, tanpa merebut posisi warna utama",
+          "Dipakai secara acak di background",
+          "Warna aksen tidak diperlukan dalam sistem warna manapun"
+        ],
+        "answer": 1,
+        "explanation": "Warna aksen bertugas menarik perhatian ke bagian spesifik (CTA, diskon) sambil warna utama tetap mendominasi identitas keseluruhan."
+      }
+    ],
+    "next_unit_id": "dg-2-4"
+  },
+  {
+    "unit_id": "dg-2-4",
+    "title": "Menerjemahkan Feedback Revisi",
+    "type": "materi",
+    "content": "Feedback klien jarang teknis — \"kurang nendang\" atau \"kurang related\" itu perasaan, bukan instruksi. Tugas desainer profesional adalah menerjemahkannya jadi keputusan visual konkret, bukan menebak-nebak ulang dari nol.\n\n- \"Kurang nendang\" biasanya berarti kontras/hierarki lemah — coba naikkan ukuran elemen utama atau perkuat kontras warna.\n- \"Kurang related sama brand\" biasanya berarti elemen visualnya menyimpang dari brand guideline yang sudah disepakati (font asing, warna di luar palet) — cek kembali ke guideline, bukan menambah elemen baru sembarangan.\n- Kalau masih ambigu, tanya balik dengan pertanyaan spesifik (mis. \"related dari sisi warna, font, atau gaya foto?\") daripada menebak dan revisi berkali-kali.\n\nBrief: \"Desainnya udah oke tapi kok kurang nendang ya? Terus kayak kurang related aja sama brand kita gitu, kurang tau napa.\" — Owner Kopi Senja, revisi ronde 1",
+    "quiz": [
+      {
+        "concept_tag": "brief_interpretation",
+        "question": "Klien bilang desainnya \"kurang nendang\". Langkah PALING tepat sebagai desainer profesional?",
+        "options": [
+          "Mendesain ulang dari nol dengan konsep yang sama sekali berbeda",
+          "Menerjemahkan ke kemungkinan teknis (kontras/hierarki lemah) dan mencoba perbaikan spesifik di area itu dulu",
+          "Mengabaikan feedback karena terlalu subjektif",
+          "Langsung menambahkan banyak elemen dekoratif baru"
+        ],
+        "answer": 1,
+        "explanation": "\"Kurang nendang\" paling sering berakar dari kontras atau hierarki yang lemah — itu titik awal paling masuk akal untuk diperbaiki sebelum redesain total."
+      },
+      {
+        "concept_tag": "brief_interpretation",
+        "question": "Klien bilang \"kurang related sama brand kita\" tapi tidak menjelaskan detail. Pertanyaan balik apa yang paling membantu?",
+        "options": [
+          "\"Mau saya desain ulang total?\"",
+          "\"Related-nya dari sisi warna, font, atau gaya foto yang dimaksud?\"",
+          "Tidak perlu bertanya, cukup tebak saja",
+          "\"Budgetnya cukup nggak buat revisi?\""
+        ],
+        "answer": 1,
+        "explanation": "Memecah pertanyaan jadi opsi konkret (warna/font/gaya foto) membuat klien lebih mudah menjawab spesifik dibanding pertanyaan terbuka yang justru menambah ambiguitas."
+      }
+    ],
+    "next_unit_id": "dg-2-cp2"
+  },
+  {
+    "unit_id": "dg-2-cp2",
+    "title": "Kastil Checkpoint 2",
+    "type": "checkpoint",
+    "content": "Ini adalah ujian Checkpoint Unit 2 — gabungan dari semua yang sudah kamu pelajari soal sistem visual multi-aset.\n\n- Kamu akan direview lewat quiz singkat yang merangkum 4 topik Unit 2.\n- Setelah lulus quiz, kamu masuk ke Tantangan Nyata: membuat 1 set (3 desain) untuk Kopi Senja dengan deadline 7 hari.\n- Tantangan dinilai 100% oleh human reviewer, bukan skor otomatis.\n\nInstruksi: Kumpulkan 1 set (3 file) desain Instagram Feed yang konsisten sesuai brief di atas.\n\nDeadline: 7 hari\n\nChecklist:\n- Grid, margin & alignment sama di ketiga desain\n- Elemen dominan sesuai tujuan tiap konten (promo/testimoni/produk)\n- Palet warna & posisi logo konsisten dengan brand guideline\n- Feedback revisi sebelumnya sudah diterapkan",
+    "quiz": [],
+    "next_unit_id": "dg-3-1"
+  },
+  {
+    "unit_id": "dg-3-1",
+    "title": "Riset Visual & Moodboard",
+    "type": "materi",
+    "content": "Sebelum buka software desain, proyek sebesar ini butuh arah visual yang jelas dulu — kalau tidak, 5 desain bisa saling tidak nyambung meski masing-masing \"bagus\".\n\n- \"Tradisional tapi modern\" adalah brief abstrak — pecah jadi elemen konkret: motif batik asli (tradisional) dipadukan dengan layout minimalis & tipografi kontemporer (modern).\n- Moodboard (kumpulan referensi visual) membantu menyamakan ekspektasi dengan klien SEBELUM eksekusi — jauh lebih murah dibanding revisi total di akhir.\n- Menjaga rasa hormat pada motif budaya itu penting: jangan distorsi motif batik sampai tidak dikenali, cukup padukan lewat layout & warna modern di sekitarnya.\n\nBrief: \"Toko Batik Nusantara mau bikin 5 konten Instagram Feed yang menonjolkan motif batik tradisional tapi dengan gaya modern, biar anak muda juga tertarik beli.\"",
+    "quiz": [
+      {
+        "concept_tag": "visual_research",
+        "question": "Brief \"tradisional tapi modern\" untuk Toko Batik Nusantara paling tepat diterjemahkan sebagai...",
+        "options": [
+          "Menghapus motif batik sepenuhnya supaya terlihat modern",
+          "Motif batik asli dipertahankan, dipadukan dengan layout minimalis dan tipografi kontemporer",
+          "Menambahkan sebanyak mungkin efek dan filter modern ke motif batik",
+          "Mengabaikan brief dan membuat desain generik ala brand internasional"
+        ],
+        "answer": 1,
+        "explanation": "Kesan \"modern\" datang dari elemen di sekitar motif (layout, tipografi, whitespace) — bukan dari mengubah/menghapus motif batik itu sendiri."
+      },
+      {
+        "concept_tag": "visual_research",
+        "question": "Kenapa membuat moodboard sebelum mendesain 5 konten sekaligus itu penting?",
+        "options": [
+          "Supaya proses desain terlihat lebih formal",
+          "Untuk menyamakan ekspektasi arah visual dengan klien sebelum eksekusi, mencegah revisi total di akhir",
+          "Moodboard wajib secara hukum untuk proyek komersial",
+          "Tidak penting, langsung eksekusi lebih efisien"
+        ],
+        "answer": 1,
+        "explanation": "Moodboard adalah investasi kecil di awal yang mencegah kerugian besar — revisi total 5 desain sekaligus jauh lebih mahal daripada meluruskan arah visual di awal."
+      }
+    ],
+    "next_unit_id": "dg-3-2"
+  },
+  {
+    "unit_id": "dg-3-2",
+    "title": "Adaptasi Lintas Format",
+    "type": "materi",
+    "content": "Di Unit 1 kamu belajar kenapa Feed dan Story butuh kanvas berbeda. Sekarang tantangannya lebih jauh: bagaimana SATU sistem desain bisa \"mengalir\" ke dua rasio tanpa terasa asal crop atau asal stretch.\n\n- Jangan pernah stretch/tarik paksa desain 1:1 ke 9:16 — itu merusak proporsi elemen (logo jadi gepeng, teks jadi distorsi).\n- Sisakan \"safe margin\" ekstra di elemen utama supaya saat diadaptasi ke rasio lain, elemen kunci (motif, headline) tidak terpotong atau harus dipaksa reposisi drastis.\n- Elemen sistem (font, warna, posisi logo) tetap sama di kedua format — yang berubah hanya layout/komposisi supaya pas dengan kanvas baru.\n\nBrief: \"5 konten ini nantinya juga mau kita share ulang ke Story biar lebih banyak yang lihat. Tapi jangan asal stretch ya, ntar gepeng.\"",
+    "quiz": [
+      {
+        "concept_tag": "layout_composition",
+        "question": "Kenapa desain Feed (1:1) tidak boleh sekadar di-stretch untuk dipakai di Story (9:16)?",
+        "options": [
+          "Karena Instagram melarang secara teknis",
+          "Karena stretch akan mendistorsi proporsi elemen seperti logo dan teks sehingga terlihat gepeng/melar",
+          "Karena ukuran file akan menjadi terlalu besar",
+          "Tidak masalah, stretch adalah cara tercepat dan hasilnya sama saja"
+        ],
+        "answer": 1,
+        "explanation": "Stretch memaksa rasio elemen berubah non-proporsional — visual jadi terdistorsi dan terlihat tidak profesional, walau secara teknis \"cepat\"."
+      },
+      {
+        "concept_tag": "layout_composition",
+        "question": "Apa yang SEBAIKNYA tetap sama saat satu desain diadaptasi dari Feed ke Story?",
+        "options": [
+          "Ukuran kanvas harus dipaksa identik",
+          "Font, warna, dan posisi logo (elemen sistem) — layout boleh menyesuaikan kanvas baru",
+          "Semua elemen harus di-resize dengan skala yang sama persis",
+          "Tidak ada yang perlu dipertahankan, desain ulang dari nol lebih baik"
+        ],
+        "answer": 1,
+        "explanation": "Elemen sistem (font, warna, posisi logo) menjaga identitas brand tetap dikenali, sementara layout/komposisi memang wajar berubah menyesuaikan bentuk kanvas."
+      }
+    ],
+    "next_unit_id": "dg-3-3"
+  },
+  {
+    "unit_id": "dg-3-3",
+    "title": "Tipografi & Elemen Budaya",
+    "type": "materi",
+    "content": "Motif batik itu sendiri sudah punya kepadatan visual/detail tinggi — tipografi yang dipilih justru harus jadi penyeimbang, bukan menambah keramaian.\n\n- Font sans-serif dengan weight tegas (bold/semi-bold) lebih terbaca di atas motif yang ramai dibanding font tipis atau dekoratif yang justru \"tenggelam\".\n- Beri \"ruang napas\" di sekitar teks (misal kotak/plang warna solid semi-transparan di belakang teks) supaya tetap terbaca tanpa harus menghilangkan motif di baliknya.\n- Hindari font kaligrafi/script Barat yang justru terasa asing berdampingan dengan motif batik — pilih font netral modern yang tidak \"bersaing budaya\" dengan motif.\n\nBrief: \"Font-nya jangan yang kaku formal ya, tapi juga jangan norak. Yang penting harga sama nama produknya kebaca jelas walau di atas motif batik yang rame.\"",
+    "quiz": [
+      {
+        "concept_tag": "typography",
+        "question": "Kenapa font sans-serif bold lebih disarankan dibanding font tipis di atas motif batik yang ramai?",
+        "options": [
+          "Font bold lebih murah lisensinya",
+          "Font tipis akan \"tenggelam\" di tengah detail motif yang padat, sementara font bold tetap terbaca jelas",
+          "Font tipis tidak didukung oleh Instagram",
+          "Tidak ada perbedaan keterbacaan antara keduanya"
+        ],
+        "answer": 1,
+        "explanation": "Kepadatan visual motif batik butuh \"lawan\" tipografi yang tegas supaya teks tetap menjadi fokus, bukan justru hilang di antara detail motif."
+      },
+      {
+        "concept_tag": "typography",
+        "question": "Klien minta harga & nama produk tetap terbaca jelas walau di atas motif ramai. Solusi paling tepat?",
+        "options": [
+          "Menghapus motif batik di area teks",
+          "Menambahkan plang/kotak warna solid semi-transparan di belakang teks sebagai \"ruang napas\"",
+          "Memperkecil ukuran teks supaya tidak mengganggu motif",
+          "Mengganti motif batik dengan background polos di semua desain"
+        ],
+        "answer": 1,
+        "explanation": "Kotak/plang semi-transparan menjaga keterbacaan teks tanpa menghilangkan motif — solusi yang menyeimbangkan kedua kebutuhan sekaligus."
+      }
+    ],
+    "next_unit_id": "dg-3-4"
+  },
+  {
+    "unit_id": "dg-3-4",
+    "title": "Presentasi & Sign-off Klien",
+    "type": "materi",
+    "content": "Proyek besar seperti ini biasanya tidak selesai dengan \"kirim file lalu selesai\" — presentasi singkat yang menjelaskan RASIONAL di balik keputusan desain membangun kepercayaan dan mempercepat approval.\n\n- Rasional desain menjawab \"kenapa\", bukan cuma \"apa\" — misal \"warna aksen emas dipilih karena mengangkat kesan batik premium, bukan sekadar estetika\".\n- Presentasikan sebagai SATU SET (5 konten sekaligus), bukan satu-satu terpisah — supaya klien melihat konsistensi sistem yang sudah dibangun sejak Unit 2.\n- Sertakan bagaimana desain ini menjawab tujuan awal (\"menjangkau pembeli muda\") secara eksplisit — klien akan lebih percaya diri approve kalau ia melihat brief-nya benar-benar terjawab.\n\nBrief: \"Sebelum gw approve buat posting semua, boleh dijelasin dulu nggak kenapa desainnya kayak gini? Biar gw juga ngerti dan bisa jelasin ke tim gw.\" — Owner Toko Batik Nusantara",
+    "quiz": [
+      {
+        "concept_tag": "client_presentation",
+        "question": "Kenapa menjelaskan RASIONAL desain (bukan cuma mengirim file) penting di proyek sebesar ini?",
+        "options": [
+          "Supaya terlihat sibuk dan effort",
+          "Membangun kepercayaan klien dan mempercepat approval karena mereka paham alasan di balik tiap keputusan",
+          "Itu syarat wajib dari WADAH untuk semua submission",
+          "Tidak penting, hasil visual saja sudah cukup"
+        ],
+        "answer": 1,
+        "explanation": "Klien yang memahami alasan di balik desain akan lebih percaya diri menyetujui — presentasi rasional mengubah \"menerima pasrah\" jadi \"setuju dengan yakin\"."
+      },
+      {
+        "concept_tag": "client_presentation",
+        "question": "Saat presentasi 5 konten sekaligus ke klien, hal apa yang paling penting ditonjolkan?",
+        "options": [
+          "Menunjukkan tiap konten satu-satu tanpa menyebut hubungan antar konten",
+          "Konsistensi sistem visual antar kelima konten dan bagaimana itu menjawab brief awal",
+          "Harga jasa desain yang dikenakan",
+          "Waktu pengerjaan yang dihabiskan"
+        ],
+        "answer": 1,
+        "explanation": "Menunjukkan konsistensi sebagai SATU sistem (bukan potongan lepas) membuktikan bahwa brief \"biar terasa satu brand\" benar-benar dipenuhi."
+      }
+    ],
+    "next_unit_id": "dg-3-cp3"
+  },
+  {
+    "unit_id": "dg-3-cp3",
+    "title": "Gerbang Akhir: Proyek Sertifikasi",
+    "type": "checkpoint",
+    "content": "Ini adalah Gerbang Akhir Skill Map Desain Grafis — proyek paling kompleks yang pernah kamu kerjakan di WADAH.\n\n- Kamu akan direview lewat quiz singkat yang merangkum seluruh Unit 3.\n- Setelah lulus quiz, kamu masuk ke Proyek Akhir: mengerjakan 5 konten Instagram Feed untuk Toko Batik Nusantara dengan deadline 10 hari.\n- Proyek ini dinilai 100% oleh human reviewer WADAH — kelulusan di sini menerbitkan Sertifikat Kompetensi Desain Grafis-mu, lengkap dengan nomor verifikasi resmi.\n\nInstruksi: Kumpulkan 1 set (5 file) konten Instagram Feed untuk Toko Batik Nusantara sesuai brief di atas.\n\nDeadline: 10 hari\n\nChecklist:\n- Kelima desain menerapkan satu sistem visual yang sama\n- Motif batik otentik terjaga, dipadukan gaya modern\n- Layout siap diadaptasi ke format Story (9:16)\n- Rasional desain (alasan keputusan) disertakan",
+    "quiz": [],
+    "next_unit_id": null
+  },
+  {
+    "unit_id": "ec-1-1",
+    "title": "Judul Listing Search-Friendly",
+    "type": "materi",
+    "content": "Judul listing adalah faktor pencarian nomor satu di marketplace — algoritma mencocokkan listing dengan kata kunci yang benar-benar diketik pembeli.\n\n- Judul harus memuat jenis produk, target pengguna, dan varian — bukan kata promosi generik.\n- Nama brand yang belum dikenal orang tidak akan menjadi kata kunci pencarian mereka.\n\nBrief: \"Toko Sepatu Bumi baru buka lapak di Shopee & Tokopedia, tapi produk kami belum pernah muncul di hasil pencarian. Tolong bantu kami perbaiki judul listingnya.\"",
+    "quiz": [
+      {
+        "question": "Struktur judul listing mana yang paling optimal biar produk gampang ketemu di pencarian marketplace?",
+        "options": [
+          "\"Sepatu Bagus Banget Murah Cuma Hari Ini\"",
+          "\"Sepatu Sneakers Pria Sport Casual Bumi Original Size 39-43\"",
+          "\"BUMI\"",
+          "\"Best Seller!!! Buruan Order!!!\""
+        ],
+        "answer": 1,
+        "explanation": "Judul dengan kata kunci jenis produk + target pengguna + varian ukuran itulah yang ditangkap algoritma pencarian marketplace."
+      }
+    ],
+    "next_unit_id": "ec-1-2"
+  },
+  {
+    "unit_id": "ec-1-2",
+    "title": "Bukti Kepercayaan Pembeli",
+    "type": "materi",
+    "content": "Listing yang rapi saja belum tentu bikin orang percaya untuk beli — ada elemen kepercayaan yang harus diperkuat dulu.\n\n- Foto multi-angle & video unboxing mengurangi keraguan pembeli soal kondisi asli produk.\n- Menambah varian tanpa memperkuat bukti visual tidak menjawab keraguan utama pembeli baru.\n\nBrief: Konversi visitor ke pembeli di Toko Sepatu Bumi masih rendah meski listing sudah rapi secara visual.",
+    "quiz": [
+      {
+        "question": "Elemen mana yang paling krusial ditambahkan dulu untuk menaikkan kepercayaan pembeli baru?",
+        "options": [
+          "Foto produk dari banyak sudut + video pendek unboxing",
+          "Menambah jumlah pilihan warna tanpa menambah info lain",
+          "Mengganti nama toko jadi lebih unik",
+          "Menambahkan lebih banyak emoji di judul"
+        ],
+        "answer": 0,
+        "explanation": "Foto multi-angle & video unboxing mengurangi keraguan pembeli soal kondisi asli produk sebelum beli — jauh lebih efektif dari menambah varian saja."
+      }
+    ],
+    "next_unit_id": "ec-1-3"
+  },
+  {
+    "unit_id": "ec-1-3",
+    "title": "Elemen Deskripsi Wajib",
+    "type": "materi",
+    "content": "Deskripsi produk yang lengkap adalah investasi jangka panjang — mengurangi retur dan komplain.\n\n- Size chart yang jelas mencegah pembeli menebak ukuran sendiri.\n- Kebijakan garansi/retur yang jelas membangun kepercayaan sebelum checkout.\n\nBrief: Tim Toko Sepatu Bumi ingin tahu elemen apa saja yang wajib ada di deskripsi produk supaya angka retur dari kesalahan ukuran bisa turun.",
+    "quiz": [
+      {
+        "question": "Elemen apa yang paling penting ada di deskripsi supaya retur akibat salah ukuran berkurang?",
+        "options": [
+          "Kata-kata pujian tentang kualitas produk",
+          "Size chart lengkap + kebijakan garansi/retur yang jelas",
+          "Jumlah testimoni sebanyak-banyaknya",
+          "Daftar semua warna yang pernah dijual"
+        ],
+        "answer": 1,
+        "explanation": "Size chart mencegah kesalahan ukuran sejak awal, dan kebijakan retur yang jelas membangun kepercayaan — dua hal ini paling langsung menekan angka retur."
+      }
+    ],
+    "next_unit_id": "ec-1-4"
+  },
+  {
+    "unit_id": "ec-1-4",
+    "title": "Membaca Brief & Interpretasi Klien",
+    "type": "materi",
+    "content": "Brief marketplace dari UMKM biasanya berupa keluhan bisnis (\"jangan komplain lagi\"), bukan instruksi teknis siap pakai.\n\n- Terjemahkan \"ketemu pas dicari orang\" jadi optimasi keyword judul.\n- Terjemahkan \"jangan sampai komplain ukuran\" jadi kelengkapan size chart di deskripsi.\n\nBrief: \"Kak tolong benerin listing sepatu kita, yang penting ketemu pas dicari orang, terus jangan sampe ada yang komplain ukuran lagi.\" — Owner Toko Sepatu Bumi",
+    "quiz": [
+      {
+        "question": "Dari brief di atas, dua masalah bisnis yang perlu diterjemahkan jadi requirement teknis adalah...",
+        "options": [
+          "Optimasi keyword judul dan kelengkapan size chart",
+          "Mengganti seluruh foto produk dengan model baru",
+          "Menurunkan harga semua produk",
+          "Menambah jumlah pilihan warna sepatu"
+        ],
+        "answer": 0,
+        "explanation": "\"Ketemu pas dicari orang\" → masalah keyword judul. \"Jangan sampai komplain ukuran\" → masalah kelengkapan size chart. Keduanya requirement teknis yang konkret."
+      }
+    ],
+    "next_unit_id": "ec-1-cp1"
+  },
+  {
+    "unit_id": "ec-1-cp1",
+    "title": "Kastil Checkpoint 1",
+    "type": "checkpoint",
+    "content": "Ini adalah ujian Checkpoint — gabungan dari semua yang sudah kamu pelajari di Unit 1.\n\n- Kamu akan direview lewat quiz singkat yang merangkum 4 topik sebelumnya.\n- Setelah lulus quiz, kamu masuk ke Tantangan Nyata: mengerjakan deliverable asli dengan deadline 7 hari.\n- Tantangan dinilai 100% oleh human reviewer, bukan skor otomatis.\n\nInstruksi: Kumpulkan 1 draft listing (judul + deskripsi) sesuai brief di atas.\n\nDeadline: 7 hari\n\nChecklist:\n- Judul listing mengandung keyword utama\n- Foto produk minimal 4 sudut berbeda\n- Deskripsi mencantumkan size chart & bahan\n- Kebijakan garansi/retur tercantum jelas",
+    "quiz": [],
+    "next_unit_id": "ec-2-1"
+  },
+  {
+    "unit_id": "ec-2-1",
+    "title": "Konsistensi Branding di Semua Listing",
+    "type": "materi",
+    "content": "Toko dengan banyak listing butuh identitas visual yang konsisten — supaya pembeli langsung kenali \"ini toko yang sama\" di manapun mereka lihat produknya.\n\n- Watermark/logo yang konsisten di semua foto produk membangun kepercayaan dan mencegah foto dicuri kompetitor.\n- Template foto (angle, background, pencahayaan) yang seragam bikin katalog toko terlihat profesional saat dilihat berjajar.\n\nBrief: \"Sekarang kita punya belasan listing produk, tapi masing-masing kelihatan beda gaya — ada yang pakai watermark, ada yang enggak. Kayak bukan toko yang sama.\"",
+    "quiz": [
+      {
+        "question": "Listing-listing Toko Sepatu Bumi terlihat beda gaya satu sama lain. Solusi paling tepat?",
+        "options": [
+          "Biarkan saja, tiap produk bebas gaya sendiri",
+          "Terapkan watermark & template foto yang konsisten di semua listing",
+          "Hapus listing lama, buat listing baru semua",
+          "Ganti nama toko supaya lebih menarik"
+        ],
+        "answer": 1,
+        "explanation": "Watermark dan template foto yang konsisten membangun identitas visual toko yang mudah dikenali di semua listing."
+      },
+      {
+        "question": "Apa manfaat template foto (angle, background) yang seragam di semua listing?",
+        "options": [
+          "Supaya file foto lebih kecil ukurannya",
+          "Katalog toko terlihat profesional dan konsisten saat dilihat berjajar",
+          "Tidak ada manfaat khusus",
+          "Supaya proses upload lebih cepat"
+        ],
+        "answer": 1,
+        "explanation": "Template yang seragam membuat katalog terlihat rapi dan profesional, memperkuat kesan toko yang serius dan terpercaya."
+      }
+    ],
+    "next_unit_id": "ec-2-2"
+  },
+  {
+    "unit_id": "ec-2-2",
+    "title": "A/B Testing Judul & Foto Listing",
+    "type": "materi",
+    "content": "A/B testing adalah cara mengetahui versi mana yang lebih efektif berdasarkan data, bukan tebakan atau selera pribadi.\n\n- Uji 1 variabel dalam satu waktu (misal cuma judul, foto tetap sama) supaya hasilnya jelas variabel mana yang berpengaruh.\n- Beri waktu cukup (misal 1 minggu) sebelum menyimpulkan mana yang menang — data terlalu sedikit bisa menyesatkan.\n\nBrief: \"Kita punya 2 versi judul buat produk sepatu terlaris. Gimana cara tau mana yang lebih efektif?\"",
+    "quiz": [
+      {
+        "question": "Ingin tahu judul listing mana yang lebih efektif antara 2 versi. Cara paling tepat?",
+        "options": [
+          "Tanya pendapat teman saja",
+          "A/B testing: uji satu variabel (judul) dalam waktu tertentu, foto tetap sama",
+          "Ganti kedua judul dan foto sekaligus",
+          "Pilih judul yang paling disukai secara pribadi"
+        ],
+        "answer": 1,
+        "explanation": "A/B testing yang valid menguji satu variabel dalam satu waktu supaya hasilnya bisa disimpulkan dengan jelas variabel mana yang berpengaruh."
+      },
+      {
+        "question": "Kenapa perlu menunggu waktu cukup (mis. 1 minggu) sebelum menyimpulkan hasil A/B testing?",
+        "options": [
+          "Supaya terlihat lebih profesional",
+          "Data yang terlalu sedikit bisa menyesatkan kesimpulan",
+          "Tidak ada alasan khusus, bisa disimpulkan kapan saja",
+          "Karena platform mewajibkan durasi tertentu"
+        ],
+        "answer": 1,
+        "explanation": "Sampel data yang terlalu sedikit (misal baru 1 hari) belum cukup representatif dan bisa menghasilkan kesimpulan yang keliru."
+      }
+    ],
+    "next_unit_id": "ec-2-3"
+  },
+  {
+    "unit_id": "ec-2-3",
+    "title": "Setup Iklan Dasar Marketplace",
+    "type": "materi",
+    "content": "Iklan marketplace dengan budget kecil harus fokus ke produk yang sudah terbukti laku — bukan menyebar tipis ke semua produk sekaligus.\n\n- Iklankan produk best-seller yang sudah punya review bagus — produk yang belum terbukti berisiko boros budget tanpa hasil.\n- Budget kecil lebih efektif difokuskan ke sedikit produk daripada disebar tipis ke banyak produk sekaligus.\n\nBrief: \"Kita mau coba pasang iklan di dalam marketplace biar listing lebih sering muncul. Tapi budgetnya kecil, gimana strateginya?\"",
+    "quiz": [
+      {
+        "question": "Budget iklan marketplace terbatas. Strategi paling efektif?",
+        "options": [
+          "Sebar budget tipis ke semua produk sekaligus",
+          "Fokuskan budget ke produk best-seller yang sudah punya review bagus",
+          "Iklankan produk yang belum pernah terjual sama sekali",
+          "Hentikan rencana iklan karena budget kecil"
+        ],
+        "answer": 1,
+        "explanation": "Budget kecil lebih efektif difokuskan ke produk yang sudah terbukti laku, karena konversinya lebih tinggi dibanding produk yang belum punya bukti sosial."
+      },
+      {
+        "question": "Kenapa produk tanpa review berisiko boros budget iklan?",
+        "options": [
+          "Karena produk tanpa review otomatis lebih mahal diiklankan",
+          "Calon pembeli masih ragu tanpa bukti sosial, sehingga konversi dari klik ke pembelian lebih rendah",
+          "Marketplace melarang iklan produk baru",
+          "Tidak ada risiko khusus"
+        ],
+        "answer": 1,
+        "explanation": "Tanpa review sebagai bukti sosial, calon pembeli cenderung ragu checkout meski sudah klik iklan — konversi rendah berarti budget iklan kurang efisien."
+      }
+    ],
+    "next_unit_id": "ec-2-4"
+  },
+  {
+    "unit_id": "ec-2-4",
+    "title": "Menerjemahkan Komplain Pembeli",
+    "type": "materi",
+    "content": "Komplain pembeli adalah sinyal ada yang perlu diperbaiki di listing/operasional — bukan sekadar dijawab basa-basi.\n\n- \"Pengiriman lama\" bisa berarti perlu update estimasi pengiriman di listing supaya ekspektasi pembeli sesuai kenyataan.\n- \"Produk beda dari foto\" berarti foto/deskripsi perlu direvisi supaya representasi produk lebih akurat — bukan cuma masalah komunikasi customer service.\n\nBrief: \"Ada beberapa komplain masuk soal pengiriman lama dan produk beda dari foto. Ini gimana ya baiknya?\" — Owner Toko Sepatu Bumi",
+    "quiz": [
+      {
+        "question": "Ada komplain \"pengiriman lama\". Tindakan paling tepat selain menjawab pembeli?",
+        "options": [
+          "Mengabaikan karena bukan salah toko",
+          "Update estimasi pengiriman di listing supaya ekspektasi pembeli sesuai kenyataan",
+          "Menghapus fitur komentar pembeli",
+          "Menaikkan harga produk"
+        ],
+        "answer": 1,
+        "explanation": "Memperbaiki informasi estimasi pengiriman di listing mencegah komplain serupa terulang di masa depan, bukan cuma menjawab satu komplain saja."
+      },
+      {
+        "question": "Komplain \"produk beda dari foto\" paling tepat diterjemahkan jadi tindakan apa?",
+        "options": [
+          "Menghapus komplain tersebut",
+          "Merevisi foto/deskripsi listing supaya lebih akurat merepresentasikan produk",
+          "Memberi diskon ke semua pembeli",
+          "Mengganti nama produk"
+        ],
+        "answer": 1,
+        "explanation": "Akar masalahnya ada di representasi produk di listing — merevisi foto/deskripsi mencegah kekecewaan pembeli berikutnya."
+      }
+    ],
+    "next_unit_id": "ec-2-cp2"
+  },
+  {
+    "unit_id": "ec-2-cp2",
+    "title": "Kastil Checkpoint 2",
+    "type": "checkpoint",
+    "content": "Ini adalah ujian Checkpoint Unit 2 — gabungan dari semua yang sudah kamu pelajari soal optimasi multi-listing.\n\n- Kamu akan direview lewat quiz singkat yang merangkum 4 topik Unit 2.\n- Setelah lulus quiz, kamu masuk ke Tantangan Nyata: mengoptimasi 1 set (3 listing) untuk Toko Sepatu Bumi dengan deadline 7 hari.\n- Tantangan dinilai 100% oleh human reviewer, bukan skor otomatis.\n\nInstruksi: Kumpulkan 1 set (3 listing) yang dioptimasi untuk Toko Sepatu Bumi sesuai brief di atas.\n\nDeadline: 7 hari\n\nChecklist:\n- Watermark & template foto konsisten di ketiga listing\n- Rencana A/B testing judul disertakan\n- Revisi berdasarkan pola komplain diterapkan\n- Deskripsi & size chart tetap lengkap sesuai fondasi Unit 1",
+    "quiz": [],
+    "next_unit_id": "ec-3-1"
+  },
+  {
+    "unit_id": "ec-3-1",
+    "title": "Audit Toko Keseluruhan",
+    "type": "materi",
+    "content": "Proyek skala toko (bukan cuma 1 listing) butuh audit menyeluruh dulu — memetakan mana yang sudah baik, mana yang perlu diperbaiki.\n\n- Audit toko mencakup: performa tiap listing, konsistensi branding, respons CS, dan kebijakan toko (retur/garansi).\n- Prioritaskan perbaikan pada listing dengan trafik tinggi tapi konversi rendah — potensi dampaknya paling besar.\n\nBrief: \"Toko Elektronik Rumahan Jaya udah jualan 2 tahun tapi belum pernah dicek menyeluruh. Bisa bantu audit toko kita dari awal?\"",
+    "quiz": [
+      {
+        "question": "Toko Elektronik Rumahan Jaya minta audit menyeluruh. Apa saja yang perlu dicek?",
+        "options": [
+          "Hanya warna logo toko",
+          "Performa listing, konsistensi branding, respons CS, dan kebijakan toko",
+          "Hanya jumlah followers toko",
+          "Hanya harga produk termurah"
+        ],
+        "answer": 1,
+        "explanation": "Audit toko menyeluruh mencakup semua aspek yang mempengaruhi kepercayaan dan konversi pembeli, bukan cuma satu elemen saja."
+      },
+      {
+        "question": "Listing mana yang paling prioritas diperbaiki dalam audit toko?",
+        "options": [
+          "Listing dengan trafik rendah dan konversi rendah",
+          "Listing dengan trafik tinggi tapi konversi rendah",
+          "Listing yang sudah paling laku",
+          "Semua listing harus diperbaiki bersamaan tanpa prioritas"
+        ],
+        "answer": 1,
+        "explanation": "Listing dengan trafik tinggi tapi konversi rendah punya potensi dampak perbaikan paling besar karena pengunjungnya sudah banyak, tinggal dioptimasi konversinya."
+      }
+    ],
+    "next_unit_id": "ec-3-2"
+  },
+  {
+    "unit_id": "ec-3-2",
+    "title": "Kalender Promo & Flash Sale",
+    "type": "materi",
+    "content": "Promo yang terlalu sering bisa menurunkan persepsi nilai produk — perlu kalender yang terencana, bukan diskon asal-asalan.\n\n- Promo besar sebaiknya berkaitan dengan momen tertentu (gajian, hari besar) supaya terasa spesial, bukan rutin generik.\n- Terlalu sering diskon membuat pembeli menunggu diskon berikutnya alih-alih beli harga normal — rusak persepsi nilai produk.\n\nBrief: \"Kita mau mulai rutin bikin promo, tapi bingung kapan waktu yang pas dan gimana biar nggak kelihatan diskon terus-terusan.\"",
+    "quiz": [
+      {
+        "question": "Toko mau rutin bikin promo tapi khawatir kelihatan \"diskon terus\". Solusi yang tepat?",
+        "options": [
+          "Diskon setiap hari supaya selalu menarik",
+          "Kalender promo terencana yang dikaitkan dengan momen tertentu (gajian, hari besar)",
+          "Tidak perlu promo sama sekali",
+          "Diskon besar-besaran tanpa jadwal tertentu"
+        ],
+        "answer": 1,
+        "explanation": "Kalender promo yang dikaitkan momen tertentu membuat promo terasa spesial dan ditunggu, bukan rutin generik yang menurunkan persepsi nilai."
+      },
+      {
+        "question": "Apa risiko jangka panjang dari diskon yang terlalu sering?",
+        "options": [
+          "Toko jadi lebih terkenal",
+          "Pembeli terbiasa menunggu diskon, enggan beli di harga normal",
+          "Tidak ada risiko sama sekali",
+          "Produk jadi lebih awet"
+        ],
+        "answer": 1,
+        "explanation": "Diskon yang terlalu sering mengkondisikan pembeli untuk selalu menunggu promo berikutnya, merusak penjualan di harga normal dan margin toko."
+      }
+    ],
+    "next_unit_id": "ec-3-3"
+  },
+  {
+    "unit_id": "ec-3-3",
+    "title": "Manajemen Stok & Respons Cepat CS",
+    "type": "materi",
+    "content": "Toko yang berkembang butuh sistem manajemen stok dan CS yang bisa mengimbangi lonjakan permintaan, bukan cuma andalkan kerja manual.\n\n- Stok yang menipis perlu sistem peringatan dini (mis. reorder point) supaya tidak kehabisan saat demand tinggi.\n- Jam sibuk butuh alokasi CS ekstra atau template balasan cepat untuk pertanyaan umum — supaya respons tetap gesit.\n\nBrief: \"Kita sering kejadian stok habis pas lagi rame pembeli, terus CS juga suka telat bales pas jam sibuk.\"",
+    "quiz": [
+      {
+        "question": "Toko sering kehabisan stok saat lagi ramai pembeli. Solusi sistemnya?",
+        "options": [
+          "Menunggu stok benar-benar habis baru restock",
+          "Menetapkan reorder point (batas stok minimum) sebagai sinyal restock dini",
+          "Membatasi jumlah pembeli yang boleh checkout",
+          "Menghapus produk yang sering habis dari listing"
+        ],
+        "answer": 1,
+        "explanation": "Reorder point memberi peringatan dini sebelum stok benar-benar habis, memberi waktu cukup untuk restock sebelum kehabisan total."
+      },
+      {
+        "question": "CS sering telat balas saat jam sibuk. Solusi yang paling praktis?",
+        "options": [
+          "Menonaktifkan fitur chat saat jam sibuk",
+          "Siapkan template balasan cepat untuk pertanyaan umum + alokasi CS ekstra saat jam ramai",
+          "Membiarkan saja, pembeli akan menunggu",
+          "Menaikkan harga supaya pembeli berkurang"
+        ],
+        "answer": 1,
+        "explanation": "Template balasan cepat untuk pertanyaan umum dan alokasi CS ekstra saat jam sibuk menjaga kecepatan respons tanpa mengorbankan kualitas layanan."
+      }
+    ],
+    "next_unit_id": "ec-3-4"
+  },
+  {
+    "unit_id": "ec-3-4",
+    "title": "Laporan Penjualan & Rekomendasi",
+    "type": "materi",
+    "content": "Proyek audit toko tidak berhenti di perbaikan — laporan penjualan yang menghubungkan hasil ke masalah awal membuktikan perbaikan bekerja.\n\n- Laporan yang baik membandingkan kondisi SEBELUM dan SESUDAH perbaikan (mis. tingkat konversi, jumlah komplain).\n- Rekomendasi lanjutan berdasarkan data yang paling berdampak (mis. \"listing X naik konversi 2x, terapkan pola sama ke listing lain\").\n\nBrief: \"Setelah semua diperbaiki, owner mau lihat laporan hasilnya dan rencana ke depan gimana.\" — Owner Toko Elektronik Rumahan Jaya",
+    "quiz": [
+      {
+        "question": "Owner minta laporan hasil audit + rencana ke depan. Elemen paling penting dalam laporan?",
+        "options": [
+          "Daftar semua produk yang dijual",
+          "Perbandingan kondisi sebelum-sesudah perbaikan + rekomendasi berbasis data",
+          "Jumlah karyawan toko",
+          "Riwayat lengkap seluruh chat CS"
+        ],
+        "answer": 1,
+        "explanation": "Perbandingan sebelum-sesudah membuktikan dampak nyata perbaikan, dan rekomendasi berbasis data memberi arah jelas untuk langkah berikutnya."
+      },
+      {
+        "question": "Rekomendasi \"terapkan pola sama ke listing lain\" seharusnya berdasarkan apa?",
+        "options": [
+          "Perasaan pribadi tentang produk favorit",
+          "Data listing yang terbukti mengalami peningkatan konversi setelah perbaikan",
+          "Permintaan acak dari pembeli",
+          "Jumlah warna yang tersedia"
+        ],
+        "answer": 1,
+        "explanation": "Rekomendasi yang kredibel didasarkan pada pola yang sudah terbukti berhasil dari data nyata, bukan asumsi atau kesukaan pribadi."
+      }
+    ],
+    "next_unit_id": "ec-3-cp3"
+  },
+  {
+    "unit_id": "ec-3-cp3",
+    "title": "Gerbang Akhir: Proyek Sertifikasi",
+    "type": "checkpoint",
+    "content": "Ini adalah Gerbang Akhir Skill Map E-Commerce — proyek paling kompleks yang pernah kamu kerjakan di WADAH.\n\n- Kamu akan direview lewat quiz singkat yang merangkum seluruh Unit 3.\n- Setelah lulus quiz, kamu masuk ke Proyek Akhir: menyusun audit & rencana optimasi toko untuk Toko Elektronik Rumahan Jaya dengan deadline 10 hari.\n- Proyek ini dinilai 100% oleh human reviewer WADAH — kelulusan di sini menerbitkan Sertifikat Kompetensi E-Commerce-mu, lengkap dengan nomor verifikasi resmi.\n\nInstruksi: Kumpulkan 1 dokumen audit & rencana optimasi toko untuk Toko Elektronik Rumahan Jaya sesuai brief di atas.\n\nDeadline: 10 hari\n\nChecklist:\n- Audit toko mencakup listing, branding, CS, dan kebijakan\n- Kalender promo/flash sale terencana disertakan\n- Rencana manajemen stok & CS jam sibuk disertakan\n- Laporan sebelum-sesudah & rekomendasi disertakan",
+    "quiz": [],
+    "next_unit_id": null
+  },
+  {
+    "unit_id": "mk-1-1",
+    "title": "Objective Campaign",
+    "type": "materi",
+    "content": "Objective campaign menentukan siapa yang ditarget algoritma dan metrik apa yang dioptimalkan.\n\n- Objective Leads/Conversions mengoptimalkan untuk orang yang benar-benar mengisi form booking.\n- Objective Awareness/Engagement mengoptimalkan metrik yang berbeda dari tujuan bisnis nyata (booking).\n\nBrief: \"Klinik Kecantikan Glow mau pasang iklan Meta Ads pertama kami buat promo treatment facial baru. Tujuannya biar orang booking konsultasi, bukan cuma tau kami ada.\"",
+    "quiz": [
+      {
+        "question": "Objective campaign mana yang paling tepat kalau tujuannya adalah booking konsultasi, bukan sekadar dikenal?",
+        "options": [
+          "Brand Awareness",
+          "Conversions / Leads dengan tujuan form booking",
+          "Engagement (like/comment)",
+          "Reach (jangkauan sebanyak mungkin akun)"
+        ],
+        "answer": 1,
+        "explanation": "Objective Leads/Conversions mengoptimalkan iklan untuk orang yang benar-benar mengisi form booking, bukan cuma melihat atau berinteraksi dengan iklan."
+      }
+    ],
+    "next_unit_id": "mk-1-2"
+  },
+  {
+    "unit_id": "mk-1-2",
+    "title": "Audience Targeting",
+    "type": "materi",
+    "content": "Budget terbatas berarti targeting harus presisi — semakin luas targeting, semakin cepat budget habis ke orang yang tidak relevan.\n\n- Targeting sempit (demografi + lokasi + minat) membuat budget jatuh ke orang yang benar-benar potensial.\n- Klinik adalah bisnis lokal — radius jarak dari lokasi adalah filter penting.\n\nBrief: Budget iklan Klinik Kecantikan Glow terbatas, jadi targeting-nya harus benar-benar tepat sasaran.",
+    "quiz": [
+      {
+        "question": "Targeting audiens mana yang paling efisien untuk treatment facial premium di kota tersebut?",
+        "options": [
+          "Semua orang di Indonesia usia 18-65 tahun",
+          "Wanita 25-45 tahun, radius 10km dari klinik, minat skincare/kecantikan",
+          "Semua gender di seluruh dunia",
+          "Hanya berdasarkan usia, tanpa filter lokasi atau minat"
+        ],
+        "answer": 1,
+        "explanation": "Targeting sempit dan relevan (demografi + lokasi + minat) bikin budget terbatas jatuh ke orang yang benar-benar potensial booking."
+      }
+    ],
+    "next_unit_id": "mk-1-3"
+  },
+  {
+    "unit_id": "mk-1-3",
+    "title": "Elemen Ad Copy Wajib",
+    "type": "materi",
+    "content": "Ad copy yang bagus bukan cuma soal kata-kata indah — ada struktur yang mendorong aksi konkret.\n\n- CTA yang jelas (\"Booking Sekarang\") mengarahkan pembaca ke tindakan spesifik.\n- Urgency (\"diskon minggu ini saja\") mendorong orang bertindak sekarang, bukan menunda.\n\nBrief: Tim Klinik Kecantikan Glow ingin tahu elemen apa saja yang wajib ada di teks iklan supaya orang benar-benar bergerak untuk booking.",
+    "quiz": [
+      {
+        "question": "Elemen apa yang wajib ada di ad copy supaya orang benar-benar bergerak untuk booking?",
+        "options": [
+          "Deskripsi panjang tentang sejarah klinik",
+          "CTA yang jelas + urgency/penawaran spesifik",
+          "Daftar semua treatment yang tersedia",
+          "Kutipan testimoni tanpa call-to-action"
+        ],
+        "answer": 1,
+        "explanation": "CTA jelas mengarahkan tindakan konkret, dan urgency mendorong orang bertindak sekarang — kombinasi ini yang paling efektif mendorong booking."
+      }
+    ],
+    "next_unit_id": "mk-1-4"
+  },
+  {
+    "unit_id": "mk-1-4",
+    "title": "Membaca Brief & Interpretasi Klien",
+    "type": "materi",
+    "content": "Brief campaign dari klien sering berupa tujuan bisnis (\"orang langsung mau booking\"), bukan setup teknis siap pakai.\n\n- Terjemahkan \"orang langsung mau booking\" jadi objective Conversions/Leads, bukan Awareness.\n- Terjemahkan \"budget terbatas\" jadi targeting yang sempit dan presisi, bukan targeting luas.\n\nBrief: \"Sis tolong bikinin iklan buat treatment baru kita, yang penting orang langsung mau booking, budget-nya terbatas ya bulan ini.\" — Owner Klinik Kecantikan Glow",
+    "quiz": [
+      {
+        "question": "Dari brief di atas, \"budget-nya terbatas ya bulan ini\" paling tepat diterjemahkan jadi keputusan teknis apa?",
+        "options": [
+          "Targeting audiens yang sangat luas supaya jangkauan maksimal",
+          "Targeting audiens yang sempit dan presisi (demografi + lokasi + minat)",
+          "Menunda campaign sampai budget lebih besar",
+          "Mengabaikan targeting sama sekali"
+        ],
+        "answer": 1,
+        "explanation": "Budget terbatas berarti setiap rupiah harus dimaksimalkan — targeting sempit dan presisi memastikan iklan hanya menjangkau orang yang benar-benar potensial."
+      }
+    ],
+    "next_unit_id": "mk-1-cp1"
+  },
+  {
+    "unit_id": "mk-1-cp1",
+    "title": "Kastil Checkpoint 1",
+    "type": "checkpoint",
+    "content": "Ini adalah ujian Checkpoint — gabungan dari semua yang sudah kamu pelajari di Unit 1.\n\n- Kamu akan direview lewat quiz singkat yang merangkum 4 topik sebelumnya.\n- Setelah lulus quiz, kamu masuk ke Tantangan Nyata: mengerjakan deliverable asli dengan deadline 7 hari.\n- Tantangan dinilai 100% oleh human reviewer, bukan skor otomatis.\n\nInstruksi: Kumpulkan 1 draft ad copy + setup targeting sesuai brief di atas.\n\nDeadline: 7 hari\n\nChecklist:\n- Objective campaign sesuai tujuan bisnis (booking)\n- Targeting audiens spesifik (demografi + lokasi + minat)\n- Ad copy punya CTA dan urgency yang jelas\n- Visual before/after sesuai etika iklan kecantikan",
+    "quiz": [],
+    "next_unit_id": "mk-2-1"
+  },
+  {
+    "unit_id": "mk-2-1",
+    "title": "A/B Testing Ad Creative",
+    "type": "materi",
+    "content": "A/B testing creative membantu menemukan visual/copy yang benar-benar berhasil, bukan sekadar tebakan desain mana yang \"lebih cantik\".\n\n- Uji satu elemen dalam satu waktu (misal cuma gambar utama, headline tetap sama) supaya jelas elemen mana yang berpengaruh.\n- Metrik yang dibandingkan harus sesuai tujuan bisnis (booking), bukan sekadar like/reach.\n\nBrief: \"Kita punya 2 versi visual iklan buat treatment yang sama. Gimana cara tau mana yang lebih menarik orang buat booking?\"",
+    "quiz": [
+      {
+        "question": "Ingin tahu visual iklan mana yang lebih efektif dari 2 versi. Cara paling tepat?",
+        "options": [
+          "Pilih berdasarkan selera desainer",
+          "A/B testing: uji satu elemen (gambar), headline tetap sama, bandingkan hasil booking",
+          "Pakai kedua visual secara bergantian tanpa data",
+          "Tanya pendapat tim internal saja"
+        ],
+        "answer": 1,
+        "explanation": "A/B testing yang valid menguji satu elemen dalam satu waktu dan membandingkan metrik yang sesuai tujuan bisnis (booking)."
+      },
+      {
+        "question": "Metrik apa yang paling relevan dibandingkan saat A/B testing iklan dengan tujuan booking?",
+        "options": [
+          "Jumlah like saja",
+          "Jumlah share saja",
+          "Jumlah booking/leads yang dihasilkan",
+          "Warna yang paling disukai tim"
+        ],
+        "answer": 2,
+        "explanation": "Metrik yang dibandingkan harus selaras dengan tujuan bisnis campaign — kalau tujuannya booking, itu yang harus diukur, bukan metrik vanity seperti like."
+      }
+    ],
+    "next_unit_id": "mk-2-2"
+  },
+  {
+    "unit_id": "mk-2-2",
+    "title": "Optimasi Budget & Bidding",
+    "type": "materi",
+    "content": "Biaya per hasil (cost per booking) yang tidak stabil biasanya berarti campaign perlu waktu belajar (learning phase) atau targeting terlalu luas.\n\n- Campaign baru butuh \"masa belajar\" beberapa hari sebelum algoritma menemukan audiens optimal — jangan buru-buru ubah setting di masa ini.\n- Monitor cost per hasil secara berkala, dan matikan ad set yang biayanya jauh di atas rata-rata setelah data cukup.\n\nBrief: \"Budget iklan kita jalan tapi hasilnya nggak stabil, kadang murah kadang mahal per booking. Gimana caranya lebih terkontrol?\"",
+    "quiz": [
+      {
+        "question": "Biaya per booking naik-turun tidak stabil. Langkah paling tepat di awal?",
+        "options": [
+          "Langsung ubah semua setting campaign",
+          "Biarkan campaign melewati masa belajar beberapa hari sebelum evaluasi",
+          "Hentikan campaign secepatnya",
+          "Naikkan budget 10x lipat"
+        ],
+        "answer": 1,
+        "explanation": "Campaign baru butuh masa belajar sebelum algoritma stabil menemukan audiens optimal — evaluasi terlalu dini bisa menyesatkan."
+      },
+      {
+        "question": "Setelah data cukup, ad set mana yang sebaiknya dimatikan?",
+        "options": [
+          "Ad set dengan biaya per hasil jauh di atas rata-rata",
+          "Ad set yang paling baru dibuat",
+          "Semua ad set harus dimatikan dan diganti",
+          "Ad set dengan jumlah like tertinggi"
+        ],
+        "answer": 0,
+        "explanation": "Ad set dengan cost per hasil jauh di atas rata-rata adalah yang paling tidak efisien dan layak dihentikan untuk mengalihkan budget ke yang lebih efektif."
+      }
+    ],
+    "next_unit_id": "mk-2-3"
+  },
+  {
+    "unit_id": "mk-2-3",
+    "title": "Retargeting Audiens",
+    "type": "materi",
+    "content": "Orang yang sudah berinteraksi (klik/kunjungi halaman) tapi belum konversi adalah audiens \"hangat\" — mereka lebih mudah dikonversi lewat retargeting dibanding audiens baru.\n\n- Retargeting menargetkan orang yang sudah menunjukkan minat (klik iklan, kunjungi website) — jauh lebih murah dan efektif dibanding menjangkau audiens dingin.\n- Pesan retargeting bisa berbeda dari iklan awal (mis. tambahkan urgency atau testimoni) untuk mendorong keputusan akhir.\n\nBrief: \"Banyak orang klik iklan kita tapi nggak langsung booking. Sayang banget kalau dibiarin gitu aja.\"",
+    "quiz": [
+      {
+        "question": "Banyak orang klik iklan tapi tidak booking. Strategi lanjutan yang tepat?",
+        "options": [
+          "Abaikan, fokus cari audiens baru saja",
+          "Retargeting ke orang yang sudah klik/kunjungi halaman sebelumnya",
+          "Hentikan campaign karena dianggap gagal",
+          "Naikkan harga treatment supaya lebih eksklusif"
+        ],
+        "answer": 1,
+        "explanation": "Retargeting audiens yang sudah menunjukkan minat adalah cara paling efisien untuk mengonversi mereka yang \"hampir\" booking."
+      },
+      {
+        "question": "Kenapa pesan iklan retargeting boleh berbeda dari iklan awal?",
+        "options": [
+          "Supaya terlihat lebih variatif saja",
+          "Untuk mendorong keputusan akhir dengan urgency/testimoni tambahan bagi audiens yang sudah tertarik",
+          "Tidak boleh berbeda sama sekali",
+          "Karena aturan platform mewajibkan variasi"
+        ],
+        "answer": 1,
+        "explanation": "Audiens retargeting sudah kenal brand-nya — pesan bisa lebih persuasif ke arah keputusan akhir (urgency, testimoni) dibanding perkenalan awal."
+      }
+    ],
+    "next_unit_id": "mk-2-4"
+  },
+  {
+    "unit_id": "mk-2-4",
+    "title": "Menerjemahkan Feedback Revisi",
+    "type": "materi",
+    "content": "Feedback campaign iklan juga sering berupa perasaan — sekarang kita hubungkan ke metrik dan sistem yang sudah dipelajari.\n\n- \"CTR kurang nendang\" berarti headline/visual utama belum cukup menarik perhatian saat scroll — perlu diperkuat hook visual/copy.\n- \"Kurang related sama gaya klinik\" berarti creative menyimpang dari branding yang sudah disepakati — cek kembali ke guideline visual klinik.\n\nBrief: \"Iklannya udah oke tapi CTR-nya kayaknya kurang 'nendang'. Terus creative-nya kurang related sama gaya klinik kita.\" — Owner Klinik Kecantikan Glow, revisi ronde 1",
+    "quiz": [
+      {
+        "question": "Feedback \"CTR kurang nendang\" pada iklan paling sering berakar dari apa?",
+        "options": [
+          "Warna latar belakang website",
+          "Headline/visual utama yang belum cukup menarik perhatian saat scroll",
+          "Jumlah kata dalam disclaimer",
+          "Waktu campaign berjalan"
+        ],
+        "answer": 1,
+        "explanation": "CTR rendah biasanya tanda hook visual atau headline belum cukup kuat menahan perhatian saat orang scroll melewati iklan."
+      },
+      {
+        "question": "\"Kurang related sama gaya klinik\" mengacu ke elemen apa yang perlu dicek ulang?",
+        "options": [
+          "Jumlah budget campaign",
+          "Branding/guideline visual yang sudah disepakati sebelumnya",
+          "Platform iklan yang digunakan",
+          "Jam tayang iklan"
+        ],
+        "answer": 1,
+        "explanation": "Kalau creative terasa \"bukan gaya klinik\", itu tanda sudah menyimpang dari guideline visual/branding yang sudah ditetapkan — perlu dicek ulang ke acuan brand."
+      }
+    ],
+    "next_unit_id": "mk-2-cp2"
+  },
+  {
+    "unit_id": "mk-2-cp2",
+    "title": "Kastil Checkpoint 2",
+    "type": "checkpoint",
+    "content": "Ini adalah ujian Checkpoint Unit 2 — gabungan dari semua yang sudah kamu pelajari soal optimasi campaign.\n\n- Kamu akan direview lewat quiz singkat yang merangkum 4 topik Unit 2.\n- Setelah lulus quiz, kamu masuk ke Tantangan Nyata: menyusun rencana optimasi untuk Klinik Kecantikan Glow dengan deadline 7 hari.\n- Tantangan dinilai 100% oleh human reviewer, bukan skor otomatis.\n\nInstruksi: Kumpulkan 1 dokumen optimasi campaign (A/B test + retargeting + monitoring budget) untuk Klinik Kecantikan Glow sesuai brief di atas.\n\nDeadline: 7 hari\n\nChecklist:\n- Rencana A/B testing creative dengan metrik yang jelas\n- Strategi retargeting audiens yang sudah berinteraksi\n- Rencana monitoring & evaluasi budget disertakan\n- Creative tetap sesuai branding & etika iklan kecantikan",
+    "quiz": [],
+    "next_unit_id": "mk-3-1"
+  },
+  {
+    "unit_id": "mk-3-1",
+    "title": "Riset Kompetitor & Positioning Campaign",
+    "type": "materi",
+    "content": "Sebelum setup campaign, riset kompetitor membantu menemukan celah diferensiasi — supaya iklan tidak terasa generik seperti resto steak lainnya.\n\n- Riset iklan kompetitor sejenis membantu menemukan pola yang sudah \"biasa\" dan mencari sudut pandang yang belum banyak dipakai.\n- Positioning yang jelas (mis. \"steak rumahan harga terjangkau\" vs \"steak premium\") menentukan seluruh arah campaign — dari visual sampai copy.\n\nBrief: \"Resto Steak Rumahan mau buka cabang baru dan butuh campaign iklan yang bikin kita beda dari resto steak lain di area situ.\"",
+    "quiz": [
+      {
+        "question": "Resto Steak Rumahan mau buka cabang baru dan butuh diferensiasi dari kompetitor. Langkah pertama?",
+        "options": [
+          "Langsung setup campaign tanpa riset",
+          "Riset iklan kompetitor sejenis + tentukan positioning yang jelas",
+          "Menyalin persis strategi kompetitor terbesar",
+          "Menunggu kompetitor gagal dulu"
+        ],
+        "answer": 1,
+        "explanation": "Riset kompetitor dan positioning yang jelas jadi fondasi sebelum eksekusi campaign yang benar-benar diferensiatif."
+      },
+      {
+        "question": "Apa fungsi \"positioning\" dalam campaign Resto Steak Rumahan?",
+        "options": [
+          "Menentukan lokasi cabang baru",
+          "Menentukan arah seluruh campaign dari visual sampai copy berdasarkan diferensiasi brand",
+          "Menentukan jam operasional resto",
+          "Menentukan menu yang akan dijual"
+        ],
+        "answer": 1,
+        "explanation": "Positioning yang jelas jadi acuan konsisten untuk semua elemen campaign — visual, copy, dan targeting — supaya diferensiasinya konsisten."
+      }
+    ],
+    "next_unit_id": "mk-3-2"
+  },
+  {
+    "unit_id": "mk-3-2",
+    "title": "Setup Campaign Multi-Channel",
+    "type": "materi",
+    "content": "Multi-channel campaign butuh koordinasi — pesan inti sama, tapi setup teknis (format, targeting) disesuaikan kebiasaan tiap platform.\n\n- Format iklan yang optimal di Meta (feed/story) berbeda dari TikTok (native short video) — creative perlu disesuaikan, bukan disamakan persis.\n- Budget dan targeting dialokasikan berdasarkan platform mana yang paling relevan dengan audiens target (usia, kebiasaan platform).\n\nBrief: \"Kita mau coba pasang iklan di Meta DAN TikTok Ads sekaligus buat launching cabang baru. Perlu disamain semua settingnya?\"",
+    "quiz": [
+      {
+        "question": "Campaign dijalankan di Meta dan TikTok sekaligus. Pendekatan setup yang tepat?",
+        "options": [
+          "Gunakan format iklan yang benar-benar identik di kedua platform",
+          "Pesan inti sama, tapi format creative & alokasi budget disesuaikan kebiasaan tiap platform",
+          "Fokus 1 platform saja, platform lain diabaikan",
+          "Budget dibagi rata tanpa mempertimbangkan audiens"
+        ],
+        "answer": 1,
+        "explanation": "Multi-channel campaign efektif ketika pesan inti konsisten tapi eksekusi teknisnya disesuaikan dengan kebiasaan masing-masing platform."
+      },
+      {
+        "question": "Kenapa format iklan Meta dan TikTok sebaiknya tidak disamakan persis?",
+        "options": [
+          "Karena kedua platform tidak mendukung format sama sekali",
+          "Karena kebiasaan konsumsi konten berbeda — TikTok mengutamakan video native, Meta lebih fleksibel",
+          "Karena biaya iklan selalu sama di kedua platform",
+          "Tidak ada alasan khusus"
+        ],
+        "answer": 1,
+        "explanation": "Kebiasaan audiens berbeda di tiap platform — menyesuaikan format sesuai kebiasaan itu meningkatkan efektivitas iklan dibanding memaksakan format yang sama."
+      }
+    ],
+    "next_unit_id": "mk-3-3"
+  },
+  {
+    "unit_id": "mk-3-3",
+    "title": "Analisis Data & Optimasi Berkelanjutan",
+    "type": "materi",
+    "content": "Campaign jangka panjang butuh evaluasi berkala — bukan cuma di akhir, tapi terus-menerus selama campaign berjalan untuk optimasi.\n\n- Bandingkan performa antar ad set/platform secara berkala untuk tahu mana yang perlu dinaikkan atau diturunkan budgetnya.\n- Optimasi berkelanjutan berarti membuat keputusan kecil rutin (geser budget, matikan yang kurang efektif) berdasarkan data terbaru, bukan menunggu campaign selesai baru dievaluasi.\n\nBrief: \"Campaign udah jalan 2 minggu. Owner nanya apa yang udah dipelajari dari datanya sejauh ini?\"",
+    "quiz": [
+      {
+        "question": "Campaign sudah jalan 2 minggu. Apa yang seharusnya dilakukan secara berkala?",
+        "options": [
+          "Menunggu sampai campaign selesai baru dievaluasi",
+          "Bandingkan performa ad set/platform secara berkala + optimasi kecil rutin",
+          "Hentikan campaign di tengah jalan tanpa alasan",
+          "Tidak perlu evaluasi apapun selama budget masih ada"
+        ],
+        "answer": 1,
+        "explanation": "Evaluasi berkala memungkinkan optimasi dilakukan lebih awal, memaksimalkan performa selama campaign masih berjalan."
+      },
+      {
+        "question": "Kenapa optimasi berkelanjutan lebih baik dibanding menunggu evaluasi di akhir?",
+        "options": [
+          "Karena lebih mudah dilakukan",
+          "Karena memberi kesempatan memperbaiki performa selagi campaign masih berjalan",
+          "Tidak ada bedanya sama sekali",
+          "Karena platform mewajibkan evaluasi rutin"
+        ],
+        "answer": 1,
+        "explanation": "Optimasi berkelanjutan memanfaatkan data yang masuk secara real-time untuk memperbaiki performa selagi masih ada waktu, bukan setelah budget habis."
+      }
+    ],
+    "next_unit_id": "mk-3-4"
+  },
+  {
+    "unit_id": "mk-3-4",
+    "title": "Presentasi Hasil & Rekomendasi ke Klien",
+    "type": "materi",
+    "content": "Proyek besar butuh presentasi hasil yang menghubungkan data campaign ke tujuan bisnis klien (mis. booking cabang baru), bukan sekadar melaporkan angka.\n\n- Presentasi hasil menjawab \"apakah tujuan bisnis tercapai\" (mis. jumlah booking cabang baru), bukan cuma metrik iklan mentah.\n- Rekomendasi lanjutan harus konkret dan actionable (mis. \"naikkan budget ad set X karena cost per booking paling efisien\").\n\nBrief: \"Boleh dijelasin nggak hasil campaign 2 minggu ini gimana, dan rencana ke depan buat cabang baru kita?\" — Owner Resto Steak Rumahan",
+    "quiz": [
+      {
+        "question": "Owner mau tau hasil campaign 2 minggu untuk cabang baru. Elemen paling penting dalam presentasi?",
+        "options": [
+          "Jumlah warna yang dipakai di iklan",
+          "Apakah tujuan bisnis (booking cabang baru) tercapai + rekomendasi actionable",
+          "Nama-nama platform yang dipakai saja",
+          "Jumlah karyawan yang terlibat"
+        ],
+        "answer": 1,
+        "explanation": "Presentasi hasil yang baik fokus menjawab pencapaian tujuan bisnis dan memberi rekomendasi konkret, bukan sekadar melaporkan metrik teknis."
+      },
+      {
+        "question": "Rekomendasi \"naikkan budget ad set X\" seharusnya didasarkan pada apa?",
+        "options": [
+          "Ad set yang paling disukai secara pribadi",
+          "Data cost per booking yang paling efisien dari ad set tersebut",
+          "Ad set yang paling baru dibuat",
+          "Warna visual yang paling menarik"
+        ],
+        "answer": 1,
+        "explanation": "Rekomendasi budget yang kredibel harus berdasarkan data efisiensi (cost per booking) yang terbukti, bukan preferensi subjektif."
+      }
+    ],
+    "next_unit_id": "mk-3-cp3"
+  },
+  {
+    "unit_id": "mk-3-cp3",
+    "title": "Gerbang Akhir: Proyek Sertifikasi",
+    "type": "checkpoint",
+    "content": "Ini adalah Gerbang Akhir Skill Map Digital Marketing — proyek paling kompleks yang pernah kamu kerjakan di WADAH.\n\n- Kamu akan direview lewat quiz singkat yang merangkum seluruh Unit 3.\n- Setelah lulus quiz, kamu masuk ke Proyek Akhir: menyusun strategi campaign multi-channel untuk Resto Steak Rumahan dengan deadline 10 hari.\n- Proyek ini dinilai 100% oleh human reviewer WADAH — kelulusan di sini menerbitkan Sertifikat Kompetensi Digital Marketing-mu, lengkap dengan nomor verifikasi resmi.\n\nInstruksi: Kumpulkan 1 dokumen strategi campaign multi-channel untuk Resto Steak Rumahan sesuai brief di atas.\n\nDeadline: 10 hari\n\nChecklist:\n- Riset kompetitor & positioning campaign tersusun\n- Setup campaign Meta Ads & TikTok Ads dengan penyesuaian format\n- Jadwal evaluasi & optimasi berkala disertakan\n- Presentasi hasil & rekomendasi lanjutan disertakan",
+    "quiz": [],
+    "next_unit_id": null
+  },
+  {
+    "unit_id": "ugc-1-1",
+    "title": "Gaya Konten Autentik",
+    "type": "materi",
+    "content": "Konten UGC yang bagus bukan soal kamera mahal atau setting studio — justru sebaliknya. Autentisitas adalah tentang:\n\n- Reaksi yang tidak dibuat-buat.\n- Lingkungan yang terasa \"nyata\" (kamar, dapur, luar ruangan).\n- Bahasa yang natural, bukan scripted.\n- Pengalaman yang bisa di-relate audiens.\n\nBrief: \"Brand skincare lokal Alami cari kreator buat bikin video review yang KERASA asli, bukan kayak iklan TV. Kami mau audiens percaya ini pengalaman jujur, bukan settingan.\"",
+    "quiz": [
+      {
+        "question": "Apa yang membuat konten UGC terasa autentik?",
+        "options": [
+          "Lighting studio profesional",
+          "Reaksi natural dan setting sehari-hari",
+          "Background musik yang epik",
+          "Banyak cut dan efek visual"
+        ],
+        "answer": 1,
+        "explanation": "Reaksi yang tidak dibuat-buat dan lingkungan sehari-hari (kamar, dapur) itulah yang bikin penonton percaya ini pengalaman nyata, bukan settingan."
+      },
+      {
+        "question": "Brand Alami meminta video yang \"KERASA asli\". Pendekatan mana yang paling tepat?",
+        "options": [
+          "Syuting di studio dengan lighting ring light",
+          "Edit dengan banyak transisi keren",
+          "Rekam di kamar sambil pakai produk secara natural",
+          "Gunakan script yang sudah disiapkan brand"
+        ],
+        "answer": 2,
+        "explanation": "Merekam natural di ruang sehari-hari (kamar) tanpa skrip kaku adalah pendekatan yang paling sesuai dengan brief \"kerasa asli\"."
+      },
+      {
+        "question": "Apa risiko terbesar kalau konten UGC terasa \"settingan\"?",
+        "options": [
+          "Video jadi kurang estetis",
+          "Audiens tidak percaya dan engagement turun",
+          "Brand tidak suka warnanya",
+          "Video terlalu pendek"
+        ],
+        "answer": 1,
+        "explanation": "Nilai jual utama UGC adalah kepercayaan — begitu konten terasa settingan, audiens langsung skeptis dan engagement anjlok."
+      }
+    ],
+    "next_unit_id": "ugc-1-2"
+  },
+  {
+    "unit_id": "ugc-1-2",
+    "title": "Struktur Cerita Review",
+    "type": "materi",
+    "content": "Review yang meyakinkan punya struktur cerita — bukan sekadar bilang \"bagus banget\".\n\n- Struktur masalah → proses → hasil membuat klaim produk terasa dibuktikan, bukan sekadar diucapkan.\n- Klaim tanpa konteks/bukti terasa seperti settingan bagi penonton yang makin skeptis.\n\nBrief: Brand Alami pengen video review yang bikin penonton percaya, bukan cuma pujian kosong tanpa konteks.",
+    "quiz": [
+      {
+        "question": "Struktur review mana yang paling meyakinkan penonton?",
+        "options": [
+          "Langsung bilang \"produk ini bagus banget, wajib beli!\" tanpa konteks",
+          "Cerita masalah kulit yang dialami → proses coba produk → hasil nyata yang terlihat",
+          "Membaca daftar bahan produk secara teknis",
+          "Membandingkan harga dengan brand lain saja"
+        ],
+        "answer": 1,
+        "explanation": "Struktur masalah→proses→hasil menunjukkan perjalanan nyata yang bisa dibuktikan, bukan klaim kosong."
+      }
+    ],
+    "next_unit_id": "ugc-1-3"
+  },
+  {
+    "unit_id": "ugc-1-3",
+    "title": "Etika Disclosure & Keaslian",
+    "type": "materi",
+    "content": "Autentik bukan berarti menyembunyikan bahwa ini konten berbayar — justru transparansi bikin makin dipercaya.\n\n- Label \"kerja sama berbayar\" adalah kewajiban etika dan diatur dalam pedoman periklanan platform.\n- Menampilkan momen \"tidak sempurna\" justru menambah kesan jujur, bukan mengurangi kualitas.\n\nBrief: Brand Alami ingin memastikan setiap kreator yang bekerja sama tetap menjaga etika dan kesan jujur di kontennya.",
+    "quiz": [
+      {
+        "question": "Elemen apa yang wajib ada di konten UGC berbayar supaya tetap etis dan terasa jujur?",
+        "options": [
+          "Label kerja sama berbayar yang jelas + momen \"tidak sempurna\" yang ditampilkan apa adanya",
+          "Menyembunyikan bahwa ini konten berbayar supaya terlihat organik",
+          "Hanya menampilkan hasil sempurna tanpa proses",
+          "Skrip yang disetujui penuh oleh brand tanpa boleh diubah"
+        ],
+        "answer": 0,
+        "explanation": "Disclosure kerja sama adalah kewajiban etika/legal, dan momen tidak sempurna justru menambah kesan jujur — dua hal ini yang menjaga kredibilitas konten UGC."
+      }
+    ],
+    "next_unit_id": "ugc-1-4"
+  },
+  {
+    "unit_id": "ugc-1-4",
+    "title": "Membaca Brief & Interpretasi Klien",
+    "type": "materi",
+    "content": "Brief UGC dari brand sering berupa perasaan yang ingin ditimbulkan (\"keliatan asli\"), plus satu instruksi legal yang wajib (disclosure).\n\n- Terjemahkan \"keliatan asli dipake\" jadi struktur cerita masalah→proses→hasil yang direkam natural.\n- \"Jangan lupa sebut kerja sama\" adalah instruksi wajib legal/etika, bukan opsional.\n\nBrief: \"Kak tolong bikin konten review produk kita ya, yang penting keliatan asli dipake, jangan lupa sebut ini kerja sama juga.\" — Tim Brand Alami",
+    "quiz": [
+      {
+        "question": "Dari brief di atas, instruksi mana yang bersifat WAJIB dan tidak boleh dilewatkan?",
+        "options": [
+          "Menyebutkan bahwa ini konten kerja sama",
+          "Merekam di lokasi outdoor",
+          "Menggunakan filter warna tertentu",
+          "Durasi video harus di atas 3 menit"
+        ],
+        "answer": 0,
+        "explanation": "\"Jangan lupa sebut ini kerja sama\" adalah instruksi legal/etika yang wajib, terlepas dari nada santai brief secara keseluruhan."
+      }
+    ],
+    "next_unit_id": "ugc-1-cp1"
+  },
+  {
+    "unit_id": "ugc-1-cp1",
+    "title": "Kastil Checkpoint 1",
+    "type": "checkpoint",
+    "content": "Ini adalah ujian Checkpoint — gabungan dari semua yang sudah kamu pelajari di Unit 1.\n\n- Kamu akan direview lewat quiz singkat yang merangkum 4 topik sebelumnya.\n- Setelah lulus quiz, kamu masuk ke Tantangan Nyata: mengerjakan deliverable asli dengan deadline 7 hari.\n- Tantangan dinilai 100% oleh human reviewer, bukan skor otomatis.\n\nInstruksi: Kumpulkan 1 video review (link/file) sesuai brief di atas.\n\nDeadline: 7 hari\n\nChecklist:\n- Label kerja sama/iklan tercantum jelas\n- Gaya bicara natural, bukan skrip kaku\n- Struktur cerita: masalah → proses → hasil\n- Before/after ditunjukkan jujur",
+    "quiz": [],
+    "next_unit_id": "ugc-2-1"
+  },
+  {
+    "unit_id": "ugc-2-1",
+    "title": "Menjaga Karakter Konsisten",
+    "type": "materi",
+    "content": "Kerja sama jangka panjang butuh karakter/personality yang konsisten — audiens harus tetap mengenali \"ini kamu\" di setiap konten, walau topiknya beda-beda.\n\n- Karakter (cara bicara, energi, humor) adalah \"brand pribadi\" kreator — konsisten menjaga ini membangun kepercayaan audiens dalam jangka panjang.\n- Konsistensi karakter BUKAN berarti kaku/monoton — tetap boleh spontan, asal \"nada dasarnya\" (misal ceria & jujur) tetap sama.\n\nBrief: \"Brand Alami mau kerja sama jangka panjang, bukan cuma 1 video. Tapi kepribadian di kontenmu harus tetep 'kamu banget' tiap video, jangan berubah-ubah.\"",
+    "quiz": [
+      {
+        "question": "Brand Alami mau kerja sama jangka panjang dan minta karakter kontenmu konsisten. Maksudnya?",
+        "options": [
+          "Harus pakai kalimat dan gerakan yang sama persis tiap video",
+          "Nada dasar kepribadian (cara bicara, energi) tetap sama meski topik video beda-beda",
+          "Harus selalu terlihat sangat formal",
+          "Tidak perlu konsisten sama sekali"
+        ],
+        "answer": 1,
+        "explanation": "Konsistensi karakter berarti audiens tetap mengenali kepribadian dasar kreator di setiap konten, bukan mengulang skrip yang identik."
+      },
+      {
+        "question": "Kenapa konsistensi karakter penting untuk kerja sama jangka panjang?",
+        "options": [
+          "Supaya brand bisa menghemat biaya produksi",
+          "Membangun kepercayaan audiens karena mereka mengenal \"sosok\" yang konsisten dari waktu ke waktu",
+          "Tidak ada hubungannya dengan kepercayaan audiens",
+          "Supaya video selalu terlihat sama persis"
+        ],
+        "answer": 1,
+        "explanation": "Audiens membangun kepercayaan pada kreator yang konsisten kepribadiannya — ini yang membuat endorsement mereka terasa lebih kredibel dari waktu ke waktu."
+      }
+    ],
+    "next_unit_id": "ugc-2-2"
+  },
+  {
+    "unit_id": "ugc-2-2",
+    "title": "Membaca Kontrak Kerja Sama Dasar",
+    "type": "materi",
+    "content": "Sebagai kreator profesional, memahami poin-poin dasar kontrak kerja sama itu penting — supaya hak dan kewajiban jelas dari awal.\n\n- Perhatikan scope kerja (berapa video, platform mana, periode kerja sama) supaya tidak ada kesalahpahaman di tengah jalan.\n- Perhatikan juga hak penggunaan konten (apakah brand boleh repost/gunakan ulang selamanya, atau ada batas waktu) — ini sering terlewat tapi penting.\n\nBrief: \"Sebelum lanjut kerja sama jangka panjang, brand Alami kirim draft kontrak sederhana. Ini yang perlu diperhatiin apa aja ya?\"",
+    "quiz": [
+      {
+        "question": "Menerima draft kontrak kerja sama jangka panjang. Poin apa yang paling penting diperhatikan?",
+        "options": [
+          "Warna logo brand di kontrak",
+          "Scope kerja (jumlah video, platform, periode) dan hak penggunaan konten",
+          "Font yang dipakai di dokumen kontrak",
+          "Jumlah halaman kontrak"
+        ],
+        "answer": 1,
+        "explanation": "Scope kerja dan hak penggunaan konten adalah dua poin dasar yang paling menentukan kejelasan kerja sama dan mencegah kesalahpahaman."
+      },
+      {
+        "question": "Kenapa penting mengecek \"hak penggunaan konten\" sebelum tanda tangan kontrak?",
+        "options": [
+          "Karena tidak ada pengaruhnya sama sekali",
+          "Supaya jelas apakah brand boleh memakai ulang konten tanpa batas waktu atau kompensasi tambahan",
+          "Karena itu wajib menurut hukum di semua kasus",
+          "Hanya formalitas belaka"
+        ],
+        "answer": 1,
+        "explanation": "Tanpa kejelasan ini, brand bisa menggunakan konten tanpa batas tanpa kompensasi tambahan bagi kreator — penting dipahami sebelum menyetujui kontrak."
+      }
+    ],
+    "next_unit_id": "ugc-2-3"
+  },
+  {
+    "unit_id": "ugc-2-3",
+    "title": "Jadwal Posting Sesuai Kesepakatan",
+    "type": "materi",
+    "content": "Konsistensi jadwal posting sesuai kesepakatan adalah bagian dari profesionalisme kreator — brand mengandalkan jadwal ini untuk strategi mereka sendiri.\n\n- Buat kalender pribadi/reminder untuk deadline kerja sama — jangan andalkan ingatan saja.\n- Kalau terpaksa telat, komunikasikan LEBIH AWAL ke brand daripada diam dan telat tanpa kabar.\n\nBrief: \"Kita udah sepakat video harus tayang tiap Jumat, tapi kadang aku lupa atau telat. Brand jadi nanya-nanya terus.\"",
+    "quiz": [
+      {
+        "question": "Sering lupa/telat posting sesuai jadwal yang disepakati brand. Solusi paling tepat?",
+        "options": [
+          "Tidak perlu khawatir, brand pasti maklum",
+          "Buat kalender/reminder pribadi untuk deadline kerja sama",
+          "Berhenti kerja sama karena terlalu merepotkan",
+          "Posting kapan saja tanpa memberi tahu brand"
+        ],
+        "answer": 1,
+        "explanation": "Kalender/reminder pribadi membantu menjaga komitmen jadwal yang sudah disepakati — ini bagian dari profesionalisme kerja sama jangka panjang."
+      },
+      {
+        "question": "Kalau terpaksa akan telat posting, apa yang paling tepat dilakukan?",
+        "options": [
+          "Diam saja dan berharap brand tidak sadar",
+          "Komunikasikan ke brand sesegera mungkin begitu tahu akan telat",
+          "Batalkan kerja sama secara sepihak",
+          "Posting konten asal-asalan supaya cepat selesai"
+        ],
+        "answer": 1,
+        "explanation": "Komunikasi lebih awal menunjukkan profesionalisme dan memberi brand waktu menyesuaikan rencana mereka, jauh lebih baik daripada diam."
+      }
+    ],
+    "next_unit_id": "ugc-2-4"
+  },
+  {
+    "unit_id": "ugc-2-4",
+    "title": "Menerjemahkan Feedback Revisi dari Brand",
+    "type": "materi",
+    "content": "Sama seperti konten lain, feedback dari brand juga sering berupa perasaan — kita terjemahkan sambil tetap menjaga keaslian karaktermu.\n\n- \"Kurang related sama campaign\" berarti pesan konten belum cukup menghubungkan ke tema campaign spesifik brand saat ini.\n- \"Energi kurang nendang di awal\" tetap soal hook — tapi ingat, perbaikannya harus tetap dalam karakter aslimu, bukan meniru gaya kreator lain.\n\nBrief: \"Videonya udah oke tapi kayaknya kurang 'related' sama campaign kita kali ini. Terus energinya kurang 'nendang' di awal.\" — Tim Brand Alami, revisi ronde 1",
+    "quiz": [
+      {
+        "question": "Feedback \"kurang related sama campaign\" dari brand berarti apa?",
+        "options": [
+          "Kualitas video kurang bagus secara teknis",
+          "Pesan konten belum cukup menghubungkan ke tema campaign spesifik brand saat ini",
+          "Durasi video terlalu panjang",
+          "Warna video kurang menarik"
+        ],
+        "answer": 1,
+        "explanation": "\"Kurang related\" biasanya berarti kontennya belum cukup terhubung dengan tema/campaign spesifik yang sedang dijalankan brand saat itu."
+      },
+      {
+        "question": "Saat memperbaiki hook berdasarkan feedback, apa yang harus tetap dijaga?",
+        "options": [
+          "Meniru gaya kreator lain yang lebih populer",
+          "Karakter/personality asli kreator itu sendiri",
+          "Mengganti total gaya bicara supaya beda",
+          "Tidak perlu menjaga apapun"
+        ],
+        "answer": 1,
+        "explanation": "Perbaikan hook harus tetap dalam karakter asli kreator — itu yang membuat konten UGC tetap terasa autentik meski direvisi."
+      }
+    ],
+    "next_unit_id": "ugc-2-cp2"
+  },
+  {
+    "unit_id": "ugc-2-cp2",
+    "title": "Kastil Checkpoint 2",
+    "type": "checkpoint",
+    "content": "Ini adalah ujian Checkpoint Unit 2 — gabungan dari semua yang sudah kamu pelajari soal kerja sama jangka panjang.\n\n- Kamu akan direview lewat quiz singkat yang merangkum 4 topik Unit 2.\n- Setelah lulus quiz, kamu masuk ke Tantangan Nyata: menyusun 1 set (3 video) untuk Skincare Lokal Alami dengan deadline 7 hari.\n- Tantangan dinilai 100% oleh human reviewer, bukan skor otomatis.\n\nInstruksi: Kumpulkan 1 set (3 video review/naskah) untuk Skincare Lokal Alami sesuai brief di atas.\n\nDeadline: 7 hari\n\nChecklist:\n- Karakter/personality konsisten di ketiga video\n- Kalender posting 3 minggu disertakan\n- Ringkasan pemahaman scope kerja & hak konten disertakan\n- Feedback revisi sebelumnya sudah diterapkan",
+    "quiz": [],
+    "next_unit_id": "ugc-3-1"
+  },
+  {
+    "unit_id": "ugc-3-1",
+    "title": "Riset Produk Mendalam Sebelum Syuting",
+    "type": "materi",
+    "content": "Produk kesehatan butuh riset lebih dalam dari produk skincare biasa — klaim yang salah bisa berakibat serius, bukan cuma soal estetika.\n\n- Pahami kandungan, cara pakai, dan klaim resmi produk dari brand SEBELUM membuat konten — supaya tidak asal bicara.\n- Riset juga pengalaman pribadi yang genuine (bukan settingan) supaya cerita produk terasa jujur dan kredibel.\n\nBrief: \"Suplemen Herbal Sehat Alami ini produk kesehatan, jadi kita butuh kreator yang bener-bener paham produknya sebelum review, bukan asal coba doang.\"",
+    "quiz": [
+      {
+        "question": "Suplemen Herbal Sehat Alami adalah produk kesehatan. Kenapa risetnya perlu lebih mendalam dari produk skincare biasa?",
+        "options": [
+          "Karena produk kesehatan selalu lebih mahal",
+          "Klaim yang salah soal produk kesehatan bisa berakibat serius bagi audiens",
+          "Tidak ada bedanya sama sekali",
+          "Karena produk kesehatan lebih sulit difoto"
+        ],
+        "answer": 1,
+        "explanation": "Produk kesehatan menyangkut keputusan yang berdampak pada tubuh audiens — klaim yang keliru bisa berakibat lebih serius dibanding produk kecantikan biasa."
+      },
+      {
+        "question": "Apa yang perlu dipahami kreator SEBELUM membuat konten review produk kesehatan?",
+        "options": [
+          "Hanya warna kemasan produk",
+          "Kandungan, cara pakai, dan klaim resmi dari brand",
+          "Harga produk di semua toko",
+          "Jumlah followers brand di media sosial"
+        ],
+        "answer": 1,
+        "explanation": "Memahami kandungan, cara pakai, dan klaim resmi mencegah kreator menyampaikan informasi yang salah atau menyesatkan audiens."
+      }
+    ],
+    "next_unit_id": "ugc-3-2"
+  },
+  {
+    "unit_id": "ugc-3-2",
+    "title": "Storytelling Personal yang Autentik",
+    "type": "materi",
+    "content": "Storytelling personal yang kuat menyeimbangkan dua hal: pesan yang perlu disampaikan brand DAN pengalaman asli yang relate dengan audiens.\n\n- Mulai dari pengalaman/masalah personal yang genuine, baru hubungkan ke produk — bukan sebaliknya (mulai dari produk lalu dipaksakan jadi cerita).\n- Detail kecil yang spesifik (bukan generik) membuat cerita terasa lebih personal dan believable.\n\nBrief: \"Kita pengen ceritanya beneran personal, bukan kayak baca dari brief brand. Gimana caranya biar tetep autentik tapi menyampaikan pesan yang tepat?\"",
+    "quiz": [
+      {
+        "question": "Brand minta cerita yang \"beneran personal\", bukan kayak baca brief. Pendekatan yang tepat?",
+        "options": [
+          "Membaca poin-poin brief secara langsung ke kamera",
+          "Mulai dari pengalaman/masalah personal genuine, baru hubungkan ke produk",
+          "Menghafal skrip yang disiapkan brand kata per kata",
+          "Fokus hanya pada fitur produk secara teknis"
+        ],
+        "answer": 1,
+        "explanation": "Storytelling yang dimulai dari pengalaman personal genuine terasa lebih autentik dibanding memaksakan pesan brand jadi cerita."
+      },
+      {
+        "question": "Apa yang membuat sebuah cerita personal terasa lebih believable bagi audiens?",
+        "options": [
+          "Menggunakan istilah teknis yang rumit",
+          "Detail kecil yang spesifik, bukan pernyataan generik",
+          "Durasi cerita yang sangat panjang",
+          "Menggunakan banyak musik latar"
+        ],
+        "answer": 1,
+        "explanation": "Detail spesifik (bukan generik) membuat cerita terasa nyata dialami, bukan template yang bisa dipakai siapa saja."
+      }
+    ],
+    "next_unit_id": "ugc-3-3"
+  },
+  {
+    "unit_id": "ugc-3-3",
+    "title": "Paket Konten Multi-Platform",
+    "type": "materi",
+    "content": "Sama seperti kreator video pada umumnya, satu konsep bisa diadaptasi ke berbagai platform tanpa perlu produksi dari nol berkali-kali.\n\n- Rekam materi mentah yang cukup fleksibel (variasi angle & durasi) supaya bisa di-edit ulang untuk kebutuhan durasi tiap platform.\n- Caption dan hook teks perlu disesuaikan gaya tiap platform meski inti pesannya sama.\n\nBrief: \"Kita mau hasil kerja samamu ini muncul di TikTok, Instagram, DAN YouTube Shorts sekaligus. Perlu bikin beda-beda?\"",
+    "quiz": [
+      {
+        "question": "Konten yang sama diminta tayang di TikTok, Instagram, dan YouTube Shorts. Persiapan syuting yang tepat?",
+        "options": [
+          "Syuting terpisah total untuk tiap platform",
+          "Rekam materi mentah dengan variasi angle & durasi yang fleksibel untuk diedit ulang",
+          "Hanya syuting durasi terpendek saja",
+          "Tidak perlu persiapan khusus"
+        ],
+        "answer": 1,
+        "explanation": "Materi mentah yang fleksibel memudahkan proses edit ulang untuk menyesuaikan durasi ideal tiap platform tanpa syuting berkali-kali."
+      },
+      {
+        "question": "Apa yang tetap perlu disesuaikan meski intinya 1 konsep untuk banyak platform?",
+        "options": [
+          "Tidak ada yang perlu disesuaikan sama sekali",
+          "Caption dan hook teks disesuaikan gaya tiap platform",
+          "Produk yang direview harus berbeda di tiap platform",
+          "Nama kreator harus diganti-ganti"
+        ],
+        "answer": 1,
+        "explanation": "Meski konsep inti sama, caption dan hook teks tetap perlu disesuaikan gaya masing-masing platform supaya terasa native, bukan asal re-upload."
+      }
+    ],
+    "next_unit_id": "ugc-3-4"
+  },
+  {
+    "unit_id": "ugc-3-4",
+    "title": "Etika & Compliance Endorsement Kesehatan",
+    "type": "materi",
+    "content": "Endorsement produk kesehatan punya aturan etika lebih ketat dibanding produk umum — klaim berlebihan bisa menyesatkan dan berisiko hukum.\n\n- Hindari klaim medis berlebihan (mis. \"menyembuhkan penyakit X\") kecuali benar-benar didukung bukti resmi dari brand/BPOM.\n- Sampaikan hasil sebagai pengalaman pribadi (\"bagi saya membantu...\") bukan klaim mutlak untuk semua orang (\"pasti sembuh\").\n\nBrief: \"Karena ini produk kesehatan, kita harus lebih hati-hati soal klaim ya. Ada aturan khusus yang perlu diikuti?\" — Tim Brand Suplemen Herbal Sehat Alami",
+    "quiz": [
+      {
+        "question": "Membuat konten review produk kesehatan. Klaim seperti apa yang harus dihindari?",
+        "options": [
+          "Menyebutkan pengalaman pribadi menggunakan produk",
+          "Klaim medis berlebihan/mutlak seperti \"menyembuhkan penyakit X\" tanpa bukti resmi",
+          "Menyebutkan nama produk dengan jelas",
+          "Menunjukkan cara pemakaian produk"
+        ],
+        "answer": 1,
+        "explanation": "Klaim medis berlebihan tanpa bukti resmi berisiko menyesatkan audiens dan bisa berakibat hukum bagi brand maupun kreator."
+      },
+      {
+        "question": "Cara paling etis menyampaikan hasil pemakaian produk kesehatan dalam konten?",
+        "options": [
+          "Menyatakan sebagai fakta mutlak untuk semua orang",
+          "Menyampaikan sebagai pengalaman pribadi, bukan klaim mutlak berlaku untuk semua orang",
+          "Tidak perlu menyebutkan hasil sama sekali",
+          "Melebih-lebihkan hasil supaya lebih menarik"
+        ],
+        "answer": 1,
+        "explanation": "Menyampaikan sebagai pengalaman pribadi lebih jujur dan etis dibanding klaim mutlak, karena hasil pemakaian produk kesehatan bisa berbeda-beda tiap individu."
+      }
+    ],
+    "next_unit_id": "ugc-3-cp3"
+  },
+  {
+    "unit_id": "ugc-3-cp3",
+    "title": "Gerbang Akhir: Proyek Sertifikasi",
+    "type": "checkpoint",
+    "content": "Ini adalah Gerbang Akhir Skill Map UGC Creator — proyek paling kompleks yang pernah kamu kerjakan di WADAH.\n\n- Kamu akan direview lewat quiz singkat yang merangkum seluruh Unit 3.\n- Setelah lulus quiz, kamu masuk ke Proyek Akhir: menyusun 3 video review untuk Suplemen Herbal Sehat Alami dengan deadline 10 hari.\n- Proyek ini dinilai 100% oleh human reviewer WADAH — kelulusan di sini menerbitkan Sertifikat Kompetensi UGC Creator-mu, lengkap dengan nomor verifikasi resmi.\n\nInstruksi: Kumpulkan 1 set (3 video review/naskah) untuk Suplemen Herbal Sehat Alami sesuai brief di atas.\n\nDeadline: 10 hari\n\nChecklist:\n- Riset kandungan & klaim resmi produk diterapkan\n- Storytelling personal terasa autentik, bukan template\n- Materi siap diadaptasi ke TikTok/IG/YouTube Shorts\n- Tanpa klaim medis berlebihan, disampaikan sebagai pengalaman pribadi",
+    "quiz": [],
+    "next_unit_id": null
+  }
+]

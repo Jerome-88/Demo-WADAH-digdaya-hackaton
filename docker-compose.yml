@@ -1,0 +1,46 @@
+services:
+  backend:
+    build: ./backend
+    env_file:
+      - ./backend/.env
+    environment:
+      ENVIRONMENT: development
+      FRONTEND_ORIGIN: http://localhost:5173
+    ports:
+      - "8000:8080"
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080", "--reload"]
+    develop:
+      # `docker compose watch` syncs changed files straight into the running
+      # container instead of a live bind mount — on Windows/macOS a bind mount
+      # over Docker Desktop's virtualized filesystem makes Vite/uvicorn's
+      # watchers either miss changes or (with polling) crawl painfully slowly.
+      watch:
+        - action: sync
+          path: ./backend/app
+          target: /app/app
+        - action: rebuild
+          path: ./backend/requirements.txt
+
+  frontend:
+    build:
+      context: .
+      target: dev
+    environment:
+      VITE_API_URL: https://gmgbvfxeozruezpthpxy.supabase.co/functions/v1/api
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /app/src
+        - action: sync
+          path: ./public
+          target: /app/public
+        - action: sync
+          path: ./index.html
+          target: /app/index.html
+        - action: rebuild
+          path: ./package.json

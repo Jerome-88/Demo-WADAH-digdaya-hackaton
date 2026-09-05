@@ -4,8 +4,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import AIMentorWidget from '../../components/AIMentorWidget';
 import useGameAudio from '../../hooks/useGameAudio';
 import { showToast } from '../../utils/toast';
-import { useApp, getExpLevel } from '../../context/AppContext';
+import { useApp } from '../../context/AppContext';
 import { SKILL_MAPS, DEFAULT_SKILL, getSkillMeta, parseUnitParam, getNodeUnit } from '../../data/skillMaps';
+import { pickVariantIndex, resolveCheckpointBrief } from '../../utils/checkpointVariant';
 
 const NODE_XP = 40;
 const PERFECT_BONUS_XP = 10;
@@ -25,9 +26,10 @@ export default function UnitPage() {
   const navigate = useNavigate();
   const { unitParam } = useParams();
   const {
-    exp, addExp, completedNodeIds, setCompletedNodeIds,
-    setStreak, hearts, setHearts, openedNodeIds, setOpenedNodeIds,
-    activeProject,
+    completedNodeIds,
+    setStreak, hearts,
+    activeProject, checkpointVariantIndex, setCheckpointVariantIndex,
+    openUnit, completeUnit, mode,
   } = useApp();
   const { playSuccess, playFail, playClick } = useGameAudio();
 
@@ -46,8 +48,12 @@ export default function UnitPage() {
   const [quizIndex, setQuizIndex] = useState(0);
   const [quizSelected, setQuizSelected] = useState(null);
   const [quizCorrectCount, setQuizCorrectCount] = useState(0);
+  // Real mode only — feeds Insight Skill's per-concept aggregation. Untagged
+  // skills' questions have no concept_tag; the backend just drops those.
+  const [quizAttempts, setQuizAttempts] = useState([]);
   const [levelUpVisible, setLevelUpVisible] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [finishingNode, setFinishingNode] = useState(false);
 
   const isCheckpoint = node?.type === 'checkpoint';
 
@@ -73,17 +79,24 @@ export default function UnitPage() {
 
   // Lives only ever charge once — the first time a node's Materi stage is
   // opened. A ref guard keeps this from double-firing under React StrictMode.
+  // openUnit() itself knows whether this node was already opened before
+  // (demo: openedNodeIds; real: the backend's progress row) and only
+  // reports livesDeducted=true the first time.
   const openGuardRef = useRef(null);
   useEffect(() => {
     if (!node) return;
     const key = nsKey(node.id);
     if (openGuardRef.current === key) return;
     openGuardRef.current = key;
-    if (!openedNodeIds.includes(key)) {
-      setHearts(h => Math.max(0, h - 1));
-      setOpenedNodeIds(prev => [...prev, key]);
-      showToast('−1 Life untuk membuka unit ini ❤', 'fa-heart-crack');
-    }
+    (async () => {
+      try {
+        const { livesDeducted } = await openUnit(skillId, node.id);
+        if (livesDeducted) showToast('−1 Life untuk membuka unit ini ❤', 'fa-heart-crack');
+      } catch (err) {
+        showToast(`Gagal membuka unit: ${err.message}`, 'fa-triangle-exclamation');
+        navigate('/rina/task', { replace: true });
+      }
+    })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [node?.id]);
 
@@ -95,6 +108,7 @@ export default function UnitPage() {
     if (quizSelected !== null) return;
     setQuizSelected(optionIndex);
     const correct = optionIndex === quizQuestions[quizIndex].correctIndex;
+    setQuizAttempts(prev => [...prev, { concept_tag: quizQuestions[quizIndex].concept_tag ?? null, correct }]);
     if (correct) { playSuccess(); setQuizCorrectCount(c => c + 1); } else { playFail(); }
   };
 
@@ -104,25 +118,40 @@ export default function UnitPage() {
     setQuizIndex(i => i + 1);
   };
 
-  const handleFinishNode = () => {
+  const handleFinishNode = async () => {
+    // Without this guard, a fast double-click fires two /unit/complete
+    // requests before completedNodeIds re-renders — the backend correctly
+    // rejects the second with 400, but the user just sees a scary error
+    // toast for what was actually a successful completion.
+    if (finishingNode) return;
     playClick();
     if (isCompleted(node.id)) { navigate('/rina/task'); return; }
-    const bonus = quizCorrectCount === quizQuestions.length ? PERFECT_BONUS_XP : 0;
-    const xpAmount = NODE_XP + bonus;
-    const leveledUp = getExpLevel(exp + xpAmount) > getExpLevel(exp);
-    addExp(xpAmount);
-    setCompletedNodeIds(prev => [...prev, nsKey(node.id)]);
-    setShowConfetti(true);
-    showToast(bonus ? `Node selesai! +${xpAmount} XP (skor sempurna 🎯)` : `Node selesai! +${xpAmount} XP`, 'fa-check');
-    if (leveledUp) {
-      setLevelUpVisible(true);
-      setTimeout(() => setLevelUpVisible(false), 2000);
+    setFinishingNode(true);
+    const quizPerfect = quizCorrectCount === quizQuestions.length;
+    try {
+      const { xpEarned, leveledUp, alreadyCompleted } = await completeUnit(skillId, node.id, { quizPerfect, quizScore: quizCorrectCount, quizAttempts });
+      if (alreadyCompleted) { navigate('/rina/task'); return; }
+      setShowConfetti(true);
+      showToast(quizPerfect ? `Node selesai! +${xpEarned} XP (skor sempurna 🎯)` : `Node selesai! +${xpEarned} XP`, 'fa-check');
+      if (leveledUp) {
+        setLevelUpVisible(true);
+        setTimeout(() => setLevelUpVisible(false), 2000);
+      }
+      setTimeout(() => navigate('/rina/task'), leveledUp ? 2300 : 1300);
+    } catch (err) {
+      showToast(`Gagal menyelesaikan unit: ${err.message}`, 'fa-triangle-exclamation');
+      setFinishingNode(false);
     }
-    setTimeout(() => navigate('/rina/task'), leveledUp ? 2300 : 1300);
   };
 
   const goToTantangan = () => {
     playClick();
+    // Pick this attempt's content variant once, on entry — reused as-is if
+    // this checkpoint was already started before (e.g. StrictMode re-run).
+    const key = nsKey(node.id);
+    if (isCheckpoint && checkpointVariantIndex[key] === undefined) {
+      setCheckpointVariantIndex(prev => ({ ...prev, [key]: pickVariantIndex(skillId, node.id) }));
+    }
     setStage('tantangan');
     showToast('🧊 Streak Freeze aktif otomatis (maks 7 hari) — streak-mu aman selama tantangan ini.', 'fa-snowflake');
   };
@@ -131,7 +160,10 @@ export default function UnitPage() {
     playSuccess();
     // Checkpoint only counts as DONE once a human reviewer approves the
     // submission — that happens on /rina/submit's revision-cycle flow, not here.
-    setStreak(s => s + 1);
+    // Real mode: skip the optimistic bump — neither /unit/open nor the
+    // approval trigger touch `streak` for checkpoints, so faking it here
+    // would just get silently overwritten on the next server refresh.
+    if (mode !== 'real') setStreak(s => s + 1);
 
     if (activeProject && activeProject.status === 'open' && activeProject.skillId === skillId) {
       showToast(`🎉 Ada proyek yang cocok untukmu: ${activeProject.umkm} membutuhkan ${skillMeta.label}!`, 'fa-briefcase');
@@ -140,6 +172,12 @@ export default function UnitPage() {
       setTimeout(() => navigate(`/rina/submit/${node.id}`), 600);
     }
   };
+
+  const brief = isCheckpoint
+    ? resolveCheckpointBrief(skillId, node.id, checkpointVariantIndex[nsKey(node.id)] ?? 0, {
+        info: node.info, instruction: node.instruction, briefBullets: node.briefBullets, checklist: node.checklist,
+      })
+    : null;
 
   // Step chips shown under the top bar.
   const steps = [];
@@ -302,10 +340,11 @@ export default function UnitPage() {
               </p>
               <button
                 onClick={isCheckpoint ? goToTantangan : handleFinishNode}
-                className="w-full max-w-xs text-white font-bold py-3.5 rounded-full transition-all text-sm cursor-pointer border-0 mt-4 hover:brightness-110"
+                disabled={!isCheckpoint && finishingNode}
+                className="w-full max-w-xs text-white font-bold py-3.5 rounded-full transition-all text-sm cursor-pointer border-0 mt-4 hover:brightness-110 disabled:opacity-60 disabled:cursor-not-allowed"
                 style={{ background: GREEN }}
               >
-                {isCheckpoint ? 'Lanjut ke Tantangan' : 'Selesai & Kembali ke Peta'}
+                {isCheckpoint ? 'Lanjut ke Tantangan' : finishingNode ? 'Menyimpan...' : 'Selesai & Kembali ke Peta'}
               </button>
             </motion.div>
           )}
@@ -320,12 +359,12 @@ export default function UnitPage() {
               <div className="bg-white border-2 rounded-2xl p-5" style={{ borderColor: BLUE }}>
                 <h4 className="text-xs font-bold font-sora mb-2" style={{ color: BLUE }}>{node.briefLabel}</h4>
                 <ul className="text-sm text-gray-500 space-y-2 list-disc pl-4 leading-relaxed font-inter">
-                  {node.briefBullets.map((b, i) => (
+                  {brief.briefBullets.map((b, i) => (
                     <li key={i}><strong style={{ color: BLUE }}>{b.strong}</strong>{b.rest}</li>
                   ))}
                 </ul>
               </div>
-              <p className="text-sm text-gray-600 font-inter leading-relaxed">{node.instruction}</p>
+              <p className="text-sm text-gray-600 font-inter leading-relaxed">{brief.instruction}</p>
               <div className="flex items-center gap-2 text-sm font-inter font-semibold" style={{ color: ORANGE }}>
                 <i className="fa-solid fa-clock"></i>
                 <span>{node.deadlineText} untuk menyelesaikan</span>
@@ -346,7 +385,7 @@ export default function UnitPage() {
       </main>
 
       {/* ── AI MENTOR FLOATING WIDGET ── */}
-      <AIMentorWidget node={node} stage={stage} skillLabel={skillMeta.label} light />
+      <AIMentorWidget node={node} stage={stage} skillLabel={skillMeta.label} skillId={skillId} light />
 
       {/* ── LEVEL UP OVERLAY ── */}
       <AnimatePresence>
