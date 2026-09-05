@@ -135,7 +135,7 @@ export default function TalentaFlow() {
     if (resendCooldown > 0) return;
     setResendCooldown(30);
     if (isReal) {
-      await getSupabase().auth.signInWithOtp({ email, options: { shouldCreateUser: true } }).catch(() => {});
+      await getSupabase().auth.signInWithOtp({ email, options: { shouldCreateUser: true } }).catch(() => { });
     }
   }
 
@@ -218,14 +218,14 @@ export default function TalentaFlow() {
               className="px-4 py-1.5 rounded-full text-xs font-bold font-inter transition-all cursor-pointer border-0"
               style={!isReal ? { background: '#f37219', color: '#fff' } : { color: '#797d85', background: 'transparent' }}
             >
-              🚀 Demo Cepat
+              Demo Cepat
             </button>
             <button
               onClick={() => setMode('real')}
               className="px-4 py-1.5 rounded-full text-xs font-bold font-inter transition-all cursor-pointer border-0"
               style={isReal ? { background: '#2b6fff', color: '#fff' } : { color: '#797d85', background: 'transparent' }}
             >
-              📧 Daftar Asli
+              Daftar Asli
             </button>
           </div>
         </div>
@@ -342,7 +342,7 @@ export default function TalentaFlow() {
 
               {!isReal && (
                 <button onClick={useDemoProfile} className="self-start text-sm font-inter underline bg-transparent border-0 cursor-pointer" style={{ color: '#f27418' }}>
-                Isi contoh cepat (demo)
+                  Isi contoh cepat (demo)
                 </button>
               )}
             </div>
@@ -403,7 +403,7 @@ export default function TalentaFlow() {
 
               {!isReal && (
                 <button onClick={fillDemoOtp} className="text-sm font-inter underline bg-transparent border-0 cursor-pointer" style={{ color: '#f27418' }}>
-                Isi contoh cepat (demo)
+                  Isi contoh cepat (demo)
                 </button>
               )}
 
