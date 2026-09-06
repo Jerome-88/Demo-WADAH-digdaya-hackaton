@@ -67,17 +67,17 @@ export default function RinaTask() {
   const finalCheckpointDone = finalCheckpoint && isCompleted(finalCheckpoint.id);
   const isCertified = !!certificateEarnedAt[skillId];
 
-  // Auto-fires a "match notification" once the final checkpoint is actually
-  // done — mirrors the "Smart Matching Terbuka" unlock below (prove
-  // yourself through the whole skill map first), instead of requiring a
-  // presenter to separately walk through /jasa and line up its skillId with
-  // whatever skill this talent happens to have (that cross-flow dependency,
-  // two independent skill pickers sharing one session, was too easy to get
-  // out of sync). Guarded on activeProject.status === null so it only ever
-  // fires once, and never overwrites a project a presenter deliberately
-  // posted for real via /jasa.
+  // Auto-fires a "match notification" once Rekam Kerja Terverifikasi is
+  // actually earned — mirrors the "Smart Matching Terbuka" unlock below
+  // (prove yourself all the way through, including the exam, before you get
+  // discovered), instead of requiring a presenter to separately walk
+  // through /jasa and line up its skillId with whatever skill this talent
+  // happens to have (that cross-flow dependency, two independent skill
+  // pickers sharing one session, was too easy to get out of sync). Guarded
+  // on activeProject.status === null so it only ever fires once, and never
+  // overwrites a project a presenter deliberately posted for real via /jasa.
   useEffect(() => {
-    if (!selectedSkill || !finalCheckpointDone || activeProject?.status !== null) return;
+    if (!selectedSkill || !isCertified || activeProject?.status !== null) return;
     const t = setTimeout(() => {
       setActiveProject({
         id: `${selectedSkill}-toko-sepatu-aneka`,
@@ -95,7 +95,7 @@ export default function RinaTask() {
     }, 2000);
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedSkill, finalCheckpointDone]);
+  }, [selectedSkill, isCertified]);
 
   // A unit tab unlocks once the previous unit's checkpoint is approved.
   // Units beyond what's been authored for this skill (totalUnits) stay
@@ -353,8 +353,43 @@ export default function RinaTask() {
           </div>
         )}
 
-        {/* ── SMART MATCHING UNLOCK — persistent entry point once the final checkpoint is done ── */}
+        {/* ── REKAM KERJA TERVERIFIKASI MENU — only shows up once the final checkpoint is done ── */}
         {finalCheckpointDone && (
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-8 rounded-2xl p-5 sm:p-6 border-2 flex flex-col sm:flex-row items-center justify-between gap-4"
+            style={{ borderColor: '#2b6fff', background: '#eef2fe' }}
+          >
+            <div className="flex items-center gap-3 text-center sm:text-left">
+              <div className="w-12 h-12 rounded-full flex items-center justify-center shrink-0 bg-white">
+                <i className="fa-solid fa-graduation-cap text-xl" style={{ color: '#2b6fff' }}></i>
+              </div>
+              <div>
+                <div className="font-sora font-bold text-sm" style={{ color: '#2b6fff' }}>
+                  {isCertified ? 'Kamu Sudah Certified!' : 'Ujian Rekam Kerja Terverifikasi Tersedia'}
+                </div>
+                <div className="text-gray-500 text-xs font-inter">
+                  {isCertified
+                    ? `Rekam Kerja Terverifikasi ${skillMeta.label} sudah kamu miliki.`
+                    : 'Kamu sudah menyelesaikan semua unit — saatnya ambil Rekam Kerja Terverifikasi resmi.'}
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={() => navigate(isCertified ? `/rina/sertifikat/${skillId}` : `/rina/sertifikasi/${skillId}`)}
+              className="shrink-0 text-white font-bold py-2.5 px-6 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
+              style={{ background: '#2b6fff' }}
+            >
+              {isCertified ? 'Lihat Rekam Kerja Terverifikasi' : 'Ambil Ujian Rekam Kerja Terverifikasi'}
+            </button>
+          </motion.div>
+        )}
+
+        {/* ── SMART MATCHING UNLOCK — persistent entry point, now gated on the
+             exam (isCertified) instead of just the final checkpoint, so
+             matching only opens once Rekam Kerja Terverifikasi is earned ── */}
+        {isCertified && (
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -376,39 +411,6 @@ export default function RinaTask() {
               style={{ background: '#00c897' }}
             >
               Lihat Smart Matching
-            </button>
-          </motion.div>
-        )}
-
-        {/* ── SERTIFIKASI MENU — only shows up once the final checkpoint is done ── */}
-        {finalCheckpointDone && (
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mt-8 rounded-2xl p-5 sm:p-6 border-2 flex flex-col sm:flex-row items-center justify-between gap-4"
-            style={{ borderColor: '#2b6fff', background: '#eef2fe' }}
-          >
-            <div className="flex items-center gap-3 text-center sm:text-left">
-              <div className="w-12 h-12 rounded-full flex items-center justify-center shrink-0 bg-white">
-                <i className="fa-solid fa-graduation-cap text-xl" style={{ color: '#2b6fff' }}></i>
-              </div>
-              <div>
-                <div className="font-sora font-bold text-sm" style={{ color: '#2b6fff' }}>
-                  {isCertified ? 'Kamu Sudah Certified!' : 'Ujian Sertifikasi Tersedia'}
-                </div>
-                <div className="text-gray-500 text-xs font-inter">
-                  {isCertified
-                    ? `Sertifikat Kompetensi ${skillMeta.label} sudah kamu miliki.`
-                    : 'Kamu sudah menyelesaikan semua unit — saatnya ambil sertifikasi resmi.'}
-                </div>
-              </div>
-            </div>
-            <button
-              onClick={() => navigate(isCertified ? `/rina/sertifikat/${skillId}` : `/rina/sertifikasi/${skillId}`)}
-              className="shrink-0 text-white font-bold py-2.5 px-6 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
-              style={{ background: '#2b6fff' }}
-            >
-              {isCertified ? 'Lihat Sertifikat' : 'Ambil Ujian Sertifikasi'}
             </button>
           </motion.div>
         )}

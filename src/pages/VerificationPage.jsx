@@ -100,9 +100,9 @@ export default function VerificationPage() {
           </div>
         </div>
 
-        {/* Tentang Sertifikasi Ini */}
+        {/* Tentang Rekam Kerja Terverifikasi Ini */}
         <div className="bg-white border-2 rounded-2xl p-5" style={{ borderColor: BLUE }}>
-          <h2 className="font-sora font-bold text-sm mb-2.5" style={{ color: BLUE }}>Tentang Sertifikasi ini</h2>
+          <h2 className="font-sora font-bold text-sm mb-2.5" style={{ color: BLUE }}>Tentang Rekam Kerja Terverifikasi ini</h2>
           <p className="text-sm font-inter italic leading-relaxed" style={{ color: BLUE }}>{cert.description}</p>
         </div>
 

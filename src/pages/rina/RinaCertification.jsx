@@ -14,7 +14,8 @@ const ORANGE = '#f37219';
 const RED = '#e5484d';
 
 const CERT_XP = 200;
-const EXAM_FEE = 650000;
+const EXAM_FEE_ORIGINAL = 650000;
+const EXAM_FEE = 200000;
 
 export default function RinaCertification() {
   const navigate = useNavigate();
@@ -138,7 +139,7 @@ export default function RinaCertification() {
           <span>Peta Misi</span>
         </button>
         <h1 className="text-white text-xs sm:text-sm font-bold font-sora truncate absolute left-1/2 -translate-x-1/2 max-w-[55%] text-center">
-          {skillMeta.label} - Ujian Sertifikasi
+          {skillMeta.label} - Ujian Rekam Kerja Terverifikasi
         </h1>
       </header>
 
@@ -150,9 +151,9 @@ export default function RinaCertification() {
               <div className="w-16 h-16 rounded-full flex items-center justify-center mb-1" style={{ background: '#eef2fe' }}>
                 <i className="fa-solid fa-graduation-cap text-2xl" style={{ color: BLUE }}></i>
               </div>
-              <h2 className="font-sora font-bold text-2xl" style={{ color: BLUE }}>Ujian Sertifikasi {skillMeta.label}</h2>
+              <h2 className="font-sora font-bold text-2xl" style={{ color: BLUE }}>Ujian Rekam Kerja Terverifikasi {skillMeta.label}</h2>
               <p className="text-sm font-inter text-gray-500 max-w-md">
-                Kamu sudah menyelesaikan semua unit — langkah terakhir adalah ujian yang menguji semua yang sudah kamu pelajari dari <strong style={{ color: '#1a1a1a' }}>Unit 1 sampai Unit 3</strong>. Hasilnya menentukan apakah kamu lulus dan dapat Sertifikat Kompetensi resmi.
+                Kamu sudah menyelesaikan semua unit — langkah terakhir adalah ujian yang menguji semua yang sudah kamu pelajari dari <strong style={{ color: '#1a1a1a' }}>Unit 1 sampai Unit 3</strong>. Hasilnya menentukan apakah kamu lulus dan dapat Rekam Kerja Terverifikasi resmi.
               </p>
             </div>
 
@@ -162,7 +163,7 @@ export default function RinaCertification() {
                 {[
                   'Ujian komprehensif lintas Unit 1–3, bukan materi terakhir saja',
                   'Direview langsung oleh senior specialist, bukan reviewer biasa',
-                  'Sertifikat Kompetensi resmi dari WADAH kalau lulus',
+                  'Rekam Kerja Terverifikasi resmi dari WADAH kalau lulus',
                   'Badge "Certified" tampil di profil publikmu ke UMKM',
                 ].map((item, i) => (
                   <li key={i} className="flex items-start gap-2.5 text-sm font-inter text-gray-600">
@@ -174,8 +175,11 @@ export default function RinaCertification() {
             </div>
 
             <div className="rounded-2xl p-6 text-center border-2" style={{ background: '#eef2fe', borderColor: BLUE }}>
-              <div className="text-xs font-inter font-bold uppercase tracking-wide mb-1" style={{ color: BLUE }}>Biaya Ujian Sertifikasi</div>
-              <div className="font-sora font-extrabold text-3xl" style={{ color: BLUE }}>{formatRupiah(EXAM_FEE)}</div>
+              <div className="text-xs font-inter font-bold uppercase tracking-wide mb-1" style={{ color: BLUE }}>Biaya Ujian Rekam Kerja Terverifikasi</div>
+              <div className="flex items-center justify-center gap-2.5">
+                <span className="font-inter text-lg text-gray-400 line-through">{formatRupiah(EXAM_FEE_ORIGINAL)}</span>
+                <span className="font-sora font-extrabold text-3xl" style={{ color: BLUE }}>{formatRupiah(EXAM_FEE)}</span>
+              </div>
               <div className="text-xs font-inter text-gray-500 mt-1">Sekali bayar per percobaan ujian</div>
             </div>
 
@@ -214,7 +218,7 @@ export default function RinaCertification() {
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-6">
             <div>
               <h2 className="font-sora font-bold text-xl mb-1" style={{ color: BLUE }}>Kumpulkan Hasil Ujian</h2>
-              <p className="text-sm font-inter font-medium" style={{ color: BLUE }}>Pastikan hasil ujian sertifikasi {skillMeta.label}-mu sudah memenuhi semua ketentuan sebelum dikirim ke senior specialist.</p>
+              <p className="text-sm font-inter font-medium" style={{ color: BLUE }}>Pastikan hasil ujian Rekam Kerja Terverifikasi {skillMeta.label}-mu sudah memenuhi semua ketentuan sebelum dikirim ke senior specialist.</p>
             </div>
 
             <div className="rounded-3xl p-6" style={{ background: '#f5f8fb' }}>
@@ -331,7 +335,7 @@ export default function RinaCertification() {
 
             <div className="w-full rounded-xl p-4 mt-2 border-2" style={{ background: '#fff', borderColor: '#e5e9f0' }}>
               <div className="text-gray-400 text-[11px] font-inter font-bold uppercase tracking-wide mb-2">⚡ Demo Mode</div>
-              <p className="text-gray-500 text-xs font-inter mb-3">Ini ujian sertifikasi — pilih langsung hasilnya buat demo, kayak ujian sertifikasi profesional yang beneran bisa gagal.</p>
+              <p className="text-gray-500 text-xs font-inter mb-3">Ini ujian Rekam Kerja Terverifikasi — pilih langsung hasilnya buat demo, kayak ujian sertifikasi profesional yang beneran bisa gagal.</p>
               <div className="flex flex-col gap-2">
                 <button
                   onClick={() => handleExamVerdict('approved')}
@@ -367,8 +371,8 @@ export default function RinaCertification() {
               <div className="w-16 h-16 rounded-full flex items-center justify-center mb-1" style={{ background: '#eef2fe' }}>
                 <i className="fa-solid fa-graduation-cap text-2xl" style={{ color: BLUE }}></i>
               </div>
-              <h2 className="font-sora font-bold text-2xl" style={{ color: BLUE }}>Ujian Sertifikasi Lulus!</h2>
-              <p className="text-sm font-inter font-semibold" style={{ color: GREEN }}>Sertifikat Kompetensi {skillMeta.label}-mu sudah terbit</p>
+              <h2 className="font-sora font-bold text-2xl" style={{ color: BLUE }}>Ujian Rekam Kerja Terverifikasi Lulus!</h2>
+              <p className="text-sm font-inter font-semibold" style={{ color: GREEN }}>Rekam Kerja Terverifikasi {skillMeta.label}-mu sudah terbit</p>
             </div>
 
             <div className="rounded-2xl p-4 flex items-center gap-4 border-2" style={{ background: '#eef2fe', borderColor: BLUE }}>
@@ -377,7 +381,7 @@ export default function RinaCertification() {
               </div>
               <div>
                 <div className="font-sora font-bold text-base" style={{ color: BLUE }}>+{CERT_XP} XP</div>
-                <div className="text-gray-500 text-xs font-inter">Kerja bagus menyelesaikan ujian sertifikasi ini!</div>
+                <div className="text-gray-500 text-xs font-inter">Kerja bagus menyelesaikan ujian Rekam Kerja Terverifikasi ini!</div>
               </div>
             </div>
 
@@ -407,7 +411,7 @@ export default function RinaCertification() {
               <div className="w-16 h-16 rounded-full flex items-center justify-center mb-1" style={{ background: '#fdecec' }}>
                 <i className="fa-solid fa-circle-xmark text-2xl" style={{ color: RED }}></i>
               </div>
-              <h2 className="font-sora font-bold text-xl" style={{ color: BLUE }}>Belum Lulus Ujian Sertifikasi</h2>
+              <h2 className="font-sora font-bold text-xl" style={{ color: BLUE }}>Belum Lulus Ujian Rekam Kerja Terverifikasi</h2>
               <p className="text-gray-500 text-sm font-inter max-w-sm">Tidak apa-apa — banyak profesional juga nggak lulus di percobaan pertama. Pelajari feedback di bawah, lalu coba lagi.</p>
             </div>
 

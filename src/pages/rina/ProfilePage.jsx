@@ -172,7 +172,7 @@ export default function ProfilePage() {
               <GraduationCap size={20} style={{ color: BLUE }} />
             </div>
             <div className="flex-1 min-w-0">
-              <div className="font-sora font-bold text-sm" style={{ color: BLUE }}>Sertifikat Kompetensi {certificate.skillLabel}</div>
+              <div className="font-sora font-bold text-sm" style={{ color: BLUE }}>Rekam Kerja Terverifikasi {certificate.skillLabel}</div>
               <div className="text-gray-400 text-[11px] font-inter mt-0.5 font-mono">{certificate.certId}</div>
             </div>
             <button

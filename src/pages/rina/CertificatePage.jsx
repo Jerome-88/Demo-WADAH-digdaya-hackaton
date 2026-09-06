@@ -48,7 +48,7 @@ export default function CertificatePage() {
           <div className="w-14 h-14 rounded-full flex items-center justify-center mb-1" style={{ background: '#eef2fe' }}>
             <GraduationCap size={26} style={{ color: BLUE }} />
           </div>
-          <h1 className="font-sora font-extrabold text-2xl" style={{ color: BLUE }}>Sertifikat Kompetensi</h1>
+          <h1 className="font-sora font-extrabold text-2xl" style={{ color: BLUE }}>Rekam Kerja Terverifikasi</h1>
           <p className="text-gray-500 font-inter text-sm">Diterbitkan resmi oleh WADAH setelah proyek akhir disetujui human reviewer</p>
         </motion.div>
 

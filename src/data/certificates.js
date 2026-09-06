@@ -16,7 +16,7 @@ export const CERTIFICATE_REGISTRY = {
     // Narrative shown on the public verification page — describes what
     // completing this Skill Map certifies (no numeric score by design).
     description:
-      'Sertifikat Kompetensi Desain Grafis diberikan kepada talenta yang telah menuntaskan seluruh Skill Map Desain Grafis di WADAH — dari fondasi estetika, sistem visual brand, hingga proyek kampanye nyata untuk UMKM. Berbeda dari sertifikat berbasis ujian teori, kredensial ini divalidasi lewat simulasi kerja: setiap hasil diperiksa langsung oleh human reviewer berpengalaman industri sebelum diluluskan.',
+      'Rekam Kerja Terverifikasi Desain Grafis diberikan kepada talenta yang telah menuntaskan seluruh Skill Map Desain Grafis di WADAH — dari fondasi estetika, sistem visual brand, hingga proyek kampanye nyata untuk UMKM. Berbeda dari sertifikat berbasis ujian teori, kredensial ini divalidasi lewat simulasi kerja: setiap hasil diperiksa langsung oleh human reviewer berpengalaman industri sebelum diluluskan.',
     competencies: [
       'Kanvas & safe zone konten feed',
       'Tipografi & hierarki visual',
@@ -35,7 +35,7 @@ export const CERTIFICATE_REGISTRY = {
     finalProjectTitle: 'Strategi Konten Bulanan — Roti Bakar Kenangan',
     validityYears: 3,
     description:
-      'Sertifikat Kompetensi Social Media diberikan kepada talenta yang telah menuntaskan seluruh Skill Map Social Media di WADAH — dari fondasi konten & hook, sistem konten mingguan, hingga strategi kampanye bulanan multi-platform untuk UMKM. Berbeda dari sertifikat berbasis ujian teori, kredensial ini divalidasi lewat simulasi kerja: setiap hasil diperiksa langsung oleh human reviewer berpengalaman industri sebelum diluluskan.',
+      'Rekam Kerja Terverifikasi Social Media diberikan kepada talenta yang telah menuntaskan seluruh Skill Map Social Media di WADAH — dari fondasi konten & hook, sistem konten mingguan, hingga strategi kampanye bulanan multi-platform untuk UMKM. Berbeda dari sertifikat berbasis ujian teori, kredensial ini divalidasi lewat simulasi kerja: setiap hasil diperiksa langsung oleh human reviewer berpengalaman industri sebelum diluluskan.',
     competencies: [
       'Format & hook konten short-video',
       'Copywriting caption & CTA',
@@ -54,7 +54,7 @@ export const CERTIFICATE_REGISTRY = {
     finalProjectTitle: 'Kampanye Video Launching Menu — Kopi Kilat Ekspres',
     validityYears: 3,
     description:
-      'Sertifikat Kompetensi Video & Reels diberikan kepada talenta yang telah menuntaskan seluruh Skill Map Video & Reels di WADAH — dari fondasi hook & format, konsistensi series video, hingga proyek kampanye multi-video untuk UMKM. Berbeda dari sertifikat berbasis ujian teori, kredensial ini divalidasi lewat simulasi kerja: setiap hasil diperiksa langsung oleh human reviewer berpengalaman industri sebelum diluluskan.',
+      'Rekam Kerja Terverifikasi Video & Reels diberikan kepada talenta yang telah menuntaskan seluruh Skill Map Video & Reels di WADAH — dari fondasi hook & format, konsistensi series video, hingga proyek kampanye multi-video untuk UMKM. Berbeda dari sertifikat berbasis ujian teori, kredensial ini divalidasi lewat simulasi kerja: setiap hasil diperiksa langsung oleh human reviewer berpengalaman industri sebelum diluluskan.',
     competencies: [
       'Rasio & durasi video short-form',
       'Hook visual & retention viewer',
@@ -73,7 +73,7 @@ export const CERTIFICATE_REGISTRY = {
     finalProjectTitle: 'Audit & Optimasi Toko — Toko Elektronik Rumahan Jaya',
     validityYears: 3,
     description:
-      'Sertifikat Kompetensi E-Commerce diberikan kepada talenta yang telah menuntaskan seluruh Skill Map E-Commerce di WADAH — dari fondasi listing marketplace, optimasi multi-listing, hingga audit dan strategi toko menyeluruh untuk UMKM. Berbeda dari sertifikat berbasis ujian teori, kredensial ini divalidasi lewat simulasi kerja: setiap hasil diperiksa langsung oleh human reviewer berpengalaman industri sebelum diluluskan.',
+      'Rekam Kerja Terverifikasi E-Commerce diberikan kepada talenta yang telah menuntaskan seluruh Skill Map E-Commerce di WADAH — dari fondasi listing marketplace, optimasi multi-listing, hingga audit dan strategi toko menyeluruh untuk UMKM. Berbeda dari sertifikat berbasis ujian teori, kredensial ini divalidasi lewat simulasi kerja: setiap hasil diperiksa langsung oleh human reviewer berpengalaman industri sebelum diluluskan.',
     competencies: [
       'Optimasi judul listing untuk pencarian',
       'Elemen kepercayaan pembeli (foto & deskripsi)',
@@ -92,7 +92,7 @@ export const CERTIFICATE_REGISTRY = {
     finalProjectTitle: 'Campaign Multi-Channel Cabang Baru — Resto Steak Rumahan',
     validityYears: 3,
     description:
-      'Sertifikat Kompetensi Digital Marketing diberikan kepada talenta yang telah menuntaskan seluruh Skill Map Digital Marketing di WADAH — dari fondasi campaign iklan, optimasi budget & targeting, hingga strategi campaign multi-channel untuk UMKM. Berbeda dari sertifikat berbasis ujian teori, kredensial ini divalidasi lewat simulasi kerja: setiap hasil diperiksa langsung oleh human reviewer berpengalaman industri sebelum diluluskan.',
+      'Rekam Kerja Terverifikasi Digital Marketing diberikan kepada talenta yang telah menuntaskan seluruh Skill Map Digital Marketing di WADAH — dari fondasi campaign iklan, optimasi budget & targeting, hingga strategi campaign multi-channel untuk UMKM. Berbeda dari sertifikat berbasis ujian teori, kredensial ini divalidasi lewat simulasi kerja: setiap hasil diperiksa langsung oleh human reviewer berpengalaman industri sebelum diluluskan.',
     competencies: [
       'Penentuan objective campaign',
       'Audience targeting & efisiensi budget',
@@ -111,7 +111,7 @@ export const CERTIFICATE_REGISTRY = {
     finalProjectTitle: 'Kampanye Video Review — Suplemen Herbal Sehat Alami',
     validityYears: 3,
     description:
-      'Sertifikat Kompetensi UGC Creator diberikan kepada talenta yang telah menuntaskan seluruh Skill Map UGC Creator di WADAH — dari fondasi autentisitas konten, konsistensi karakter & kerja sama brand, hingga proyek kampanye multi-konten untuk UMKM. Berbeda dari sertifikat berbasis ujian teori, kredensial ini divalidasi lewat simulasi kerja: setiap hasil diperiksa langsung oleh human reviewer berpengalaman industri sebelum diluluskan.',
+      'Rekam Kerja Terverifikasi UGC Creator diberikan kepada talenta yang telah menuntaskan seluruh Skill Map UGC Creator di WADAH — dari fondasi autentisitas konten, konsistensi karakter & kerja sama brand, hingga proyek kampanye multi-konten untuk UMKM. Berbeda dari sertifikat berbasis ujian teori, kredensial ini divalidasi lewat simulasi kerja: setiap hasil diperiksa langsung oleh human reviewer berpengalaman industri sebelum diluluskan.',
     competencies: [
       'Gaya konten autentik & natural',
       'Struktur storytelling review produk',

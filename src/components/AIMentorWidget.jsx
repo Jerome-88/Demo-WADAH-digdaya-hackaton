@@ -25,8 +25,8 @@ const MAP_SUGGESTS = [
   },
   {
     id: 'faq-map-sertifikasi',
-    text: 'Sertifikasi WADAH itu apa?',
-    answer: 'Setelah semua unit selesai, kamu bisa ambil **ujian live 60 menit** bareng examiner praktisi industri. Jika lulus, kamu akan mendapatkan **sertifikasi** yang bisa kalian masukan di CV atau LinkedIn. Tapi ini opsional ya — bukan syarat buat dapat proyek di WADAH 😊',
+    text: 'Rekam Kerja Terverifikasi WADAH itu apa?',
+    answer: 'Setelah semua unit selesai, kamu bisa ambil **ujian live 60 menit** bareng examiner praktisi industri. Jika lulus, kamu akan mendapatkan **Rekam Kerja Terverifikasi** yang bisa kalian masukan di CV atau LinkedIn. Tapi ini opsional ya — bukan syarat buat dapat proyek di WADAH 😊',
   },
 ];
 
