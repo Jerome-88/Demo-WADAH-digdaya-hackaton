@@ -660,25 +660,29 @@ export default function RinaSubmit() {
               </div>
             </div>
 
-            {/* Smart Matching unlock — only fires once, right when the skill map's
-                final project checkpoint gets approved (not every checkpoint). */}
+            {/* Rekam Kerja Terverifikasi unlock — only fires once, right when the
+                skill map's final project checkpoint gets approved (not every
+                checkpoint). Points at the exam, not Smart Matching directly —
+                Smart Matching itself only opens after that exam is passed
+                (see RinaTask.jsx), so claiming it's "open" here would be
+                telling the talent something that isn't true yet. */}
             {checkpointNode?.isFinalProject && (
               <motion.button
-                onClick={() => navigate('/rina/match')}
+                onClick={() => navigate(`/rina/sertifikasi/${skillId}`)}
                 initial={{ opacity: 0, scale: 0.9, y: 8 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 transition={{ delay: 0.4, type: 'spring', bounce: 0.45 }}
                 className="w-full text-left rounded-2xl p-4 flex items-center gap-4 border-2 cursor-pointer transition-all hover:brightness-105"
                 style={{ background: 'rgba(0,200,151,0.08)', borderColor: GREEN }}
               >
-                <div className="w-11 h-11 rounded-full flex items-center justify-center shrink-0 bg-white text-xl">🎯</div>
+                <div className="w-11 h-11 rounded-full flex items-center justify-center shrink-0 bg-white text-xl">🎓</div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-sora font-bold text-sm" style={{ color: GREEN }}>Smart Matching Terbuka!</span>
+                    <span className="font-sora font-bold text-sm" style={{ color: GREEN }}>Ujian Rekam Kerja Terverifikasi Terbuka!</span>
                     <span className="text-[9px] font-extrabold tracking-wide px-2 py-0.5 rounded-full text-white" style={{ background: GREEN }}>BARU</span>
                   </div>
                   <div className="text-gray-500 text-xs font-inter mt-0.5">
-                    Skill map {skillMeta.label} kamu selesai — profilmu sekarang bisa di-match otomatis ke proyek UMKM yang cocok.
+                    Skill map {skillMeta.label} kamu selesai — ambil ujiannya buat dapat Rekam Kerja Terverifikasi resmi dan buka Smart Matching.
                   </div>
                 </div>
                 <i className="fa-solid fa-chevron-right text-sm shrink-0" style={{ color: GREEN }}></i>
