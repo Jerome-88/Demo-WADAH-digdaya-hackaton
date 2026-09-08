@@ -15,7 +15,7 @@ const RED = '#e5484d';
 
 const CERT_XP = 200;
 const EXAM_FEE_ORIGINAL = 650000;
-const EXAM_FEE = 200000;
+const EXAM_FEE = 199000;
 
 export default function RinaCertification() {
   const navigate = useNavigate();
