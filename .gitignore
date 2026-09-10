@@ -37,3 +37,6 @@ backend/__pycache__/
 backend/**/__pycache__/
 backend/.env
 .vercel
+
+# Supabase CLI local state
+supabase/.temp/

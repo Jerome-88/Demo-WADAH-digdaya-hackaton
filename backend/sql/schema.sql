@@ -97,6 +97,18 @@ create table insight_analysis (
   generated_at timestamptz not null default now()
 );
 
+-- ── demo_mentor_rate_limit ────────────────────────────────────────────
+-- Per-IP daily rate limit for POST /mentor/chat-demo — the one public,
+-- auth-free, Gemini-calling endpoint. See the Edge Function port
+-- (supabase/functions/api/routes/mentor.ts) for why this has to be a table
+-- and not in-memory state: Supabase's Edge Runtime gives each invocation
+-- its own isolate, so module-level counters don't survive between requests.
+create table demo_mentor_rate_limit (
+  ip           text primary key,
+  count        int not null default 1,
+  window_start timestamptz not null default now()
+);
+
 
 -- ═══════════════════════════════════════════════════════════════════════
 -- Row Level Security (PRD section 6: "user hanya bisa baca data milik
@@ -113,6 +125,9 @@ alter table submissions enable row level security;
 alter table portfolio enable row level security;
 alter table mentor_context enable row level security;
 alter table insight_analysis enable row level security;
+-- No policies at all (not even read) — only the service-role key touches
+-- this, and it has no per-user meaning to expose to a client session anyway.
+alter table demo_mentor_rate_limit enable row level security;
 
 -- Deliberately read-only (or insert-only) for direct client access. Every
 -- write that carries business logic (XP, lives, streak, submission review)

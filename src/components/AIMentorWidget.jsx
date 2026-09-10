@@ -119,13 +119,25 @@ const AIMentorWidget = forwardRef(function AIMentorWidget({ node, stage, skillLa
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ message: text, unit_id: unitId, unit_stage: backendStage, history }),
         });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        if (!res.ok) {
+          // The backend sends a friendly `detail` message (e.g. the daily
+          // rate-limit notice) — surface that instead of a bare HTTP code
+          // whenever it's there.
+          const body = await res.json().catch(() => ({}));
+          throw new Error(body.detail || `HTTP ${res.status}`);
+        }
         const data = await res.json();
         setIsTyping(false);
         setMessages(prev => [...prev, { role: 'ai', text: data.response }]);
       } catch (err) {
         setIsTyping(false);
-        setMessages(prev => [...prev, { role: 'ai', text: `Gagal connect ke backend AI Mentor (${err.message}). Pastikan backend jalan: cd backend, lalu uvicorn app.main:app --reload` }]);
+        // fetch() itself throws a bare TypeError on a real network failure
+        // (no JSON body to read) — only the HttpError case above already
+        // carries a friendly message worth showing as-is.
+        const text = err instanceof TypeError
+          ? `Gagal terhubung ke AI Mentor (${err.message}). Cek koneksi internet kamu.`
+          : err.message;
+        setMessages(prev => [...prev, { role: 'ai', text }]);
       }
       return;
     }
