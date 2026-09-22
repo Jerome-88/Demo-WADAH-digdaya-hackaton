@@ -15,6 +15,12 @@ const PROTECTIONS = [
   'Tidak ada transaksi di luar app',
 ];
 
+const PAYMENT_METHODS = [
+  { id: 'bank', label: 'Transfer Bank', icon: 'fa-building-columns' },
+  { id: 'qris', label: 'QRIS', icon: 'fa-qrcode' },
+  { id: 'va', label: 'Virtual Account', icon: 'fa-wallet' },
+];
+
 function parseBulanCount(durasi) {
   const match = /^(\d+)\s*Bulan$/.exec(durasi || '');
   return match ? Number(match[1]) : 1;
@@ -26,7 +32,8 @@ export default function KontrakFinalPage() {
   const { activeProject, setActiveProject } = useApp();
   const talent = getTalentBySlug(talentSlug);
 
-  const [phase, setPhase] = useState('review'); // review | signing | celebrating | active
+  const [phase, setPhase] = useState('review'); // review | paying | signing | celebrating | active
+  const [paymentMethod, setPaymentMethod] = useState('bank');
 
   useEffect(() => {
     if (!talent) navigate('/jasa', { replace: true });
@@ -38,15 +45,21 @@ export default function KontrakFinalPage() {
   const bulanCount = parseBulanCount(activeProject.durasi);
   const total = budget * bulanCount;
 
-  function handleSign() {
-    setPhase('signing');
+  // Escrow covers one month at a time (matches the "Dana escrow bulan
+  // pertama terkunci" copy already shown once the contract goes active) —
+  // not the full contract total upfront.
+  function handlePayEscrow() {
+    setPhase('paying');
     setTimeout(() => {
-      setPhase('celebrating');
+      setPhase('signing');
       setTimeout(() => {
-        setActiveProject(prev => ({ ...prev, status: 'matched' }));
-        setPhase('active');
-      }, 2000);
-    }, 1200);
+        setPhase('celebrating');
+        setTimeout(() => {
+          setActiveProject(prev => ({ ...prev, status: 'matched' }));
+          setPhase('active');
+        }, 2000);
+      }, 1200);
+    }, 1500);
   }
 
   return (
@@ -67,7 +80,7 @@ export default function KontrakFinalPage() {
       </header>
 
       <main className="max-w-[680px] mx-auto px-4 py-10 pb-16">
-        {(phase === 'review' || phase === 'signing') && (
+        {(phase === 'review' || phase === 'paying' || phase === 'signing') && (
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-5">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-bold font-inter uppercase tracking-wide" style={{ color: BLUE }}>Kontrak Final</span>
@@ -101,9 +114,43 @@ export default function KontrakFinalPage() {
             </div>
 
             {phase === 'review' && (
-              <button onClick={handleSign} className="mx-auto text-white font-bold py-3.5 px-10 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110" style={{ background: GREEN }}>
-                ✓ Setujui & Tanda Tangani
-              </button>
+              <div className="bg-white border-2 rounded-2xl p-6 flex flex-col gap-4" style={{ borderColor: GREEN }}>
+                <div className="text-center">
+                  <div className="text-xs font-inter font-bold uppercase tracking-wide mb-1" style={{ color: GREEN }}>Setor Dana Escrow Bulan Pertama</div>
+                  <div className="font-sora font-extrabold text-2xl" style={{ color: GREEN }}>{formatRupiah(budget)}</div>
+                  <div className="text-xs font-inter text-gray-500 mt-1">Ditahan WADAH, dicairkan ke talent setelah hasil kerja disetujui</div>
+                </div>
+
+                <div className="grid grid-cols-3 gap-2">
+                  {PAYMENT_METHODS.map(m => (
+                    <button
+                      key={m.id}
+                      onClick={() => setPaymentMethod(m.id)}
+                      className="flex flex-col items-center gap-1.5 rounded-xl p-3 border-2 cursor-pointer transition-all"
+                      style={paymentMethod === m.id ? { borderColor: GREEN, background: '#e3faf0' } : { borderColor: '#e5e9f0', background: '#fff' }}
+                    >
+                      <i className={`fa-solid ${m.icon} text-base`} style={{ color: paymentMethod === m.id ? GREEN : '#9ca3af' }}></i>
+                      <span className="text-[10px] font-inter font-semibold text-center" style={{ color: paymentMethod === m.id ? GREEN : '#6b7280' }}>{m.label}</span>
+                    </button>
+                  ))}
+                </div>
+
+                <div className="rounded-xl p-3 border-2" style={{ background: '#fff', borderColor: '#e5e9f0' }}>
+                  <div className="text-gray-400 text-[10px] font-inter font-bold uppercase tracking-wide mb-1">⚡ Demo Mode</div>
+                  <p className="text-gray-500 text-xs font-inter">Pembayaran ini simulasi untuk keperluan demo — tidak ada transaksi nyata yang terjadi.</p>
+                </div>
+
+                <button onClick={handlePayEscrow} className="mx-auto text-white font-bold py-3.5 px-10 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110" style={{ background: GREEN }}>
+                  Bayar Escrow & Tanda Tangani
+                </button>
+              </div>
+            )}
+
+            {phase === 'paying' && (
+              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center gap-2 py-4">
+                <div className="w-8 h-8 border-2 rounded-full animate-spin-fast" style={{ borderColor: GREEN, borderTopColor: 'transparent' }} />
+                <p className="text-sm font-inter text-gray-400">Memproses pembayaran escrow...</p>
+              </motion.div>
             )}
 
             {phase === 'signing' && (
