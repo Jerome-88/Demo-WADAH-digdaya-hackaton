@@ -43,7 +43,6 @@ export default function JasaDashboard() {
 
           {(!activeProject || activeProject.status === null) && (
             <div className="rounded-2xl border-2 border-dashed p-8 text-center" style={{ borderColor: '#c9d3e0' }}>
-              <div className="text-3xl mb-2">📋</div>
               <p className="font-sora font-bold text-base mb-1" style={{ color: '#1a1a1a' }}>Belum ada proyek aktif</p>
               <p className="text-sm font-inter text-gray-500 mb-5">Ceritain kebutuhan bisnismu, AI kami carikan talent yang paling cocok.</p>
               <button
@@ -61,7 +60,7 @@ export default function JasaDashboard() {
               {activeProject.talentSlug ? (
                 <>
                   <span className="inline-block text-[11px] font-bold px-2.5 py-1 rounded-full font-inter border-2 mb-3" style={{ color: ORANGE, borderColor: ORANGE, background: '#fff' }}>
-                    💬 Dalam Proses dengan {matchedTalent?.name ?? 'Talent'}
+                    Dalam Proses dengan {matchedTalent?.name ?? 'Talent'}
                   </span>
                   <div className="font-sora font-bold text-lg mb-1" style={{ color: '#1a1a1a' }}>{activeProject.umkm}</div>
                   <div className="text-sm font-inter text-gray-600 mb-4">{activeProject.skill} · {formatRupiah(activeProject.budgetNegotiated ?? activeProject.budget)}/bulan</div>
@@ -76,7 +75,7 @@ export default function JasaDashboard() {
               ) : (
                 <>
                   <span className="inline-block text-[11px] font-bold px-2.5 py-1 rounded-full font-inter border-2 mb-3" style={{ color: ORANGE, borderColor: ORANGE, background: '#fff' }}>
-                    🔍 Sedang Dicocokkan
+                    Sedang Dicocokkan
                   </span>
                   <div className="font-sora font-bold text-lg mb-1" style={{ color: '#1a1a1a' }}>{activeProject.umkm}</div>
                   <div className="text-sm font-inter text-gray-600 mb-1">{activeProject.skill} · {formatRupiah(activeProject.budget)}/bulan</div>
@@ -109,7 +108,7 @@ export default function JasaDashboard() {
                 className="text-white font-bold py-2.5 px-7 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
                 style={{ background: GREEN }}
               >
-                💬 Buka Chat & Kelola Proyek
+                Buka Chat & Kelola Proyek
               </button>
             </div>
           )}
@@ -139,7 +138,7 @@ export default function JasaDashboard() {
                   className="shrink-0 flex items-center gap-1.5 text-xs font-bold font-inter px-3.5 py-2 rounded-full cursor-pointer transition-colors border-2"
                   style={active ? { background: BLUE, color: '#fff', borderColor: BLUE } : { background: '#fff', color: '#6b7280', borderColor: '#e5e9f0' }}
                 >
-                  {catId === 'all' ? '✨ Semua' : `${meta.emoji} ${meta.label}`}
+                  {catId === 'all' ? 'Semua' : `${meta.emoji} ${meta.label}`}
                 </button>
               );
             })}
@@ -180,7 +179,7 @@ export default function JasaDashboard() {
                 </div>
 
                 <div className="flex items-center justify-between text-xs font-inter">
-                  <span className="text-gray-400">⚡ Respon {talent.responseTime}</span>
+                  <span className="text-gray-400">Respon {talent.responseTime}</span>
                   <span className="font-semibold" style={{ color: BLUE }}>Lihat Profil →</span>
                 </div>
               </motion.div>
@@ -189,7 +188,7 @@ export default function JasaDashboard() {
 
           <div className="rounded-xl p-4 mt-4" style={{ background: '#eef2fe' }}>
             <p className="text-xs font-inter leading-relaxed" style={{ color: BLUE }}>
-              💡 Semua talent di WADAH sudah lewat simulasi kerja & diverifikasi human reviewer — bukan sekadar klaim di CV.
+              Semua talent di WADAH sudah lewat simulasi kerja & diverifikasi human reviewer — bukan sekadar klaim di CV.
             </p>
           </div>
         </section>

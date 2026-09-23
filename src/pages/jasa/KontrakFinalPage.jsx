@@ -143,7 +143,7 @@ export default function KontrakFinalPage() {
                 </div>
 
                 <div className="rounded-xl p-3 border-2" style={{ background: '#fff', borderColor: '#e5e9f0' }}>
-                  <div className="text-gray-400 text-[10px] font-inter font-bold uppercase tracking-wide mb-1">⚡ Demo Mode</div>
+                  <div className="text-gray-400 text-[10px] font-inter font-bold uppercase tracking-wide mb-1">Demo Mode</div>
                   <p className="text-gray-500 text-xs font-inter">Pembayaran ini simulasi untuk keperluan demo — tidak ada transaksi nyata yang terjadi.</p>
                 </div>
 

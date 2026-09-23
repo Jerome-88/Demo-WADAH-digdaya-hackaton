@@ -31,7 +31,7 @@ export default function ProjectChatPage() {
 
   useEffect(() => {
     const t = setTimeout(() => {
-      setChatMessages([{ role: 'talent', text: 'Halo! Makasih udah setuju kerja sama 🙌 Aku mulai kerjain proyeknya sekarang ya.' }]);
+      setChatMessages([{ role: 'talent', text: 'Halo! Makasih udah setuju kerja sama. Aku mulai kerjain proyeknya sekarang ya.' }]);
     }, 500);
     return () => clearTimeout(t);
   }, []);
@@ -52,7 +52,7 @@ export default function ProjectChatPage() {
   // for the escrow mechanism is that *some* event flips held → submitted
   // before the UMKM can approve.
   function handleTalentSubmitWork() {
-    setChatMessages(prev => [...prev, { role: 'talent', text: 'Hasil kerja bulan ini udah aku kirim ✅ — cek file terlampir ya!', file: true }]);
+    setChatMessages(prev => [...prev, { role: 'talent', text: 'Hasil kerja bulan ini udah aku kirim — cek file terlampir ya!', file: true }]);
     setEscrowStatus('submitted');
   }
 
@@ -127,7 +127,7 @@ export default function ProjectChatPage() {
 
             {escrowStatus === 'held' && (
               <button onClick={handleTalentSubmitWork} className="mt-3 text-xs font-inter text-gray-400 hover:text-gray-600 bg-transparent border-0 cursor-pointer underline text-left">
-                ⚡ Demo: simulasikan {talent.name.split(' ')[0]} kirim hasil kerja
+                Demo: simulasikan {talent.name.split(' ')[0]} kirim hasil kerja
               </button>
             )}
           </div>
