@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../../context/AppContext';
-import { SKILLS, getSkillMeta } from '../../data/skillMaps';
+import { PICKER_SKILLS, COMING_SOON_SKILL_IDS, getSkillMeta } from '../../data/skillMaps';
 import { SCOPE_TEMPLATES, CURATED_TALENTS_DISPLAY } from '../../data/jasaData';
 
 const BLUE = '#2b6fff';
@@ -151,19 +151,26 @@ export default function JasaFlow() {
             <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-6">
               <h3 className="font-sora font-bold text-lg" style={{ color: BLUE }}>Pilih Skill yang Kamu Butuhkan</h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
-                {SKILLS.map(cat => {
+                {PICKER_SKILLS.map(cat => {
                   const active = selectedSkill === cat.id;
+                  const comingSoon = COMING_SOON_SKILL_IDS.includes(cat.id);
                   return (
                     <button
                       key={cat.id}
-                      onClick={() => setSelectedSkill(cat.id)}
-                      className="relative p-3.5 rounded-2xl border-2 text-left transition-all cursor-pointer"
+                      onClick={() => !comingSoon && setSelectedSkill(cat.id)}
+                      disabled={comingSoon}
+                      className="relative p-3.5 rounded-2xl border-2 text-left transition-all cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
                       style={active ? { borderColor: BLUE, background: '#eef2fe' } : { borderColor: '#e5e9f0', background: '#fff' }}
                     >
                       {active && (
                         <div className="absolute top-2 right-2 w-5 h-5 rounded-full flex items-center justify-center" style={{ background: BLUE }}>
                           <i className="fa-solid fa-check text-white text-[10px]"></i>
                         </div>
+                      )}
+                      {comingSoon && (
+                        <span className="absolute top-2 right-2 text-[9px] font-bold font-inter px-1.5 py-0.5 rounded-full" style={{ background: '#e5e9f0', color: '#797d85' }}>
+                          Coming Soon
+                        </span>
                       )}
                       <div className="text-xl mb-1.5">{cat.emoji}</div>
                       <div className="font-semibold text-xs font-inter" style={{ color: '#1a1a1a' }}>{cat.label}</div>

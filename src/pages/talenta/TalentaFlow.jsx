@@ -3,7 +3,7 @@ import { useNavigate, Navigate } from 'react-router-dom';
 import { ArrowRight, ArrowLeft, CheckCircle, Upload } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { getSupabase } from '../../lib/supabaseClient';
-import { SKILLS } from '../../data/skillMaps';
+import { PICKER_SKILLS, COMING_SOON_SKILL_IDS } from '../../data/skillMaps';
 
 const ACTIVATION_CHECKS = [
   'Menyusun kurikulum skill map',
@@ -148,7 +148,7 @@ export default function TalentaFlow() {
     return () => clearTimeout(t);
   }, [step, resendCooldown]);
 
-  const skillMeta = SKILLS.find(s => s.id === localSkill);
+  const skillMeta = PICKER_SKILLS.find(s => s.id === localSkill);
 
   // Picking a skill IS the final action — it commits the skill and drops
   // straight into the (non-interactive) activation animation below. In real
@@ -452,19 +452,26 @@ export default function TalentaFlow() {
             <h2 className="font-sora font-bold text-2xl" style={{ color: '#1a1a1a' }}>Pilih Skill Utamamu</h2>
 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
-              {SKILLS.map(skill => {
+              {PICKER_SKILLS.map(skill => {
                 const sel = localSkill === skill.id;
+                const comingSoon = COMING_SOON_SKILL_IDS.includes(skill.id);
                 return (
                   <button
                     key={skill.id}
-                    onClick={() => setLocalSkill(skill.id)}
-                    className="relative p-3.5 rounded-2xl border-2 text-left transition-all cursor-pointer"
+                    onClick={() => !comingSoon && setLocalSkill(skill.id)}
+                    disabled={comingSoon}
+                    className="relative p-3.5 rounded-2xl border-2 text-left transition-all cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
                     style={sel ? { borderColor: '#2b6fff', background: '#eef2fe' } : { borderColor: '#e5e9f0', background: '#fff' }}
                   >
                     {sel && (
                       <div className="absolute top-2 right-2 w-5 h-5 rounded-full flex items-center justify-center" style={{ background: '#2b6fff' }}>
                         <CheckCircle size={12} className="text-white" />
                       </div>
+                    )}
+                    {comingSoon && (
+                      <span className="absolute top-2 right-2 text-[9px] font-bold font-inter px-1.5 py-0.5 rounded-full" style={{ background: '#e5e9f0', color: '#797d85' }}>
+                        Coming Soon
+                      </span>
                     )}
                     <div className="text-xl mb-1.5">{skill.emoji}</div>
                     <div className="font-semibold text-xs font-inter" style={{ color: '#1a1a1a' }}>{skill.label}</div>

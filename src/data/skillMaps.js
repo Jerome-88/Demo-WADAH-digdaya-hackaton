@@ -56,6 +56,16 @@ export function getSkillMeta(skillId) {
   return SKILLS.find(s => s.id === skillId) ?? SKILLS.find(s => s.id === DEFAULT_SKILL);
 }
 
+// The skill picker UI (talent onboarding, UMKM "cari talent" wizard) only
+// surfaces 3 cards — Desain Grafis is the one fully-wired demo path (Rina's
+// persona, certification, and the UMKM-side match in jasaData all assume
+// this skill), the other two are shown as disabled "Coming Soon" cards so a
+// live demo stays focused instead of wandering into a category that has no
+// matching narrative on the other side. Their skill map content underneath
+// still exists and isn't deleted by this — just hidden from the picker.
+export const COMING_SOON_SKILL_IDS = ['social', 'video'];
+export const PICKER_SKILLS = ['desain', ...COMING_SOON_SKILL_IDS].map(getSkillMeta);
+
 // Node ids like "1.1" become URL-safe "1-1"; checkpoint ids ("checkpoint-1")
 // already are URL-safe and pass through unchanged.
 export function nodeIdToSlug(nodeId) {
