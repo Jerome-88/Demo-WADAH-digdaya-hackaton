@@ -105,11 +105,11 @@ export default function JasaDashboard() {
                 {formatRupiah(activeProject.budgetNegotiated ?? activeProject.budget)}/bulan · {activeProject.durasi}
               </div>
               <button
-                onClick={() => navigate(`/jasa/kontrak-final/${activeProject.talentSlug}`)}
+                onClick={() => navigate(`/jasa/proyek/${activeProject.talentSlug}`)}
                 className="text-white font-bold py-2.5 px-7 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
                 style={{ background: GREEN }}
               >
-                Lihat Detail Kontrak
+                💬 Buka Chat & Kelola Proyek
               </button>
             </div>
           )}

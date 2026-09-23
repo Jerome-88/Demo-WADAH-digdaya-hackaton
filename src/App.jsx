@@ -11,6 +11,7 @@ import TalentPortfolioPage from './pages/jasa/TalentPortfolioPage';
 import DraftKontrakPage    from './pages/jasa/DraftKontrakPage';
 import NegoChatPage        from './pages/jasa/NegoChatPage';
 import KontrakFinalPage    from './pages/jasa/KontrakFinalPage';
+import ProjectChatPage     from './pages/jasa/ProjectChatPage';
 import TalentaFlow      from './pages/talenta/TalentaFlow';
 import RinaTask         from './pages/rina/RinaTask';
 import UnitPage         from './pages/rina/UnitPage';
@@ -35,6 +36,7 @@ function AppShell() {
         <Route path="/jasa/kontrak/:talentSlug" element={<DraftKontrakPage />} />
         <Route path="/jasa/nego/:talentSlug" element={<NegoChatPage />} />
         <Route path="/jasa/kontrak-final/:talentSlug" element={<KontrakFinalPage />} />
+        <Route path="/jasa/proyek/:talentSlug" element={<ProjectChatPage />} />
         <Route path="/talenta"           element={<TalentaFlow />} />
         <Route path="/rina/task"         element={<RinaTask />} />
         <Route path="/unit/:unitParam"   element={<UnitPage />} />
