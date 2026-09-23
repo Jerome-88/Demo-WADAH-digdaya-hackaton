@@ -35,9 +35,31 @@ export default function KontrakFinalPage() {
   const [phase, setPhase] = useState('review'); // review | paying | signing | celebrating | active
   const [paymentMethod, setPaymentMethod] = useState('bank');
 
+  // Escrow status once the contract is active — held (money sits with WADAH)
+  // → submitted (talent sent work, via chat) → released (UMKM approved,
+  // explicit click required; this is the one step that must never be
+  // automatic — see handleApproveWork).
+  const [escrowStatus, setEscrowStatus] = useState('held'); // held | submitted | released
+  const [releaseInfo, setReleaseInfo] = useState(null); // { txId, timestamp }
+
+  const [chatOpen, setChatOpen] = useState(false);
+  const [chatMessages, setChatMessages] = useState([]);
+  const [chatInput, setChatInput] = useState('');
+
   useEffect(() => {
     if (!talent) navigate('/jasa', { replace: true });
   }, [talent, navigate]);
+
+  // Chat is reachable the moment the contract goes active — it's a support
+  // channel alongside the escrow flow, not a gate at the end of it.
+  useEffect(() => {
+    if (chatOpen && chatMessages.length === 0) {
+      const t = setTimeout(() => {
+        setChatMessages([{ role: 'talent', text: 'Halo! Makasih udah setuju kerja sama 🙌 Aku mulai kerjain proyeknya sekarang ya.' }]);
+      }, 500);
+      return () => clearTimeout(t);
+    }
+  }, [chatOpen, chatMessages.length]);
 
   if (!talent) return null;
 
@@ -60,6 +82,32 @@ export default function KontrakFinalPage() {
         }, 2000);
       }, 1200);
     }, 1500);
+  }
+
+  function handleSendChat() {
+    if (!chatInput.trim()) return;
+    const text = chatInput.trim();
+    setChatInput('');
+    setChatMessages(prev => [...prev, { role: 'user', text }]);
+  }
+
+  // Demo-only trigger standing in for the talent's own submission action
+  // (there's no separate talent-side view wired into this flow) — what
+  // matters for the escrow mechanism is that *some* event flips
+  // held → submitted before the UMKM can approve.
+  function handleTalentSubmitWork() {
+    setChatMessages(prev => [...prev, { role: 'talent', text: 'Hasil kerja bulan ini udah aku kirim ✅ — cek file terlampir ya!', file: true }]);
+    setEscrowStatus('submitted');
+  }
+
+  // The one step in this whole flow that must stay an explicit UMKM click —
+  // dana never auto-releases just because work was submitted.
+  function handleApproveWork() {
+    const txId = `ESC-${Date.now().toString(36).toUpperCase()}`;
+    const timestamp = new Date().toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' });
+    setReleaseInfo({ txId, timestamp });
+    setEscrowStatus('released');
+    setChatMessages(prev => [...prev, { role: 'user', text: '✓ Hasil kerja diterima — dana escrow udah aku lepas ke kamu. Makasih ya!' }]);
   }
 
   return (
@@ -168,11 +216,95 @@ export default function KontrakFinalPage() {
               <div className="font-sora font-extrabold text-base mb-2" style={{ color: GREEN }}>KONTRAK AKTIF ✓</div>
               <div className="font-sora font-bold text-lg mb-1" style={{ color: '#1a1a1a' }}>{activeProject.umkm} × {talent.name}</div>
               <div className="text-sm font-inter text-gray-600">Budget: {formatRupiah(budget)}/bulan · Durasi: {activeProject.durasi}</div>
-              <div className="text-sm font-inter mt-1 text-gray-600">Dana escrow bulan pertama terkunci: {formatRupiah(budget)}</div>
             </div>
 
-            <div className="rounded-xl p-4" style={{ background: '#f5f8fb' }}>
-              <p className="text-xs font-inter text-gray-500">Komunikasi dengan {talent.name.split(' ')[0]} ada di tab Chat</p>
+            <div className="rounded-2xl p-6 border-2" style={{ borderColor: escrowStatus === 'released' ? GREEN : ORANGE, background: escrowStatus === 'released' ? '#e3faf0' : '#fff7ee' }}>
+              <div className="flex items-center gap-2 mb-2">
+                <i className={`fa-solid ${escrowStatus === 'held' ? 'fa-lock' : escrowStatus === 'submitted' ? 'fa-box-open' : 'fa-circle-check'} text-sm`} style={{ color: escrowStatus === 'released' ? GREEN : ORANGE }}></i>
+                <span className="text-[11px] font-bold font-inter uppercase tracking-wide" style={{ color: escrowStatus === 'released' ? GREEN : ORANGE }}>
+                  {escrowStatus === 'held' && 'Dana Ditahan Platform'}
+                  {escrowStatus === 'submitted' && 'Hasil Kerja Diterima — Menunggu Persetujuan'}
+                  {escrowStatus === 'released' && 'Dana Dilepas ke Talent'}
+                </span>
+              </div>
+
+              <div className="font-sora font-extrabold text-2xl mb-2" style={{ color: '#1a1a1a' }}>{formatRupiah(budget)}</div>
+
+              {escrowStatus === 'held' && (
+                <p className="text-sm font-inter text-gray-600">Ditahan WADAH — akan dilepas ke {talent.name.split(' ')[0]} setelah kamu terima hasil kerja bulan ini.</p>
+              )}
+
+              {escrowStatus === 'submitted' && (
+                <>
+                  <p className="text-sm font-inter text-gray-600 mb-4">{talent.name.split(' ')[0]} udah kirim hasil kerja lewat chat. Cek hasilnya, baru setujui biar dananya dilepas.</p>
+                  <button onClick={handleApproveWork} className="w-full text-white font-bold py-3 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110" style={{ background: GREEN }}>
+                    ✓ Terima Hasil Kerja &amp; Lepas Dana
+                  </button>
+                </>
+              )}
+
+              {escrowStatus === 'released' && releaseInfo && (
+                <div className="text-sm font-inter text-gray-600">
+                  <p className="mb-2">Dana udah cair ke {talent.name.split(' ')[0]}.</p>
+                  <div className="rounded-xl p-3" style={{ background: '#fff' }}>
+                    <div className="flex justify-between text-xs"><span className="text-gray-400">ID Transaksi</span><span className="font-mono font-semibold" style={{ color: '#1a1a1a' }}>{releaseInfo.txId}</span></div>
+                    <div className="flex justify-between text-xs mt-1"><span className="text-gray-400">Waktu</span><span className="font-semibold" style={{ color: '#1a1a1a' }}>{releaseInfo.timestamp}</span></div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="rounded-2xl border-2 overflow-hidden" style={{ borderColor: BLUE }}>
+              <button onClick={() => setChatOpen(o => !o)} className="w-full flex items-center justify-between px-5 py-4 border-0 cursor-pointer" style={{ background: '#eef2fe' }}>
+                <span className="text-sm font-bold font-inter flex items-center gap-2" style={{ color: BLUE }}>
+                  <i className="fa-solid fa-comment-dots"></i> Chat dengan {talent.name.split(' ')[0]}
+                </span>
+                <i className={`fa-solid fa-chevron-${chatOpen ? 'up' : 'down'} text-xs`} style={{ color: BLUE }}></i>
+              </button>
+
+              <AnimatePresence initial={false}>
+                {chatOpen && (
+                  <motion.div initial={{ height: 0 }} animate={{ height: 'auto' }} exit={{ height: 0 }} className="overflow-hidden">
+                    <div className="flex flex-col gap-3 px-4 py-4" style={{ background: '#f5f8fb', maxHeight: 320, overflowY: 'auto' }}>
+                      {chatMessages.map((msg, i) => (
+                        <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                          <div
+                            className="max-w-[85%] rounded-2xl px-4 py-3 text-sm font-inter leading-relaxed"
+                            style={msg.role === 'user'
+                              ? { background: BLUE, color: '#fff', borderTopRightRadius: 4 }
+                              : { background: '#fff', color: '#1a1a1a', borderTopLeftRadius: 4, border: '1px solid #e5e9f0' }}
+                          >
+                            {msg.file ? (
+                              <span className="flex items-center gap-2"><i className="fa-solid fa-file-arrow-down"></i>{msg.text}</span>
+                            ) : msg.text}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="border-t p-3 flex flex-col gap-2" style={{ borderColor: '#e5e9f0' }}>
+                      <div className="flex gap-2">
+                        <input
+                          value={chatInput}
+                          onChange={e => setChatInput(e.target.value)}
+                          onKeyDown={e => e.key === 'Enter' && handleSendChat()}
+                          placeholder={`Kirim pesan ke ${talent.name.split(' ')[0]}...`}
+                          className="flex-1 rounded-full px-4 py-2 text-sm font-inter focus:outline-none border-2"
+                          style={{ background: '#f5f8fb', borderColor: '#e5e9f0', color: '#1a1a1a' }}
+                        />
+                        <button onClick={handleSendChat} disabled={!chatInput.trim()} className="w-10 h-10 rounded-full flex items-center justify-center text-white disabled:opacity-40 cursor-pointer border-0 shrink-0" style={{ background: BLUE }}>
+                          <i className="fa-solid fa-paper-plane text-xs"></i>
+                        </button>
+                      </div>
+                      {escrowStatus === 'held' && (
+                        <button onClick={handleTalentSubmitWork} className="text-xs font-inter text-gray-400 hover:text-gray-600 bg-transparent border-0 cursor-pointer underline text-left">
+                          ⚡ Demo: simulasikan {talent.name.split(' ')[0]} kirim hasil kerja
+                        </button>
+                      )}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
             <button onClick={() => navigate('/')} className="w-full text-white font-bold py-3.5 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110" style={{ background: GREEN }}>
