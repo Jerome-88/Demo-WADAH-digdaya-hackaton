@@ -32,7 +32,10 @@ export default function KontrakFinalPage() {
   const { activeProject, setActiveProject } = useApp();
   const talent = getTalentBySlug(talentSlug);
 
-  const [phase, setPhase] = useState('review'); // review | paying | signing | celebrating | active
+  // Revisiting an already-active contract (e.g. from the Find Talent
+  // dashboard's "Lihat Detail Kontrak" link) must land straight on the
+  // active view, not reset back to the payment step.
+  const [phase, setPhase] = useState(() => (activeProject.status === 'matched' ? 'active' : 'review')); // review | paying | signing | celebrating | active
   const [paymentMethod, setPaymentMethod] = useState('bank');
 
   // Escrow status once the contract is active — held (money sits with WADAH)

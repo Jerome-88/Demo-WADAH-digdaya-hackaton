@@ -5,6 +5,7 @@ import Navbar from './components/Navbar';
 import LandingPage         from './pages/LandingPage';
 import LoginPage           from './pages/LoginPage';
 import VerificationPage    from './pages/VerificationPage';
+import JasaDashboard       from './pages/jasa/JasaDashboard';
 import JasaFlow            from './pages/jasa/JasaFlow';
 import TalentPortfolioPage from './pages/jasa/TalentPortfolioPage';
 import DraftKontrakPage    from './pages/jasa/DraftKontrakPage';
@@ -28,7 +29,8 @@ function AppShell() {
         <Route path="/"                  element={<LandingPage />} />
         <Route path="/login"             element={<LoginPage />} />
         <Route path="/verifikasi/:certId" element={<VerificationPage />} />
-        <Route path="/jasa"              element={<JasaFlow />} />
+        <Route path="/jasa"              element={<JasaDashboard />} />
+        <Route path="/jasa/cari"         element={<JasaFlow />} />
         <Route path="/portfolio/:talentSlug" element={<TalentPortfolioPage />} />
         <Route path="/jasa/kontrak/:talentSlug" element={<DraftKontrakPage />} />
         <Route path="/jasa/nego/:talentSlug" element={<NegoChatPage />} />

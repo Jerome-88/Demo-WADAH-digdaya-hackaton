@@ -114,11 +114,11 @@ export default function JasaFlow() {
     <div className="min-h-screen bg-white flex flex-col">
       <header className="sticky top-0 z-30 h-14 flex items-center px-4 md:px-6 bg-white/95 backdrop-blur border-b border-gray-100 flex-shrink-0">
         <button
-          onClick={() => navigate('/')}
+          onClick={() => navigate('/jasa')}
           className="flex items-center gap-2 text-gray-500 hover:text-[#1a1a1a] text-sm font-inter transition-colors bg-transparent border-0 cursor-pointer"
         >
           <i className="fa-solid fa-arrow-left text-sm"></i>
-          <span>Beranda</span>
+          <span>Dashboard</span>
         </button>
       </header>
 
@@ -174,7 +174,7 @@ export default function JasaFlow() {
               </div>
 
               <div className="flex items-center justify-between pt-2">
-                <button onClick={() => navigate('/')} className="flex items-center gap-2 font-inter font-semibold text-sm bg-transparent border-0 cursor-pointer" style={{ color: BLUE }}>
+                <button onClick={() => navigate('/jasa')} className="flex items-center gap-2 font-inter font-semibold text-sm bg-transparent border-0 cursor-pointer" style={{ color: BLUE }}>
                   <i className="fa-solid fa-arrow-left"></i> Back
                 </button>
                 <button

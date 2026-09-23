@@ -28,6 +28,24 @@ export default function DraftKontrakPage() {
     if (!talent) navigate('/jasa', { replace: true });
   }, [talent, navigate]);
 
+  // Ties the shared project to this specific talent as soon as an offer
+  // goes out — the Find Talent dashboard needs this to deep-link back into
+  // an in-progress or active contract (nego, kontrak-final) later. Also
+  // promotes status out of null: reaching a talent's Draft Kontrak straight
+  // from the dashboard's Browse Talent grid (skipping the AI-matching
+  // wizard entirely) never otherwise touches activeProject.status, which
+  // would leave the dashboard showing "belum ada proyek aktif" despite an
+  // offer already being in play.
+  useEffect(() => {
+    if (talent) {
+      setActiveProject(prev => ({
+        ...prev,
+        talentSlug: talent.slug,
+        status: prev.status === null ? 'open' : prev.status,
+      }));
+    }
+  }, [talent, setActiveProject]);
+
   if (!talent) return null;
 
   const budget = activeProject.budgetNegotiated ?? activeProject.budget;

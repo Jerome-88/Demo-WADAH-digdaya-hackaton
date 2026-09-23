@@ -60,6 +60,7 @@ export const SCOPE_TEMPLATES = {
 export const CURATED_TALENTS = [
   {
     slug: 'rina-kusumawati',
+    skillId: 'desain',
     initials: 'RK',
     avatarImg: '/rina.jpg',
     avatarBg: '#7C3AED',
@@ -86,6 +87,7 @@ export const CURATED_TALENTS = [
   },
   {
     slug: 'siti-aminah',
+    skillId: 'social',
     initials: 'SA',
     avatarBg: '#4F46E5',
     name: 'Siti Aminah',
@@ -110,6 +112,7 @@ export const CURATED_TALENTS = [
   },
   {
     slug: 'rizky-aulia',
+    skillId: 'video',
     initials: 'RA',
     avatarBg: '#7C3AED',
     name: 'Rizky Aulia',
@@ -134,6 +137,7 @@ export const CURATED_TALENTS = [
   },
   {
     slug: 'dewi-wulandari',
+    skillId: 'marketing',
     initials: 'DW',
     avatarBg: '#0F766E',
     name: 'Dewi Wulandari',

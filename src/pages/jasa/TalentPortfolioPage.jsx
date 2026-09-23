@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { getTalentBySlug } from '../../data/jasaData';
 
@@ -9,7 +9,16 @@ const GREEN = '#00c897';
 export default function TalentPortfolioPage() {
   const navigate = useNavigate();
   const { talentSlug } = useParams();
+  const location = useLocation();
   const talent = getTalentBySlug(talentSlug);
+
+  // Reached either by browsing the Find Talent dashboard directly, or by
+  // stepping through the AI-matching wizard — the "back" destination (and
+  // its label) should match wherever the visitor actually came from.
+  const fromDashboard = location.state?.from === 'dashboard';
+  const backTarget = fromDashboard ? '/jasa' : '/jasa/cari';
+  const backState = fromDashboard ? undefined : { state: { resumeStep: 3 } };
+  const backLabel = fromDashboard ? 'Dashboard' : 'Hasil Matching';
 
   useEffect(() => {
     if (!talent) navigate('/jasa', { replace: true });
@@ -21,11 +30,11 @@ export default function TalentPortfolioPage() {
     <div className="min-h-screen bg-white">
       <header className="sticky top-0 z-30 h-14 flex items-center px-4 md:px-6" style={{ background: BLUE }}>
         <button
-          onClick={() => navigate('/jasa', { state: { resumeStep: 3 } })}
+          onClick={() => navigate(backTarget, backState)}
           className="flex items-center gap-2 text-white hover:text-white/80 text-sm font-bold font-inter transition-colors bg-transparent border-0 cursor-pointer"
         >
           <i className="fa-solid fa-arrow-left"></i>
-          <span>Hasil Matching</span>
+          <span>{backLabel}</span>
         </button>
         <h1 className="text-white text-xs sm:text-sm font-bold font-sora truncate absolute left-1/2 -translate-x-1/2 max-w-[55%] text-center">
           Verified Portfolio
@@ -135,11 +144,11 @@ export default function TalentPortfolioPage() {
             Hubungi {talent.name.split(' ')[0]}
           </button>
           <button
-            onClick={() => navigate('/jasa', { state: { resumeStep: 3 } })}
+            onClick={() => navigate(backTarget, backState)}
             className="w-full font-semibold py-3 rounded-full transition-all text-sm cursor-pointer bg-transparent border-2"
             style={{ color: 'white', background: GREEN }}
           >
-            Kembali ke Hasil Matching
+            {fromDashboard ? 'Kembali ke Dashboard' : 'Kembali ke Hasil Matching'}
           </button>
         </section>
       </main>

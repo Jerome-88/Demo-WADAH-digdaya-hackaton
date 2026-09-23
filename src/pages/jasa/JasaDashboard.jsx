@@ -1,0 +1,199 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { useApp } from '../../context/AppContext';
+import { CURATED_TALENTS, getTalentBySlug, formatRupiah } from '../../data/jasaData';
+import { getSkillMeta } from '../../data/skillMaps';
+
+const BLUE = '#2b6fff';
+const GREEN = '#00c897';
+const ORANGE = '#f37219';
+
+// Only the categories a curated talent actually covers — no point showing a
+// filter chip that always renders an empty grid.
+const BROWSE_CATEGORIES = ['all', ...new Set(CURATED_TALENTS.map(t => t.skillId))];
+
+export default function JasaDashboard() {
+  const navigate = useNavigate();
+  const { activeProject } = useApp();
+  const [filterSkill, setFilterSkill] = useState('all');
+
+  const matchedTalent = activeProject?.talentSlug ? getTalentBySlug(activeProject.talentSlug) : null;
+  const visibleTalents = CURATED_TALENTS.filter(t => filterSkill === 'all' || t.skillId === filterSkill);
+
+  return (
+    <div className="min-h-screen bg-white">
+      <header className="sticky top-0 z-30 h-14 flex items-center px-4 md:px-6" style={{ background: BLUE }}>
+        <button
+          onClick={() => navigate('/')}
+          className="flex items-center gap-2 text-white hover:text-white/80 text-sm font-bold font-inter transition-colors bg-transparent border-0 cursor-pointer"
+        >
+          <i className="fa-solid fa-arrow-left"></i>
+          <span>Beranda</span>
+        </button>
+        <h1 className="text-white text-xs sm:text-sm font-bold font-sora truncate absolute left-1/2 -translate-x-1/2 max-w-[55%] text-center">
+          Find Talent
+        </h1>
+      </header>
+
+      <main className="max-w-[880px] mx-auto px-4 py-8 pb-16 flex flex-col gap-8">
+        {/* ── Proyek Kamu ── */}
+        <section>
+          <h2 className="font-sora font-bold text-sm uppercase tracking-wide mb-3" style={{ color: BLUE }}>Proyek Kamu</h2>
+
+          {(!activeProject || activeProject.status === null) && (
+            <div className="rounded-2xl border-2 border-dashed p-8 text-center" style={{ borderColor: '#c9d3e0' }}>
+              <div className="text-3xl mb-2">📋</div>
+              <p className="font-sora font-bold text-base mb-1" style={{ color: '#1a1a1a' }}>Belum ada proyek aktif</p>
+              <p className="text-sm font-inter text-gray-500 mb-5">Ceritain kebutuhan bisnismu, AI kami carikan talent yang paling cocok.</p>
+              <button
+                onClick={() => navigate('/jasa/cari')}
+                className="text-white font-bold py-3 px-8 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
+                style={{ background: BLUE }}
+              >
+                Mulai Cari Talent
+              </button>
+            </div>
+          )}
+
+          {activeProject?.status === 'open' && (
+            <div className="rounded-2xl border-2 p-6" style={{ borderColor: ORANGE, background: '#fff7ee' }}>
+              {activeProject.talentSlug ? (
+                <>
+                  <span className="inline-block text-[11px] font-bold px-2.5 py-1 rounded-full font-inter border-2 mb-3" style={{ color: ORANGE, borderColor: ORANGE, background: '#fff' }}>
+                    💬 Dalam Proses dengan {matchedTalent?.name ?? 'Talent'}
+                  </span>
+                  <div className="font-sora font-bold text-lg mb-1" style={{ color: '#1a1a1a' }}>{activeProject.umkm}</div>
+                  <div className="text-sm font-inter text-gray-600 mb-4">{activeProject.skill} · {formatRupiah(activeProject.budgetNegotiated ?? activeProject.budget)}/bulan</div>
+                  <button
+                    onClick={() => navigate(`/portfolio/${activeProject.talentSlug}`, { state: { from: 'dashboard' } })}
+                    className="text-white font-bold py-2.5 px-7 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
+                    style={{ background: GREEN }}
+                  >
+                    Lanjutkan
+                  </button>
+                </>
+              ) : (
+                <>
+                  <span className="inline-block text-[11px] font-bold px-2.5 py-1 rounded-full font-inter border-2 mb-3" style={{ color: ORANGE, borderColor: ORANGE, background: '#fff' }}>
+                    🔍 Sedang Dicocokkan
+                  </span>
+                  <div className="font-sora font-bold text-lg mb-1" style={{ color: '#1a1a1a' }}>{activeProject.umkm}</div>
+                  <div className="text-sm font-inter text-gray-600 mb-1">{activeProject.skill} · {formatRupiah(activeProject.budget)}/bulan</div>
+                  <p className="text-sm font-inter text-gray-500 mb-4 line-clamp-2">{activeProject.desc}</p>
+                  <button
+                    onClick={() => navigate('/jasa/cari', { state: { resumeStep: 3 } })}
+                    className="text-white font-bold py-2.5 px-7 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
+                    style={{ background: GREEN }}
+                  >
+                    Lihat Talent yang Cocok
+                  </button>
+                </>
+              )}
+            </div>
+          )}
+
+          {activeProject?.status === 'matched' && (
+            <div className="rounded-2xl border-2 p-6" style={{ borderColor: GREEN, background: '#e3faf0' }}>
+              <span className="inline-block text-[11px] font-bold px-2.5 py-1 rounded-full font-inter border-2 mb-3" style={{ color: GREEN, borderColor: GREEN, background: '#fff' }}>
+                ✓ Kontrak Aktif
+              </span>
+              <div className="font-sora font-bold text-lg mb-1" style={{ color: '#1a1a1a' }}>
+                {activeProject.umkm}{matchedTalent ? ` × ${matchedTalent.name}` : ''}
+              </div>
+              <div className="text-sm font-inter text-gray-600 mb-4">
+                {formatRupiah(activeProject.budgetNegotiated ?? activeProject.budget)}/bulan · {activeProject.durasi}
+              </div>
+              <button
+                onClick={() => navigate(`/jasa/kontrak-final/${activeProject.talentSlug}`)}
+                className="text-white font-bold py-2.5 px-7 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
+                style={{ background: GREEN }}
+              >
+                Lihat Detail Kontrak
+              </button>
+            </div>
+          )}
+        </section>
+
+        {/* ── Browse Talent ── */}
+        <section>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="font-sora font-bold text-sm uppercase tracking-wide" style={{ color: BLUE }}>Browse Talent</h2>
+            <button
+              onClick={() => navigate('/jasa/cari')}
+              className="text-xs font-bold font-inter bg-transparent border-0 cursor-pointer hover:underline"
+              style={{ color: BLUE }}
+            >
+              + Post Proyek Baru
+            </button>
+          </div>
+
+          <div className="flex gap-2 overflow-x-auto pb-1 mb-4">
+            {BROWSE_CATEGORIES.map(catId => {
+              const meta = catId === 'all' ? null : getSkillMeta(catId);
+              const active = filterSkill === catId;
+              return (
+                <button
+                  key={catId}
+                  onClick={() => setFilterSkill(catId)}
+                  className="shrink-0 flex items-center gap-1.5 text-xs font-bold font-inter px-3.5 py-2 rounded-full cursor-pointer transition-colors border-2"
+                  style={active ? { background: BLUE, color: '#fff', borderColor: BLUE } : { background: '#fff', color: '#6b7280', borderColor: '#e5e9f0' }}
+                >
+                  {catId === 'all' ? '✨ Semua' : `${meta.emoji} ${meta.label}`}
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-4">
+            {visibleTalents.map((talent, i) => (
+              <motion.div
+                key={talent.slug}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.06, duration: 0.3 }}
+                onClick={() => navigate(`/portfolio/${talent.slug}`, { state: { from: 'dashboard' } })}
+                className="bg-white border-2 rounded-2xl p-5 cursor-pointer transition-all hover:shadow-md"
+                style={{ borderColor: '#e5e9f0' }}
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  {talent.avatarImg ? (
+                    <img src={talent.avatarImg} alt={talent.name} className="w-11 h-11 rounded-full object-cover shrink-0" />
+                  ) : (
+                    <div className="w-11 h-11 rounded-full flex items-center justify-center text-white font-sora font-bold text-sm shrink-0" style={{ background: talent.avatarBg }}>
+                      {talent.initials}
+                    </div>
+                  )}
+                  <div className="min-w-0 flex-1">
+                    <div className="font-sora font-bold text-sm truncate" style={{ color: '#1a1a1a' }}>{talent.name}</div>
+                    <div className="text-xs font-inter text-gray-500 truncate">{talent.role} · {talent.location}</div>
+                  </div>
+                  <span className="shrink-0 text-[11px] font-bold px-2 py-1 rounded-full font-inter border" style={{ color: GREEN, borderColor: GREEN, background: '#e3faf0' }}>
+                    {talent.score}/10
+                  </span>
+                </div>
+
+                <div className="flex flex-wrap gap-1.5 mb-3">
+                  {talent.skills.slice(0, 3).map(s => (
+                    <span key={s} className="text-[10px] px-2 py-1 rounded-full font-inter border" style={{ color: BLUE, borderColor: '#c7d5fb', background: '#eef2fe' }}>{s}</span>
+                  ))}
+                </div>
+
+                <div className="flex items-center justify-between text-xs font-inter">
+                  <span className="text-gray-400">⚡ Respon {talent.responseTime}</span>
+                  <span className="font-semibold" style={{ color: BLUE }}>Lihat Profil →</span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="rounded-xl p-4 mt-4" style={{ background: '#eef2fe' }}>
+            <p className="text-xs font-inter leading-relaxed" style={{ color: BLUE }}>
+              💡 Semua talent di WADAH sudah lewat simulasi kerja & diverifikasi human reviewer — bukan sekadar klaim di CV.
+            </p>
+          </div>
+        </section>
+      </main>
+    </div>
+  );
+}
