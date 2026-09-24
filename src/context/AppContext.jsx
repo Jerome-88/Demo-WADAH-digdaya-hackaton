@@ -150,6 +150,34 @@ export function AppProvider({ children }) {
     setOpenedNodeIds(opened);
 
     setSubmissions(await api.getMySubmissions());
+
+    // Real match, if any — set once a real UMKM picks this talent from
+    // RealTalentProfilePage (see chooseRealTalent below). This is the real
+    // replacement for RinaTask's old always-on fake-match effect, which
+    // used to fire for every certified talent regardless of whether any
+    // UMKM had actually chosen them.
+    const { data: matchedRows } = await getSupabase()
+      .from('projects')
+      .select('*')
+      .eq('talent_id', me.id)
+      .order('created_at', { ascending: false })
+      .limit(1);
+    const match = matchedRows?.[0];
+    if (match) {
+      setActiveProject({
+        id: match.id,
+        umkm: match.umkm_name,
+        location: 'Indonesia',
+        skillId: match.skill,
+        skill: getSkillMeta(match.skill).label,
+        budget: match.budget,
+        budgetNegotiated: null,
+        durasi: 'Fleksibel',
+        desc: match.description,
+        scope: match.scope || [],
+        status: match.status,
+      });
+    }
   }
 
   // UMKM-side counterpart of hydrateFromBackend — no backend endpoint
@@ -330,6 +358,20 @@ export function AppProvider({ children }) {
     return data;
   }
 
+  // Called from a real talent's RealTalentProfilePage ("Pilih Talent Ini
+  // untuk Proyek") — assigns activeProject's real row to that talent, which
+  // is what lets the talent's own hydrateFromBackend pick it up as a real
+  // match. Targets activeProject.id, so it only works once a real project
+  // has actually been posted+persisted (createRealProject above).
+  async function chooseRealTalent(talentId) {
+    const supabase = getSupabase();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user || !activeProject?.id) throw new Error('Belum ada proyek yang bisa dipilihkan talent-nya');
+    const { error } = await supabase.from('projects').update({ talent_id: talentId }).eq('id', activeProject.id).eq('umkm_id', user.id);
+    if (error) throw error;
+    setActiveProject(prev => ({ ...prev, realTalentId: talentId }));
+  }
+
   // Full reload (like resetDemo) rather than manually resetting every piece
   // of state this session hydrated (exp/hearts/streak/completedNodeIds/
   // submissions/onboardingComplete/...) — guarantees nothing stale survives
@@ -421,7 +463,7 @@ export function AppProvider({ children }) {
       openUnit, completeUnit, submitCheckpoint,
       createRealUserRow, refreshUser, refreshSubmissions, signOutReal, hydrateFromBackend,
       // UMKM-side real-backend additions
-      umkmProfile, createRealUmkmProfile, createRealProject, hydrateUmkmFromBackend,
+      umkmProfile, createRealUmkmProfile, createRealProject, hydrateUmkmFromBackend, chooseRealTalent,
     }}>
       {children}
     </AppContext.Provider>

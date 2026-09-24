@@ -105,7 +105,11 @@ export default function JasaFlow() {
       if (mode === 'real') {
         setPostError(null);
         try {
-          await createRealProject({ umkmName, skillId: selectedSkill, description, scope: scopeItems, budget: budgetValue });
+          const saved = await createRealProject({ umkmName, skillId: selectedSkill, description, scope: scopeItems, budget: budgetValue });
+          // Swap the local placeholder id for the real row's UUID — needed
+          // so a later "Pilih Talent Ini untuk Proyek" (chooseRealTalent)
+          // updates the actual persisted project, not a fake local id.
+          setActiveProject(prev => ({ ...prev, id: saved.id }));
         } catch (err) {
           setPostError(err.message || 'Proyek gagal disimpan ke server, tapi tetap bisa dilihat di sesi ini.');
         }

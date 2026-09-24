@@ -28,6 +28,9 @@ export default function JasaDashboard() {
   // backend isn't reachable (e.g. demo-only laptop with no VITE_API_URL),
   // the grid just falls back to curated talents alone.
   const [realTalents, setRealTalents] = useState([]);
+  // Name of the real talent chosen for activeProject (chooseRealTalent only
+  // stores the id) — fetched lazily, only once a real pick actually exists.
+  const [realMatchedName, setRealMatchedName] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -36,6 +39,17 @@ export default function JasaDashboard() {
     }).catch(() => {});
     return () => { cancelled = true; };
   }, []);
+
+  useEffect(() => {
+    // No reset-to-null branch when realTalentId is absent — harmless, since
+    // realMatchedName is only ever rendered behind an activeProject.realTalentId check.
+    if (!activeProject?.realTalentId) return;
+    let cancelled = false;
+    api.getPortfolio(activeProject.realTalentId).then(res => {
+      if (!cancelled) setRealMatchedName(res.user.name);
+    }).catch(() => {});
+    return () => { cancelled = true; };
+  }, [activeProject?.realTalentId]);
 
   const matchedTalent = activeProject?.talentSlug ? getTalentBySlug(activeProject.talentSlug) : null;
   const visibleCurated = CURATED_TALENTS.filter(t => filterSkill === 'all' || t.skillId === filterSkill);
@@ -102,7 +116,22 @@ export default function JasaDashboard() {
 
           {activeProject?.status === 'open' && (
             <div className="rounded-2xl border-2 p-6" style={{ borderColor: ORANGE, background: '#fff7ee' }}>
-              {activeProject.talentSlug ? (
+              {activeProject.realTalentId ? (
+                <>
+                  <span className="inline-block text-[11px] font-bold px-2.5 py-1 rounded-full font-inter border-2 mb-3" style={{ color: ORANGE, borderColor: ORANGE, background: '#fff' }}>
+                    Dipilih oleh {realMatchedName ?? 'Talent'}
+                  </span>
+                  <div className="font-sora font-bold text-lg mb-1" style={{ color: '#1a1a1a' }}>{activeProject.umkm}</div>
+                  <div className="text-sm font-inter text-gray-600 mb-4">{activeProject.skill} · {formatRupiah(activeProject.budgetNegotiated ?? activeProject.budget)}/bulan</div>
+                  <button
+                    onClick={() => navigate(`/jasa/chat/${activeProject.realTalentId}`, { state: { talentName: realMatchedName } })}
+                    className="text-white font-bold py-2.5 px-7 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
+                    style={{ background: GREEN }}
+                  >
+                    Buka Chat
+                  </button>
+                </>
+              ) : activeProject.talentSlug ? (
                 <>
                   <span className="inline-block text-[11px] font-bold px-2.5 py-1 rounded-full font-inter border-2 mb-3" style={{ color: ORANGE, borderColor: ORANGE, background: '#fff' }}>
                     Dalam Proses dengan {matchedTalent?.name ?? 'Talent'}

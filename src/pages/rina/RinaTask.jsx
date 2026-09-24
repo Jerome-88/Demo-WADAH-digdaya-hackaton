@@ -21,7 +21,7 @@ const WADY_QUOTES = [
 
 export default function RinaTask() {
   const navigate = useNavigate();
-  const { streak, hearts, selectedSkill, completedNodeIds, setCompletedNodeIds, activeProject, setActiveProject, certificateEarnedAt } = useApp();
+  const { streak, hearts, selectedSkill, completedNodeIds, setCompletedNodeIds, activeProject, setActiveProject, certificateEarnedAt, mode } = useApp();
   const { playFail, playClick } = useGameAudio();
 
   // Wady's speech bubble rotates through motivational quotes; stays visible
@@ -67,16 +67,19 @@ export default function RinaTask() {
   const finalCheckpointDone = finalCheckpoint && isCompleted(finalCheckpoint.id);
   const isCertified = !!certificateEarnedAt[skillId];
 
-  // Auto-fires a "match notification" once Rekam Kerja Terverifikasi is
-  // actually earned — mirrors the "Smart Matching Terbuka" unlock below
-  // (prove yourself all the way through, including the exam, before you get
-  // discovered), instead of requiring a presenter to separately walk
-  // through /jasa and line up its skillId with whatever skill this talent
-  // happens to have (that cross-flow dependency, two independent skill
-  // pickers sharing one session, was too easy to get out of sync). Guarded
-  // on activeProject.status === null so it only ever fires once, and never
-  // overwrites a project a presenter deliberately posted for real via /jasa.
+  // Demo-only: auto-fires a fake "match notification" once Rekam Kerja
+  // Terverifikasi is earned — mirrors the "Smart Matching Terbuka" unlock
+  // below (prove yourself all the way through, including the exam, before
+  // you get discovered), instead of requiring a presenter to separately
+  // walk through /jasa and line up its skillId with whatever skill this
+  // talent happens to have. Guarded on activeProject.status === null so it
+  // only ever fires once, and never overwrites a project a presenter
+  // deliberately posted for real via /jasa. Real accounts never get this —
+  // their match only ever comes from a real UMKM actually picking them
+  // (RealTalentProfilePage's "Pilih Talent Ini untuk Proyek"), loaded back
+  // by AppContext.hydrateFromBackend.
   useEffect(() => {
+    if (mode === 'real') return;
     if (!selectedSkill || !isCertified || activeProject?.status !== null) return;
     const t = setTimeout(() => {
       setActiveProject({

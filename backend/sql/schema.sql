@@ -42,6 +42,13 @@ create table umkm_profiles (
 -- match/negotiate/contract simulation (NegoChatPage, DraftKontrakPage,
 -- KontrakFinalPage) still runs entirely on curated-demo talent data and
 -- local React state, same as before this table existed.
+--
+-- talent_id: set once a real UMKM picks a real (certified) talent for this
+-- project, from that talent's RealTalentProfilePage ("Pilih Talent Ini
+-- untuk Proyek"). This is the real replacement for RinaTask's old
+-- always-on fake "Ada proyek yang cocok" simulation — a real talent only
+-- ever sees a match once an actual UMKM chose them here (see
+-- AppContext.hydrateFromBackend, which loads it back on the talent's side).
 create table projects (
   id                uuid primary key default gen_random_uuid(),
   umkm_id           uuid references umkm_profiles(id) on delete cascade,
@@ -51,6 +58,7 @@ create table projects (
   scope             jsonb,
   budget            int,
   status            text default 'open' check (status in ('open', 'matched')),
+  talent_id         uuid references users(id),
   created_at        timestamptz default now()
 );
 create index projects_umkm_id_idx on projects(umkm_id);
@@ -213,6 +221,13 @@ create policy "UMKM insert own row" on umkm_profiles for insert with check (auth
 -- match/negotiate/contract steps downstream stay simulated, per PRD 3.7).
 create policy "UMKM read own projects" on projects for select using (auth.uid() = umkm_id);
 create policy "UMKM insert own projects" on projects for insert with check (auth.uid() = umkm_id);
+-- Lets a UMKM set talent_id on their own project (RealTalentProfilePage's
+-- "Pilih Talent Ini untuk Proyek") — same insert-own-row-style trust as
+-- above, just an update instead.
+create policy "UMKM update own projects" on projects for update using (auth.uid() = umkm_id) with check (auth.uid() = umkm_id);
+-- A talent needs to see a project once they're the one picked for it — this
+-- is the real match signal AppContext.hydrateFromBackend loads on login.
+create policy "Talent read matched projects" on projects for select using (auth.uid() = talent_id);
 
 -- Either side of a thread can read it; a sender can only insert a row that
 -- (a) names themselves as umkm_id/talent_id matching their own auth uid,
