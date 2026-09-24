@@ -12,6 +12,7 @@ export default function Navbar() {
   // LandingPage.jsx) since it needs marketing nav links this shared bar
   // doesn't have.
   const hasOwnHeader = location.pathname === '/' || location.pathname === '/rina/task' || location.pathname === '/rina/profile' || location.pathname === '/rina/insight'
+    || location.pathname.startsWith('/rina/pesan')
     || location.pathname.startsWith('/rina/submit') || location.pathname.startsWith('/unit/')
     || location.pathname.startsWith('/rina/sertifikat/') || location.pathname.startsWith('/rina/sertifikasi/') || location.pathname.startsWith('/verifikasi/')
     || location.pathname === '/jasa' || location.pathname.startsWith('/portfolio/')

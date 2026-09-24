@@ -85,6 +85,20 @@ export default function TopBar({ mapTitle, streak, hearts, light = false }) {
             <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-rose-500 animate-pulse-dot" />
           )}
         </button>
+        {/* Real chat with real UMKM accounts only makes sense for a real
+            (not demo-persona) talent — no umkm_id/talent_id to key threads
+            off of otherwise. */}
+        {isReal && (
+          <button
+            onClick={() => navigate('/rina/pesan')}
+            title="Pesan"
+            className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors bg-transparent border-0 cursor-pointer ${
+              light ? 'text-white/70 hover:text-white hover:bg-white/15' : 'text-white/50 hover:text-white hover:bg-white/10'
+            }`}
+          >
+            <i className="fa-solid fa-comment-dots text-sm"></i>
+          </button>
+        )}
         <button
           onClick={() => navigate('/rina/profile')}
           className="flex items-center gap-2.5 hover:opacity-80 transition-opacity bg-transparent border-0 cursor-pointer"

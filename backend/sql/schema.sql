@@ -55,6 +55,28 @@ create table projects (
 );
 create index projects_umkm_id_idx on projects(umkm_id);
 
+-- ── messages ───────────────────────────────────────────────────────────
+-- Real 1:1 chat between a real UMKM account and a real (certified) talent
+-- account — independent of the curated-demo negotiate/contract pipeline
+-- (NegoChatPage/DraftKontrakPage/KontrakFinalPage/ProjectChatPage), which
+-- stays exactly as-is. A UMKM starts a thread from a real talent's public
+-- profile (RealTalentProfilePage); the talent replies from their own inbox
+-- (TalentInboxPage/TalentChatPage). umkm_name/talent_name are denormalized
+-- (same reasoning as projects.umkm_name) so each side's inbox listing can
+-- render without joining umkm_profiles/users per row.
+create table messages (
+  id          uuid primary key default gen_random_uuid(),
+  umkm_id     uuid references umkm_profiles(id) on delete cascade,
+  talent_id   uuid references users(id) on delete cascade,
+  umkm_name   text not null,
+  talent_name text not null,
+  sender_role text not null check (sender_role in ('umkm', 'talent')),
+  text        text not null,
+  created_at  timestamptz default now()
+);
+create index messages_umkm_idx on messages(umkm_id, created_at);
+create index messages_talent_idx on messages(talent_id, created_at);
+
 -- ── progress ───────────────────────────────────────────────────────────
 create table progress (
   id            uuid primary key default gen_random_uuid(),
@@ -156,6 +178,7 @@ create table demo_mentor_rate_limit (
 alter table users enable row level security;
 alter table umkm_profiles enable row level security;
 alter table projects enable row level security;
+alter table messages enable row level security;
 alter table progress enable row level security;
 alter table gamification enable row level security;
 alter table submissions enable row level security;
@@ -190,6 +213,18 @@ create policy "UMKM insert own row" on umkm_profiles for insert with check (auth
 -- match/negotiate/contract steps downstream stay simulated, per PRD 3.7).
 create policy "UMKM read own projects" on projects for select using (auth.uid() = umkm_id);
 create policy "UMKM insert own projects" on projects for insert with check (auth.uid() = umkm_id);
+
+-- Either side of a thread can read it; a sender can only insert a row that
+-- (a) names themselves as umkm_id/talent_id matching their own auth uid,
+-- and (b) tags it with their own actual role — a talent session can't spoof
+-- a message as if the UMKM sent it, and vice versa.
+create policy "Thread participants read messages" on messages for select
+  using (auth.uid() = umkm_id or auth.uid() = talent_id);
+create policy "Thread participants insert own messages" on messages for insert
+  with check (
+    (sender_role = 'umkm' and auth.uid() = umkm_id) or
+    (sender_role = 'talent' and auth.uid() = talent_id)
+  );
 
 create policy "Users read own progress" on progress for select using (auth.uid() = user_id);
 

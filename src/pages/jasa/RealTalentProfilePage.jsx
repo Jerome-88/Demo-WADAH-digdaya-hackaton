@@ -70,6 +70,14 @@ export default function RealTalentProfilePage() {
         </div>
         <h2 className="font-sora font-extrabold text-2xl mb-1" style={{ color: BLUE }}>{user.name}</h2>
         <p className="text-sm mb-6 text-gray-500 font-inter">{meta.emoji} {meta.label}</p>
+
+        <button
+          onClick={() => navigate(`/jasa/chat/${userId}`, { state: { talentName: user.name } })}
+          className="text-white font-bold py-3 px-8 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110 inline-flex items-center gap-2"
+          style={{ background: GREEN }}
+        >
+          <i className="fa-solid fa-comment-dots"></i> Chat dengan Talent Ini
+        </button>
       </div>
 
       {/* Verified portfolio */}

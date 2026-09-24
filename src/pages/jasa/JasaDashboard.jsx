@@ -55,14 +55,23 @@ export default function JasaDashboard() {
           Find Talent
         </h1>
         {mode === 'real' && umkmProfile && (
-          <button
-            onClick={() => {
-              if (window.confirm('Keluar dari akun? Proyek yang sudah diposting tetap tersimpan — tinggal login lagi pakai email yang sama.')) signOutReal();
-            }}
-            className="ml-auto text-white/80 hover:text-white text-xs font-inter bg-transparent border-0 cursor-pointer"
-          >
-            Keluar
-          </button>
+          <div className="ml-auto flex items-center gap-3">
+            <button
+              onClick={() => navigate('/jasa/pesan')}
+              title="Pesan"
+              className="text-white/80 hover:text-white bg-transparent border-0 cursor-pointer"
+            >
+              <i className="fa-solid fa-comment-dots"></i>
+            </button>
+            <button
+              onClick={() => {
+                if (window.confirm('Keluar dari akun? Proyek yang sudah diposting tetap tersimpan — tinggal login lagi pakai email yang sama.')) signOutReal();
+              }}
+              className="text-white/80 hover:text-white text-xs font-inter bg-transparent border-0 cursor-pointer"
+            >
+              Keluar
+            </button>
+          </div>
         )}
       </header>
 

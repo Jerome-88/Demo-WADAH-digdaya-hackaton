@@ -14,11 +14,15 @@ import DraftKontrakPage    from './pages/jasa/DraftKontrakPage';
 import NegoChatPage        from './pages/jasa/NegoChatPage';
 import KontrakFinalPage    from './pages/jasa/KontrakFinalPage';
 import ProjectChatPage     from './pages/jasa/ProjectChatPage';
+import UmkmChatPage        from './pages/jasa/UmkmChatPage';
+import UmkmInboxPage       from './pages/jasa/UmkmInboxPage';
 import TalentaFlow      from './pages/talenta/TalentaFlow';
 import RinaTask         from './pages/rina/RinaTask';
 import UnitPage         from './pages/rina/UnitPage';
 import RinaSubmit       from './pages/rina/RinaSubmit';
 import ProfilePage      from './pages/rina/ProfilePage';
+import TalentInboxPage  from './pages/rina/TalentInboxPage';
+import TalentChatPage   from './pages/rina/TalentChatPage';
 import SkillInsightPage from './pages/rina/SkillInsightPage';
 import SmartMatchPage   from './pages/rina/SmartMatchPage';
 import CertificatePage  from './pages/rina/CertificatePage';
@@ -41,11 +45,15 @@ function AppShell() {
         <Route path="/jasa/nego/:talentSlug" element={<NegoChatPage />} />
         <Route path="/jasa/kontrak-final/:talentSlug" element={<KontrakFinalPage />} />
         <Route path="/jasa/proyek/:talentSlug" element={<ProjectChatPage />} />
+        <Route path="/jasa/chat/:talentId" element={<UmkmChatPage />} />
+        <Route path="/jasa/pesan"        element={<UmkmInboxPage />} />
         <Route path="/talenta"           element={<TalentaFlow />} />
         <Route path="/rina/task"         element={<RinaTask />} />
         <Route path="/unit/:unitParam"   element={<UnitPage />} />
         <Route path="/rina/submit/:checkpointId" element={<RinaSubmit />} />
         <Route path="/rina/profile"      element={<ProfilePage />} />
+        <Route path="/rina/pesan"        element={<TalentInboxPage />} />
+        <Route path="/rina/pesan/:umkmId" element={<TalentChatPage />} />
         <Route path="/rina/insight"      element={<SkillInsightPage />} />
         <Route path="/rina/match"        element={<SmartMatchPage />} />
         <Route path="/rina/sertifikat/:skillId" element={<CertificatePage />} />
