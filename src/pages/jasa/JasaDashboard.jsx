@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useApp } from '../../context/AppContext';
 import { CURATED_TALENTS, getTalentBySlug, formatRupiah } from '../../data/jasaData';
 import { getSkillMeta } from '../../data/skillMaps';
+import { api } from '../../lib/api';
 
 const BLUE = '#2b6fff';
 const GREEN = '#00c897';
@@ -13,13 +14,32 @@ const ORANGE = '#f37219';
 // filter chip that always renders an empty grid.
 const BROWSE_CATEGORIES = ['all', ...new Set(CURATED_TALENTS.map(t => t.skillId))];
 
+function initialsOf(name) {
+  return name.split(' ').filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join('');
+}
+
 export default function JasaDashboard() {
   const navigate = useNavigate();
   const { activeProject } = useApp();
   const [filterSkill, setFilterSkill] = useState('all');
+  // Real talents who actually finished the whole journey (passed the
+  // skill's certification exam — POST /user/certify) — separate from
+  // CURATED_TALENTS, which stays 100% static demo data. Best-effort: if the
+  // backend isn't reachable (e.g. demo-only laptop with no VITE_API_URL),
+  // the grid just falls back to curated talents alone.
+  const [realTalents, setRealTalents] = useState([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    api.getTalents().then(({ talents }) => {
+      if (!cancelled) setRealTalents(talents);
+    }).catch(() => {});
+    return () => { cancelled = true; };
+  }, []);
 
   const matchedTalent = activeProject?.talentSlug ? getTalentBySlug(activeProject.talentSlug) : null;
-  const visibleTalents = CURATED_TALENTS.filter(t => filterSkill === 'all' || t.skillId === filterSkill);
+  const visibleCurated = CURATED_TALENTS.filter(t => filterSkill === 'all' || t.skillId === filterSkill);
+  const visibleRealTalents = realTalents.filter(t => filterSkill === 'all' || t.skill === filterSkill);
 
   return (
     <div className="min-h-screen bg-white">
@@ -145,7 +165,7 @@ export default function JasaDashboard() {
           </div>
 
           <div className="grid sm:grid-cols-2 gap-4">
-            {visibleTalents.map((talent, i) => (
+            {visibleCurated.map((talent, i) => (
               <motion.div
                 key={talent.slug}
                 initial={{ opacity: 0, y: 10 }}
@@ -184,6 +204,46 @@ export default function JasaDashboard() {
                 </div>
               </motion.div>
             ))}
+
+            {/* Real talents who actually finished the journey (certified via
+                backend, not a curated demo persona) — simpler card since
+                there's no fabricated score/skills/response-time for them. */}
+            {visibleRealTalents.map((talent, i) => {
+              const meta = getSkillMeta(talent.skill);
+              return (
+                <motion.div
+                  key={talent.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: (visibleCurated.length + i) * 0.06, duration: 0.3 }}
+                  onClick={() => navigate(`/talent/${talent.id}`)}
+                  className="bg-white border-2 rounded-2xl p-5 cursor-pointer transition-all hover:shadow-md"
+                  style={{ borderColor: '#e5e9f0' }}
+                >
+                  <div className="flex items-center gap-3 mb-3">
+                    {talent.avatar_url ? (
+                      <img src={talent.avatar_url} alt={talent.name} className="w-11 h-11 rounded-full object-cover shrink-0" />
+                    ) : (
+                      <div className="w-11 h-11 rounded-full flex items-center justify-center text-white font-sora font-bold text-sm shrink-0" style={{ background: BLUE }}>
+                        {initialsOf(talent.name)}
+                      </div>
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <div className="font-sora font-bold text-sm truncate" style={{ color: '#1a1a1a' }}>{talent.name}</div>
+                      <div className="text-xs font-inter text-gray-500 truncate">{meta.emoji} {meta.label}</div>
+                    </div>
+                    <span className="shrink-0 inline-flex items-center gap-1 text-[11px] font-bold px-2 py-1 rounded-full font-inter border" style={{ color: ORANGE, borderColor: ORANGE, background: '#fff7ee' }}>
+                      <i className="fa-solid fa-graduation-cap"></i> Certified
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between text-xs font-inter">
+                    <span className="text-gray-400">Talent WADAH terverifikasi</span>
+                    <span className="font-semibold" style={{ color: BLUE }}>Lihat Profil →</span>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
 
           <div className="rounded-xl p-4 mt-4" style={{ background: '#eef2fe' }}>

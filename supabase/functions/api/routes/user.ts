@@ -14,6 +14,7 @@ function toResponse(user: Record<string, any>, gam: Record<string, any>) {
     skill: user.skill,
     avatar_url: user.avatar_url ?? null,
     is_premium: user.is_premium,
+    certified_at: user.certified_at ?? null,
     xp: gam.xp,
     lives: gam.lives,
     streak: gam.streak,
@@ -37,6 +38,24 @@ app.post("/user/upgrade-premium", async (c) => {
   await supabase.from("users").update({ is_premium: true }).eq("id", user.id as string);
   const updatedUser = { ...user, is_premium: true };
   const gam = await getOrCreateGamification(supabase, user.id as string, true);
+  return c.json(toResponse(updatedUser, gam));
+});
+
+// Dedicated endpoint, same reasoning as /user/upgrade-premium above — a
+// talent should not be able to PATCH this field to any value it likes.
+// Idempotent: passing the certification exam a second time (e.g. re-running
+// the demo) must not push certified_at forward, since that's also what
+// GET /talents sorts by.
+app.post("/user/certify", async (c) => {
+  const user = await getCurrentUser(c);
+  const supabase = getSupabase();
+  let updatedUser = user;
+  if (!user.certified_at) {
+    const certifiedAt = new Date().toISOString();
+    await supabase.from("users").update({ certified_at: certifiedAt }).eq("id", user.id as string);
+    updatedUser = { ...user, certified_at: certifiedAt };
+  }
+  const gam = await getOrCreateGamification(supabase, user.id as string, user.is_premium as boolean);
   return c.json(toResponse(updatedUser, gam));
 });
 

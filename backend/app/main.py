@@ -6,7 +6,7 @@ from fastapi.responses import JSONResponse
 from google.genai.errors import APIError
 
 from app.config import settings
-from app.routers import insight, mentor, matching, portfolio, progress, submission, user
+from app.routers import insight, mentor, matching, portfolio, progress, submission, talents, user
 
 logger = logging.getLogger("uvicorn.error")
 
@@ -62,6 +62,7 @@ app.include_router(mentor.router)
 app.include_router(submission.router)
 app.include_router(portfolio.router)
 app.include_router(matching.router)
+app.include_router(talents.router)
 app.include_router(insight.router)
 
 

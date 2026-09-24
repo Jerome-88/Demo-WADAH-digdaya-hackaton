@@ -14,6 +14,7 @@ import mentorRoutes from "./routes/mentor.ts";
 import submissionRoutes from "./routes/submission.ts";
 import portfolioRoutes from "./routes/portfolio.ts";
 import matchingRoutes from "./routes/matching.ts";
+import talentsRoutes from "./routes/talents.ts";
 import insightRoutes from "./routes/insight.ts";
 
 // Requests arrive at /functions/v1/api/<path>, full path included — this
@@ -45,6 +46,7 @@ app.route("/", mentorRoutes);
 app.route("/", submissionRoutes);
 app.route("/", portfolioRoutes);
 app.route("/", matchingRoutes);
+app.route("/", talentsRoutes);
 app.route("/", insightRoutes);
 
 // Central error handler — this is what backend/app/main.py's two

@@ -26,9 +26,27 @@ async function authedFetch(path, { method = 'GET', body, isForm = false } = {}) 
   return res.json();
 }
 
+// No session required — mirrors the backend's own public routes
+// (/portfolio, /matching, /talents), which read past a service-role key
+// server-side rather than a caller's own RLS-scoped session.
+async function publicFetch(path) {
+  const res = await fetch(`${API_URL}${path}`);
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    const err = new Error(body.detail || `HTTP ${res.status}`);
+    err.status = res.status;
+    throw err;
+  }
+  return res.json();
+}
+
 export const api = {
   getMe: () => authedFetch('/user/me'),
   updateMe: (body) => authedFetch('/user/me', { method: 'PATCH', body }),
+  // Called once, right when the skill map's final certification exam is
+  // passed (RinaCertification) — this is the real, backend-persisted
+  // signal that flips a talent into GET /talents' pool.
+  certify: () => authedFetch('/user/certify', { method: 'POST' }),
 
   getProgress: () => authedFetch('/progress'),
   openUnit: (unit_id) => authedFetch('/unit/open', { method: 'POST', body: { unit_id } }),
@@ -50,4 +68,8 @@ export const api = {
   getInsight: () => authedFetch('/insight/skill'),
   analyzeInsight: () => authedFetch('/insight/analyze', { method: 'POST' }),
   upgradePremium: () => authedFetch('/user/upgrade-premium', { method: 'POST' }),
+
+  // Real (not curated-demo) talent pool for the Find Talent dashboard.
+  getTalents: (skill) => publicFetch(`/talents${skill ? `?skill=${encodeURIComponent(skill)}` : ''}`),
+  getPortfolio: (userId) => publicFetch(`/portfolio/${userId}`),
 };

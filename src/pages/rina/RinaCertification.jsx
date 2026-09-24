@@ -50,6 +50,8 @@ export default function RinaCertification() {
   const [uploaded, setUploaded] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [checkedItems, setCheckedItems] = useState(new Set());
+  const [certifyError, setCertifyError] = useState(null);
+  const [certifying, setCertifying] = useState(false);
 
   // Only gate entry at the initial payment gate. Once the user has started
   // the exam through this page, passing it flips `alreadyCertified` via our
@@ -101,9 +103,18 @@ export default function RinaCertification() {
     setView('submitted');
   }
 
-  function triggerApproved() {
+  async function triggerApproved() {
     addExp(CERT_XP);
-    issueCertificate(skillId);
+    setCertifyError(null);
+    setCertifying(true);
+    try {
+      await issueCertificate(skillId);
+    } catch (err) {
+      setCertifying(false);
+      setCertifyError(err.message || 'Gagal menyimpan status kelulusan. Coba lagi.');
+      return;
+    }
+    setCertifying(false);
     setView('approved-celebrating');
     setTimeout(() => setView('approved-result'), 2000);
   }
@@ -336,17 +347,25 @@ export default function RinaCertification() {
             <div className="w-full rounded-xl p-4 mt-2 border-2" style={{ background: '#fff', borderColor: '#e5e9f0' }}>
               <div className="text-gray-400 text-[11px] font-inter font-bold uppercase tracking-wide mb-2">⚡ Demo Mode</div>
               <p className="text-gray-500 text-xs font-inter mb-3">Ini ujian Rekam Kerja Terverifikasi — pilih langsung hasilnya buat demo, kayak ujian sertifikasi profesional yang beneran bisa gagal.</p>
+              {certifyError && (
+                <div className="rounded-xl p-3 mb-3 text-sm font-inter font-semibold text-center" style={{ background: '#fdecec', color: RED }}>
+                  {certifyError}
+                </div>
+              )}
+
               <div className="flex flex-col gap-2">
                 <button
                   onClick={() => handleExamVerdict('approved')}
-                  className="w-full text-white font-bold py-3 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
+                  disabled={certifying}
+                  className="w-full text-white font-bold py-3 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110 disabled:opacity-60 disabled:cursor-not-allowed"
                   style={{ background: GREEN }}
                 >
-                  Lulus
+                  {certifying ? 'Menyimpan…' : 'Lulus'}
                 </button>
                 <button
                   onClick={() => handleExamVerdict('gagal')}
-                  className="w-full text-white font-bold py-3 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
+                  disabled={certifying}
+                  className="w-full text-white font-bold py-3 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110 disabled:opacity-60 disabled:cursor-not-allowed"
                   style={{ background: RED }}
                 >
                   Gagal Ujian

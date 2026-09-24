@@ -13,12 +13,13 @@ not a replacement forced on you.
 
 Every route from `backend/app/routers/*.py`, 1:1:
 
-- `GET /user/me`, `PATCH /user/me`, `POST /user/upgrade-premium`
+- `GET /user/me`, `PATCH /user/me`, `POST /user/upgrade-premium`, `POST /user/certify`
 - `GET /progress`, `POST /unit/open`, `POST /unit/complete`
 - `POST /mentor/chat`, `POST /mentor/chat-demo`
 - `POST /submission`, `GET /submission/my`
 - `GET /portfolio/:userId`
 - `GET /matching`
+- `GET /talents`
 - `GET /insight/skill`, `POST /insight/analyze`
 
 Same business logic (XP/lives/streak math, checkpoint revision caps, the
@@ -62,8 +63,8 @@ regardless of which backend you use, it doesn't change.
    (`--no-verify-jwt` is no longer needed as a flag — `supabase/config.toml`
    already sets `verify_jwt = false` for this function, which is required:
    auth is enforced per-route in `lib/auth.ts`, same as the old FastAPI
-   version, so the public routes — `/portfolio`, `/matching` — must stay
-   reachable without a user session.)
+   version, so the public routes — `/portfolio`, `/matching`, `/talents` —
+   must stay reachable without a user session.)
 
 ## Point the frontend at it
 

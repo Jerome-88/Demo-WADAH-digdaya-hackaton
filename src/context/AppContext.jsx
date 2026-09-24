@@ -99,7 +99,15 @@ export function AppProvider({ children }) {
 
   // Idempotent — re-approving an already-certified skill (shouldn't happen,
   // but StrictMode double-invokes effects) won't overwrite the earned date.
-  function issueCertificate(skillId) {
+  // Real mode additionally persists this to the backend (POST /user/certify)
+  // — this is what actually flips the talent into GET /talents' pool, not
+  // just this session's local state.
+  async function issueCertificate(skillId) {
+    if (mode === 'real') {
+      const me = await api.certify();
+      setCertificateEarnedAt(prev => (prev[skillId] ? prev : { ...prev, [skillId]: me.certified_at }));
+      return;
+    }
     setCertificateEarnedAt(prev => (prev[skillId] ? prev : { ...prev, [skillId]: new Date().toISOString() }));
   }
 
@@ -120,6 +128,9 @@ export function AppProvider({ children }) {
     setSelectedSkill(me.skill);
     setRealUserName(me.name);
     setOnboardingComplete(true);
+    // Restores the real "already certified" signal after a reload — before
+    // this, certificateEarnedAt was session-only state (see issueCertificate).
+    if (me.certified_at) setCertificateEarnedAt(prev => ({ ...prev, [me.skill]: me.certified_at }));
 
     const rows = await api.getProgress();
     const completed = [];

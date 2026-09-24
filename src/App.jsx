@@ -8,6 +8,7 @@ import VerificationPage    from './pages/VerificationPage';
 import JasaDashboard       from './pages/jasa/JasaDashboard';
 import JasaFlow            from './pages/jasa/JasaFlow';
 import TalentPortfolioPage from './pages/jasa/TalentPortfolioPage';
+import RealTalentProfilePage from './pages/jasa/RealTalentProfilePage';
 import DraftKontrakPage    from './pages/jasa/DraftKontrakPage';
 import NegoChatPage        from './pages/jasa/NegoChatPage';
 import KontrakFinalPage    from './pages/jasa/KontrakFinalPage';
@@ -33,6 +34,7 @@ function AppShell() {
         <Route path="/jasa"              element={<JasaDashboard />} />
         <Route path="/jasa/cari"         element={<JasaFlow />} />
         <Route path="/portfolio/:talentSlug" element={<TalentPortfolioPage />} />
+        <Route path="/talent/:userId"    element={<RealTalentProfilePage />} />
         <Route path="/jasa/kontrak/:talentSlug" element={<DraftKontrakPage />} />
         <Route path="/jasa/nego/:talentSlug" element={<NegoChatPage />} />
         <Route path="/jasa/kontrak-final/:talentSlug" element={<KontrakFinalPage />} />

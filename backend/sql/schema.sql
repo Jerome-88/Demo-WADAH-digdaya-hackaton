@@ -17,6 +17,7 @@ create table users (
   skill       text not null,
   avatar_url  text,
   is_premium  boolean default false,
+  certified_at timestamptz, -- set once by POST /user/certify, after passing the skill's certification exam (RinaCertification) — the real, backend-persisted trigger for a talent to show up in GET /talents.
   created_at  timestamptz default now()
 );
 

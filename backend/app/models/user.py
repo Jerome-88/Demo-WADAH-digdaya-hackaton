@@ -7,6 +7,7 @@ class UserMeResponse(BaseModel):
     skill: str
     avatar_url: str | None = None
     is_premium: bool
+    certified_at: str | None = None
     xp: int
     lives: int
     streak: int
