@@ -1,14 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Navigate, Link } from 'react-router-dom';
-import { ArrowRight, ArrowLeft } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Users, Briefcase } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { getSupabase } from '../lib/supabaseClient';
-import { motion, AnimatePresence } from 'framer-motion';
 
-const BLUE = '#4085ee';
 const BLUE_STRONG = '#2b6fff';
-const GREEN = '#00c897';
-const ORANGE = '#f27418';
 
 // Matches TalentaFlow's OTP length and this Supabase project's Auth setting
 // (Authentication → Providers → Email → OTP length).
@@ -18,7 +14,12 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const { setMode, hydrateFromBackend, hydrateUmkmFromBackend, onboardingComplete, umkmProfile, mode, authUser } = useApp();
 
-  const [step, setStep] = useState(0); // 0 = email, 1 = OTP
+  // step: 0 = pick role, 1 = email, 2 = OTP. Picking the role up front (vs
+  // trying both profile types after OTP verify) means a wrong-account error
+  // can name exactly what's missing, instead of a generic "neither side
+  // matched" message.
+  const [step, setStep] = useState(0);
+  const [role, setRole] = useState(null); // 'talent' | 'umkm'
   const [email, setEmail] = useState('');
   const [sendingOtp, setSendingOtp] = useState(false);
   const [sendError, setSendError] = useState(null);
@@ -27,6 +28,11 @@ export default function LoginPage() {
   const [verifying, setVerifying] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
   const otpRefs = useRef([]);
+
+  function pickRole(r) {
+    setRole(r);
+    setStep(1);
+  }
 
   async function handleSendOtp(e) {
     e.preventDefault();
@@ -41,10 +47,10 @@ export default function LoginPage() {
       setOtp(Array(OTP_LENGTH).fill(''));
       setOtpError(null);
       setResendCooldown(30);
-      setStep(1);
+      setStep(2);
     } catch (err) {
       setSendError(err.message?.includes('Signups not allowed')
-        ? 'Email ini belum terdaftar. Daftar dulu lewat "Daftar sebagai Talent" atau "Daftar sebagai UMKM" di bawah.'
+        ? `Email ini belum terdaftar. Daftar dulu lewat "Daftar sebagai ${role === 'umkm' ? 'UMKM' : 'Talent'}" di bawah.`
         : err.message || 'Gagal mengirim kode OTP');
     } finally {
       setSendingOtp(false);
@@ -60,26 +66,17 @@ export default function LoginPage() {
       if (error) throw error;
 
       setMode('real');
-      // One shared login for both sides — try the talent profile first,
-      // then the UMKM one, and route wherever the match actually is. Same
-      // "frontend tries both, no way to know the role up front" reasoning
-      // as AppContext's own session-bootstrap effect.
       try {
-        await hydrateFromBackend();
-        navigate('/rina/task');
-        return;
+        if (role === 'umkm') {
+          await hydrateUmkmFromBackend();
+          navigate('/jasa');
+        } else {
+          await hydrateFromBackend();
+          navigate('/rina/task');
+        }
       } catch {
-        // Not a talent account (or onboarding unfinished) — try UMKM next.
+        setOtpError(`Belum ada akun ${role === 'umkm' ? 'UMKM' : 'talent'} terdaftar buat email ini. Lanjutkan pendaftaran lewat "Daftar sebagai ${role === 'umkm' ? 'UMKM' : 'Talent'}" di bawah.`);
       }
-      try {
-        await hydrateUmkmFromBackend();
-        navigate('/jasa');
-        return;
-      } catch {
-        // Neither profile exists — onboarding was started but never
-        // finished on either side. No way to tell which one from here.
-      }
-      setOtpError('Akun belum terdaftar penuh. Lanjutkan pendaftaran lewat "Daftar sebagai Talent" atau "Daftar sebagai UMKM" di bawah.');
     } catch (err) {
       setOtpError(err.message || 'Kode OTP salah atau kedaluwarsa');
     } finally {
@@ -110,7 +107,7 @@ export default function LoginPage() {
   const otpComplete = otp.every(d => d !== '');
 
   useEffect(() => {
-    if (step !== 1 || resendCooldown <= 0) return;
+    if (step !== 2 || resendCooldown <= 0) return;
     const t = setTimeout(() => setResendCooldown(c => c - 1), 1000);
     return () => clearTimeout(t);
   }, [step, resendCooldown]);
@@ -124,11 +121,11 @@ export default function LoginPage() {
     <div className="min-h-screen bg-bg flex flex-col">
       <header className="sticky top-0 z-30 h-14 flex items-center px-4 md:px-6 bg-white/95 backdrop-blur border-b border-gray-100 flex-shrink-0">
         <button
-          onClick={() => navigate('/')}
+          onClick={() => (step === 0 ? navigate('/') : setStep(0))}
           className="flex items-center gap-2 text-gray-500 hover:text-[#1a1a1a] text-sm font-inter transition-colors bg-transparent border-0 cursor-pointer"
         >
           <ArrowLeft size={15} />
-          <span>Beranda</span>
+          <span>{step === 0 ? 'Beranda' : 'Ganti Peran'}</span>
         </button>
       </header>
 
@@ -137,10 +134,42 @@ export default function LoginPage() {
           Masuk ke WADAH
         </h1>
 
-
-
         <div className="rounded-3xl p-6 sm:p-8" style={{ background: '#f5f8fb' }}>
           {step === 0 && (
+            <div className="animate-fade-in flex flex-col gap-4">
+              <p className="text-center text-sm font-inter font-semibold mb-1" style={{ color: '#0052ff' }}>Masuk sebagai apa?</p>
+
+              <button
+                onClick={() => pickRole('talent')}
+                className="w-full flex items-center gap-4 rounded-2xl p-5 border-2 bg-white text-left transition-all cursor-pointer hover:shadow-md"
+                style={{ borderColor: '#e5e9f0' }}
+              >
+                <div className="w-11 h-11 rounded-full flex items-center justify-center shrink-0" style={{ background: '#eef2fe' }}>
+                  <Users size={20} style={{ color: BLUE_STRONG }} />
+                </div>
+                <div>
+                  <div className="font-sora font-bold text-sm" style={{ color: '#1a1a1a' }}>Talent</div>
+                  <div className="text-xs font-inter text-gray-500">Lanjut Peta Misi & skill map kamu</div>
+                </div>
+              </button>
+
+              <button
+                onClick={() => pickRole('umkm')}
+                className="w-full flex items-center gap-4 rounded-2xl p-5 border-2 bg-white text-left transition-all cursor-pointer hover:shadow-md"
+                style={{ borderColor: '#e5e9f0' }}
+              >
+                <div className="w-11 h-11 rounded-full flex items-center justify-center shrink-0" style={{ background: '#eef2fe' }}>
+                  <Briefcase size={20} style={{ color: BLUE_STRONG }} />
+                </div>
+                <div>
+                  <div className="font-sora font-bold text-sm" style={{ color: '#1a1a1a' }}>UMKM</div>
+                  <div className="text-xs font-inter text-gray-500">Lanjut proyek & chat sama talent</div>
+                </div>
+              </button>
+            </div>
+          )}
+
+          {step === 1 && (
             <form onSubmit={handleSendOtp} className="animate-fade-in flex flex-col gap-6">
               <div>
                 <h3 className="font-inter font-bold text-sm uppercase tracking-wide mb-2" style={{ color: '#0052ff' }}>Email</h3>
@@ -179,15 +208,15 @@ export default function LoginPage() {
               </button>
 
               <p className="text-center text-sm font-inter" style={{ color: '#797d85' }}>
-                Belum punya akun?{' '}
-                <Link to="/talenta" className="font-bold hover:underline" style={{ color: '#f27418' }}>Daftar sebagai Talent</Link>
-                {' '}atau{' '}
-                <Link to="/jasa/daftar" className="font-bold hover:underline" style={{ color: BLUE_STRONG }}>Daftar sebagai UMKM</Link>
+                Belum punya akun {role === 'umkm' ? 'UMKM' : 'Talent'}?{' '}
+                <Link to={role === 'umkm' ? '/jasa/daftar' : '/talenta'} className="font-bold hover:underline" style={{ color: '#f27418' }}>
+                  Daftar sebagai {role === 'umkm' ? 'UMKM' : 'Talent'}
+                </Link>
               </p>
             </form>
           )}
 
-          {step === 1 && (
+          {step === 2 && (
             <form onSubmit={handleVerifyOtp} className="animate-fade-in flex flex-col items-center gap-6 text-center">
               <div>
                 <h2 className="font-sora font-bold text-2xl mb-2" style={{ color: '#0052ff' }}>Verifikasi Email</h2>
@@ -229,7 +258,7 @@ export default function LoginPage() {
               </div>
 
               <div className="flex justify-between w-full pt-2">
-                <button type="button" onClick={() => setStep(0)} className="flex items-center gap-2 font-inter text-sm bg-transparent border-0 cursor-pointer" style={{ color: '#0052ff' }}>
+                <button type="button" onClick={() => setStep(1)} className="flex items-center gap-2 font-inter text-sm bg-transparent border-0 cursor-pointer" style={{ color: '#0052ff' }}>
                   <ArrowLeft size={16} /> Kembali
                 </button>
                 <button

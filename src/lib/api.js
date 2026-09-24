@@ -2,7 +2,7 @@ import { getSupabase } from './supabaseClient';
 
 export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
-async function authedFetch(path, { method = 'GET', body, isForm = false } = {}) {
+async function authedFetch(path, { method = 'GET', body, isForm = false } = {}, _retried = false) {
   const { data: { session } } = await getSupabase().auth.getSession();
   if (!session) throw new Error('Belum login — sesi Supabase tidak ditemukan');
 
@@ -18,8 +18,16 @@ async function authedFetch(path, { method = 'GET', body, isForm = false } = {}) 
   });
 
   if (!res.ok) {
-    const body = await res.json().catch(() => ({}));
-    const err = new Error(body.detail || `HTTP ${res.status}`);
+    const respBody = await res.json().catch(() => ({}));
+    // One retry on an auth-shaped 401 right after a cold page load — a
+    // just-restored Supabase session can momentarily hand back a token
+    // that isn't valid yet (session-refresh race), which otherwise made a
+    // perfectly logged-in user look logged out until they refreshed again.
+    if (res.status === 401 && !_retried) {
+      await new Promise(r => setTimeout(r, 400));
+      return authedFetch(path, { method, body, isForm }, true);
+    }
+    const err = new Error(respBody.detail || `HTTP ${res.status}`);
     err.status = res.status;
     throw err;
   }
