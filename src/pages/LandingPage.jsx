@@ -80,6 +80,16 @@ export default function LandingPage() {
   const isLoggedIn = mode === 'real' && !!authUser && (onboardingComplete || !!umkmProfile);
   const [wadyMsgIndex, setWadyMsgIndex] = useState(0);
 
+  // Already-onboarded accounts skip straight to their dashboard instead of
+  // being sent through registration again — these CTAs used to hardcode
+  // /talenta and /jasa/daftar regardless of login state.
+  function goToTalentSide() {
+    navigate(onboardingComplete ? '/rina/task' : '/talenta');
+  }
+  function goToUmkmSide() {
+    navigate(umkmProfile ? '/jasa' : '/jasa/daftar');
+  }
+
   useEffect(() => {
     const id = setInterval(() => {
       setWadyMsgIndex(i => (i + 1) % WADY_MESSAGES.length);
@@ -235,14 +245,14 @@ export default function LandingPage() {
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                   <button
-                    onClick={() => navigate('/jasa/daftar')}
+                    onClick={goToUmkmSide}
                     className="flex items-center gap-2 bg-white text-[#1a1a1a] font-bold px-7 py-3.5 rounded-full hover:shadow-md transition-all active:scale-95 font-inter text-base"
                   >
                     <Briefcase size={18} />
                     Find Talent
                   </button>
                   <button
-                    onClick={() => navigate('/talenta')}
+                    onClick={goToTalentSide}
                     className="flex items-center gap-2 text-white font-bold px-7 py-3.5 rounded-full transition-all shadow-lg hover:shadow-xl active:scale-95 font-inter text-base"
                     style={{ background: ORANGE }}
                   >
@@ -265,7 +275,7 @@ export default function LandingPage() {
         <div className="grid gap-6 lg:grid-cols-[1fr_auto_1fr] lg:items-stretch">
           {/* Penyedia Jasa (UMKM) */}
           <div
-            onClick={() => navigate('/jasa/daftar')}
+            onClick={goToUmkmSide}
             className="group cursor-pointer bg-white rounded-2xl border-2 p-8 hover:shadow-xl transition-all duration-300"
             style={{ borderColor: BLUE }}
           >
@@ -300,7 +310,7 @@ export default function LandingPage() {
 
           {/* Pengguna Jasa (Talenta) */}
           <div
-            onClick={() => navigate('/talenta')}
+            onClick={goToTalentSide}
             className="group cursor-pointer bg-white rounded-2xl border-2 p-8 hover:shadow-xl transition-all duration-300"
             style={{ borderColor: GREEN }}
           >
