@@ -232,7 +232,7 @@ export default function LandingPage() {
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                   <button
-                    onClick={() => navigate('/jasa')}
+                    onClick={() => navigate('/jasa/daftar')}
                     className="flex items-center gap-2 bg-white text-[#1a1a1a] font-bold px-7 py-3.5 rounded-full hover:shadow-md transition-all active:scale-95 font-inter text-base"
                   >
                     <Briefcase size={18} />
@@ -262,7 +262,7 @@ export default function LandingPage() {
         <div className="grid gap-6 lg:grid-cols-[1fr_auto_1fr] lg:items-stretch">
           {/* Penyedia Jasa (UMKM) */}
           <div
-            onClick={() => navigate('/jasa')}
+            onClick={() => navigate('/jasa/daftar')}
             className="group cursor-pointer bg-white rounded-2xl border-2 p-8 hover:shadow-xl transition-all duration-300"
             style={{ borderColor: BLUE }}
           >

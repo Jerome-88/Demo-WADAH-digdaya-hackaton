@@ -18,7 +18,7 @@ const MATCH_LINES = [
 export default function JasaFlow() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { activeProject, setActiveProject } = useApp();
+  const { activeProject, setActiveProject, mode, createRealProject } = useApp();
 
   // step: 0=Pilih Skill, 1=Detail Bisnis, 2=Mencari (matching animation),
   // 3=Hasil (talent results).
@@ -34,6 +34,7 @@ export default function JasaFlow() {
 
   // ── Step 2 state (matching animation) ──
   const [animLines, setAnimLines] = useState(0); // how many MATCH_LINES revealed
+  const [postError, setPostError] = useState(null);
 
   // AI "scope analysis" — a breakdown of likely deliverables, not a price
   // estimate. Triggered once the UMKM blurs the description textarea (or
@@ -72,7 +73,7 @@ export default function JasaFlow() {
     setAnimLines(0);
   }
 
-  function goToResults() {
+  async function goToResults() {
     const skillMeta = getSkillMeta(selectedSkill);
     // Don't clobber a match the talent already has — this flow's own
     // results screen (step 3) shows a fixed CURATED_TALENTS_DISPLAY list
@@ -96,6 +97,19 @@ export default function JasaFlow() {
         scope: scopeItems,
         status: 'open',
       });
+
+      // Real UMKM account — persist the posted project so it survives a
+      // reload/re-login (GET-equivalent: AppContext's hydrateUmkmFromBackend
+      // loads it back). The match/negotiate/contract steps that follow stay
+      // local-only regardless of mode, same as before this existed.
+      if (mode === 'real') {
+        setPostError(null);
+        try {
+          await createRealProject({ umkmName, skillId: selectedSkill, description, scope: scopeItems, budget: budgetValue });
+        } catch (err) {
+          setPostError(err.message || 'Proyek gagal disimpan ke server, tapi tetap bisa dilihat di sesi ini.');
+        }
+      }
     }
     setStep(3);
   }
@@ -301,6 +315,12 @@ export default function JasaFlow() {
                 <h2 className="font-sora font-bold text-xl mb-1" style={{ color: BLUE }}>3 Talent Paling Cocok Untukmu</h2>
                 <p className="text-sm font-inter font-medium" style={{ color: BLUE }}>Dipilih berdasarkan kecocokan proyekmu — bukan skor tertinggi semata</p>
               </div>
+
+              {postError && (
+                <div className="rounded-xl p-3 text-sm font-inter font-semibold text-center" style={{ background: '#fdecec', color: '#e5484d' }}>
+                  {postError}
+                </div>
+              )}
 
               <div className="flex flex-col gap-4">
                 {CURATED_TALENTS_DISPLAY.map((talent, i) => (

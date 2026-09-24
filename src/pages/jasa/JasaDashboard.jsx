@@ -20,7 +20,7 @@ function initialsOf(name) {
 
 export default function JasaDashboard() {
   const navigate = useNavigate();
-  const { activeProject } = useApp();
+  const { activeProject, mode, umkmProfile, signOutReal } = useApp();
   const [filterSkill, setFilterSkill] = useState('all');
   // Real talents who actually finished the whole journey (passed the
   // skill's certification exam — POST /user/certify) — separate from
@@ -54,9 +54,25 @@ export default function JasaDashboard() {
         <h1 className="text-white text-xs sm:text-sm font-bold font-sora truncate absolute left-1/2 -translate-x-1/2 max-w-[55%] text-center">
           Find Talent
         </h1>
+        {mode === 'real' && umkmProfile && (
+          <button
+            onClick={() => {
+              if (window.confirm('Keluar dari akun? Proyek yang sudah diposting tetap tersimpan — tinggal login lagi pakai email yang sama.')) signOutReal();
+            }}
+            className="ml-auto text-white/80 hover:text-white text-xs font-inter bg-transparent border-0 cursor-pointer"
+          >
+            Keluar
+          </button>
+        )}
       </header>
 
       <main className="max-w-[880px] mx-auto px-4 py-8 pb-16 flex flex-col gap-8">
+        {mode === 'real' && umkmProfile && (
+          <p className="text-sm font-inter text-gray-500 -mb-4">
+            Masuk sebagai <span className="font-semibold" style={{ color: '#1a1a1a' }}>{umkmProfile.businessName}</span> ({umkmProfile.picName})
+          </p>
+        )}
+
         {/* ── Proyek Kamu ── */}
         <section>
           <h2 className="font-sora font-bold text-sm uppercase tracking-wide mb-3" style={{ color: BLUE }}>Proyek Kamu</h2>

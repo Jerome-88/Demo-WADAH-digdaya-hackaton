@@ -6,6 +6,7 @@ import LandingPage         from './pages/LandingPage';
 import LoginPage           from './pages/LoginPage';
 import VerificationPage    from './pages/VerificationPage';
 import JasaDashboard       from './pages/jasa/JasaDashboard';
+import UmkmRegisterFlow    from './pages/jasa/UmkmRegisterFlow';
 import JasaFlow            from './pages/jasa/JasaFlow';
 import TalentPortfolioPage from './pages/jasa/TalentPortfolioPage';
 import RealTalentProfilePage from './pages/jasa/RealTalentProfilePage';
@@ -32,6 +33,7 @@ function AppShell() {
         <Route path="/login"             element={<LoginPage />} />
         <Route path="/verifikasi/:certId" element={<VerificationPage />} />
         <Route path="/jasa"              element={<JasaDashboard />} />
+        <Route path="/jasa/daftar"       element={<UmkmRegisterFlow />} />
         <Route path="/jasa/cari"         element={<JasaFlow />} />
         <Route path="/portfolio/:talentSlug" element={<TalentPortfolioPage />} />
         <Route path="/talent/:userId"    element={<RealTalentProfilePage />} />

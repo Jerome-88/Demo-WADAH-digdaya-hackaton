@@ -21,6 +21,40 @@ create table users (
   created_at  timestamptz default now()
 );
 
+-- ── umkm_profiles ──────────────────────────────────────────────────────
+-- The UMKM-client side's equivalent of `users` — same id-mirrors-auth.users
+-- pattern, same "frontend inserts its own row after OTP" onboarding model
+-- (UmkmRegisterFlow.jsx), kept as its own table rather than a `role` column
+-- on `users` because the two sides share nothing else (no skill, no
+-- gamification) and `users.skill` is not-null for the talent side.
+create table umkm_profiles (
+  id            uuid primary key references auth.users(id) on delete cascade,
+  email         text unique not null,
+  business_name text not null,
+  pic_name      text not null,
+  phone         text,
+  created_at    timestamptz default now()
+);
+
+-- ── projects ───────────────────────────────────────────────────────────
+-- A real UMKM's posted project (JasaFlow) — only the "posted" moment is
+-- persisted here so it survives a reload/re-login; the downstream
+-- match/negotiate/contract simulation (NegoChatPage, DraftKontrakPage,
+-- KontrakFinalPage) still runs entirely on curated-demo talent data and
+-- local React state, same as before this table existed.
+create table projects (
+  id                uuid primary key default gen_random_uuid(),
+  umkm_id           uuid references umkm_profiles(id) on delete cascade,
+  umkm_name         text not null,
+  skill             text not null,
+  description       text,
+  scope             jsonb,
+  budget            int,
+  status            text default 'open' check (status in ('open', 'matched')),
+  created_at        timestamptz default now()
+);
+create index projects_umkm_id_idx on projects(umkm_id);
+
 -- ── progress ───────────────────────────────────────────────────────────
 create table progress (
   id            uuid primary key default gen_random_uuid(),
@@ -120,6 +154,8 @@ create table demo_mentor_rate_limit (
 -- ═══════════════════════════════════════════════════════════════════════
 
 alter table users enable row level security;
+alter table umkm_profiles enable row level security;
+alter table projects enable row level security;
 alter table progress enable row level security;
 alter table gamification enable row level security;
 alter table submissions enable row level security;
@@ -141,6 +177,19 @@ create policy "Users read own row" on users for select using (auth.uid() = id);
 -- Lets the frontend create its own profile row right after Supabase Auth
 -- sign-up — there's no dedicated backend endpoint for this (PRD 3.1).
 create policy "Users insert own row" on users for insert with check (auth.uid() = id);
+
+-- Same insert-own-row-via-RLS model as `users` above — UmkmRegisterFlow.jsx
+-- inserts its own row directly, no dedicated backend endpoint. There is no
+-- business logic on this table (no XP/lives/streak equivalent) to protect
+-- behind a service-role endpoint, so read+insert-own-row is the whole policy.
+create policy "UMKM read own row" on umkm_profiles for select using (auth.uid() = id);
+create policy "UMKM insert own row" on umkm_profiles for insert with check (auth.uid() = id);
+
+-- Posting a project (JasaFlow) is likewise a plain "insert your own row" —
+-- there's no matching/escrow business logic here to guard server-side (the
+-- match/negotiate/contract steps downstream stay simulated, per PRD 3.7).
+create policy "UMKM read own projects" on projects for select using (auth.uid() = umkm_id);
+create policy "UMKM insert own projects" on projects for insert with check (auth.uid() = umkm_id);
 
 create policy "Users read own progress" on progress for select using (auth.uid() = user_id);
 

@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getSupabase } from '../lib/supabaseClient';
 import { api } from '../lib/api';
-import { toBackendUnitId, fromBackendUnitId } from '../data/skillMaps';
+import { toBackendUnitId, fromBackendUnitId, getSkillMeta } from '../data/skillMaps';
 
 export const XP_PER_LEVEL = 200;
 export const LEVEL_NAMES = ['', 'Explorer', 'Beginner', 'Verified Beginner', 'Intermediate', 'Advanced'];
@@ -80,6 +80,10 @@ export function AppProvider({ children }) {
   const [realUserName, setRealUserName] = useState(null);
   const [submissions, setSubmissions] = useState([]); // mirrors GET /submission/my
   const [hydrating, setHydrating] = useState(true); // true until session-restore settles
+  // The UMKM side's real identity — separate from realUserName/authUser's
+  // talent-shaped fields (name/skill/xp make no sense for a UMKM account).
+  // null until UmkmRegisterFlow creates/hydrates it.
+  const [umkmProfile, setUmkmProfile] = useState(null);
 
   const navigate = useNavigate();
 
@@ -148,6 +152,43 @@ export function AppProvider({ children }) {
     setSubmissions(await api.getMySubmissions());
   }
 
+  // UMKM-side counterpart of hydrateFromBackend — no backend endpoint
+  // involved (see createRealUmkmProfile's comment: umkm_profiles/projects
+  // have no business logic to guard behind a service-role endpoint, so this
+  // reads directly through the user's own RLS-scoped session). Throws if no
+  // umkm_profiles row exists yet, same contract as hydrateFromBackend, so
+  // the bootstrap effect below can try both and fall through cleanly.
+  async function hydrateUmkmFromBackend() {
+    const supabase = getSupabase();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('Belum login');
+
+    const { data: profile, error } = await supabase.from('umkm_profiles').select('*').eq('id', user.id).maybeSingle();
+    if (error || !profile) throw new Error('UMKM profile not found');
+    setUmkmProfile({ id: profile.id, businessName: profile.business_name, picName: profile.pic_name, phone: profile.phone, email: profile.email });
+
+    // Most recently posted project, if any — feeds activeProject so a
+    // reload/re-login shows what was already posted instead of resetting to
+    // "belum ada proyek aktif".
+    const { data: rows } = await supabase.from('projects').select('*').eq('umkm_id', user.id).order('created_at', { ascending: false }).limit(1);
+    const row = rows?.[0];
+    if (row) {
+      setActiveProject({
+        id: row.id,
+        umkm: row.umkm_name,
+        location: 'Indonesia',
+        skillId: row.skill,
+        skill: getSkillMeta(row.skill).label,
+        budget: row.budget,
+        budgetNegotiated: null,
+        durasi: 'Fleksibel',
+        desc: row.description,
+        scope: row.scope || [],
+        status: row.status,
+      });
+    }
+  }
+
   // ── Real-mode session bootstrap — restores a persisted Supabase session
   // (the JS client already persists it to localStorage) and hydrates
   // xp/hearts/streak/progress/submissions from the backend. Guarded so a
@@ -172,9 +213,16 @@ export function AppProvider({ children }) {
         try {
           await hydrateFromBackend();
         } catch {
-          // No `users` row yet — expected mid-onboarding (magic link clicked
-          // before the profile was created). Not an error: mode/authUser are
-          // already set above, TalentaFlow picks up from there.
+          // No `users` row yet — could be mid-talent-onboarding (magic link
+          // clicked before the profile was created), or this session
+          // actually belongs to a UMKM account instead. Try that side next
+          // before giving up — mode/authUser are already set above either
+          // way, so TalentaFlow/UmkmRegisterFlow pick up from here.
+          try {
+            await hydrateUmkmFromBackend();
+          } catch {
+            // Neither profile exists yet — genuinely mid-onboarding.
+          }
         } finally {
           setHydrating(false);
         }
@@ -191,6 +239,7 @@ export function AppProvider({ children }) {
           setMode('demo');
           setAuthUser(null);
           setRealUserName(null);
+          setUmkmProfile(null);
         } else if (event === 'SIGNED_IN' && session) {
           setMode('real');
           setAuthUser(session.user);
@@ -237,6 +286,48 @@ export function AppProvider({ children }) {
     if (error && error.code !== '23505') throw error;
     setAuthUser(user);
     setRealUserName(name);
+  }
+
+  // UMKM-side counterpart of createRealUserRow — called by UmkmRegisterFlow
+  // once OTP is verified and hydrateUmkmFromBackend confirmed there's no
+  // existing profile yet. Same "frontend inserts its own row, no dedicated
+  // endpoint" model, just a different table/shape.
+  async function createRealUmkmProfile({ businessName, picName, phone }) {
+    const supabase = getSupabase();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('Sesi login habis — ulangi dari langkah Verifikasi OTP');
+    const { error } = await supabase.from('umkm_profiles').insert({
+      id: user.id,
+      email: user.email,
+      business_name: businessName,
+      pic_name: picName,
+      phone: phone || null,
+    });
+    if (error && error.code !== '23505') throw error;
+    setAuthUser(user);
+    setUmkmProfile({ id: user.id, businessName, picName, phone: phone || null, email: user.email });
+  }
+
+  // Called by JasaFlow when a real (mode === 'real') UMKM finishes Step 1
+  // and the matching animation plays — persists the posted project so it
+  // survives a reload/re-login. Only the "posted, status open" moment is
+  // saved; the match/negotiate/contract simulation that follows in JasaFlow
+  // stays local-only (see the `projects` table's own comment in schema.sql).
+  async function createRealProject({ umkmName, skillId, description, scope, budget }) {
+    const supabase = getSupabase();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('Sesi login habis — ulangi dari langkah Data Diri');
+    const { data, error } = await supabase.from('projects').insert({
+      umkm_id: user.id,
+      umkm_name: umkmName,
+      skill: skillId,
+      description,
+      scope,
+      budget: Number(budget) || 0,
+      status: 'open',
+    }).select().single();
+    if (error) throw error;
+    return data;
   }
 
   // Full reload (like resetDemo) rather than manually resetting every piece
@@ -329,6 +420,8 @@ export function AppProvider({ children }) {
       submissions,
       openUnit, completeUnit, submitCheckpoint,
       createRealUserRow, refreshUser, refreshSubmissions, signOutReal, hydrateFromBackend,
+      // UMKM-side real-backend additions
+      umkmProfile, createRealUmkmProfile, createRealProject, hydrateUmkmFromBackend,
     }}>
       {children}
     </AppContext.Provider>
