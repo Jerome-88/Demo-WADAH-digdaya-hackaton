@@ -10,10 +10,6 @@ const BLUE = '#2b6fff';
 const GREEN = '#00c897';
 const ORANGE = '#f37219';
 
-// Only the categories a curated talent actually covers — no point showing a
-// filter chip that always renders an empty grid.
-const BROWSE_CATEGORIES = ['all', ...new Set(CURATED_TALENTS.map(t => t.skillId))];
-
 function initialsOf(name) {
   return name.split(' ').filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join('');
 }
@@ -52,8 +48,17 @@ export default function JasaDashboard() {
   }, [activeProject?.realTalentId]);
 
   const matchedTalent = activeProject?.talentSlug ? getTalentBySlug(activeProject.talentSlug) : null;
-  const visibleCurated = CURATED_TALENTS.filter(t => filterSkill === 'all' || t.skillId === filterSkill);
+  // A signed-in real UMKM browses the real talent pool only — the curated
+  // demo personas (Rina, Siti, ...) stay for demo mode / anonymous browsing,
+  // but a real account shouldn't be offered a "talent" that can't actually
+  // chat back for real.
+  const isRealUmkm = mode === 'real' && !!umkmProfile;
+  const visibleCurated = isRealUmkm ? [] : CURATED_TALENTS.filter(t => filterSkill === 'all' || t.skillId === filterSkill);
   const visibleRealTalents = realTalents.filter(t => filterSkill === 'all' || t.skill === filterSkill);
+  const browseCategories = ['all', ...new Set([
+    ...(isRealUmkm ? [] : CURATED_TALENTS.map(t => t.skillId)),
+    ...realTalents.map(t => t.skill),
+  ])];
 
   return (
     <div className="min-h-screen bg-white">
@@ -202,7 +207,7 @@ export default function JasaDashboard() {
           </div>
 
           <div className="flex gap-2 overflow-x-auto pb-1 mb-4">
-            {BROWSE_CATEGORIES.map(catId => {
+            {browseCategories.map(catId => {
               const meta = catId === 'all' ? null : getSkillMeta(catId);
               const active = filterSkill === catId;
               return (

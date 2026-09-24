@@ -4,6 +4,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../../context/AppContext';
 import { PICKER_SKILLS, COMING_SOON_SKILL_IDS, getSkillMeta } from '../../data/skillMaps';
 import { SCOPE_TEMPLATES, CURATED_TALENTS_DISPLAY } from '../../data/jasaData';
+import { api } from '../../lib/api';
+
+function initialsOf(name) {
+  return name.split(' ').filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join('');
+}
 
 const BLUE = '#2b6fff';
 const GREEN = '#00c897';
@@ -18,7 +23,8 @@ const MATCH_LINES = [
 export default function JasaFlow() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { activeProject, setActiveProject, mode, createRealProject } = useApp();
+  const { activeProject, setActiveProject, mode, umkmProfile, createRealProject, chooseRealTalent } = useApp();
+  const isRealUmkm = mode === 'real' && !!umkmProfile;
 
   // step: 0=Pilih Skill, 1=Detail Bisnis, 2=Mencari (matching animation),
   // 3=Hasil (talent results).
@@ -35,6 +41,37 @@ export default function JasaFlow() {
   // ── Step 2 state (matching animation) ──
   const [animLines, setAnimLines] = useState(0); // how many MATCH_LINES revealed
   const [postError, setPostError] = useState(null);
+
+  // ── Step 3 state — real UMKM only: real certified talents for the chosen
+  // skill, in place of CURATED_TALENTS_DISPLAY's fixed demo cards. ──
+  const [realMatches, setRealMatches] = useState([]);
+  const [pickingId, setPickingId] = useState(null);
+  const [pickError, setPickError] = useState(null);
+
+  useEffect(() => {
+    if (step !== 3 || !isRealUmkm) return;
+    let cancelled = false;
+    api.getTalents(selectedSkill).then(({ talents }) => {
+      if (!cancelled) setRealMatches(talents);
+    }).catch(() => {});
+    return () => { cancelled = true; };
+  }, [step, isRealUmkm, selectedSkill]);
+
+  // Picking a real talent is both "match" and "start talking" in one move —
+  // assigns activeProject.talent_id (chooseRealTalent) then drops straight
+  // into the real chat thread with them.
+  async function handlePickRealTalent(talent) {
+    setPickingId(talent.id);
+    setPickError(null);
+    try {
+      await chooseRealTalent(talent.id);
+      navigate(`/jasa/chat/${talent.id}`, { state: { talentName: talent.name } });
+    } catch (err) {
+      setPickError(err.message || 'Gagal memilih talent ini');
+    } finally {
+      setPickingId(null);
+    }
+  }
 
   // AI "scope analysis" — a breakdown of likely deliverables, not a price
   // estimate. Triggered once the UMKM blurs the description textarea (or
@@ -316,8 +353,12 @@ export default function JasaFlow() {
           {step === 3 && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col gap-5">
               <div className="text-center">
-                <h2 className="font-sora font-bold text-xl mb-1" style={{ color: BLUE }}>3 Talent Paling Cocok Untukmu</h2>
-                <p className="text-sm font-inter font-medium" style={{ color: BLUE }}>Dipilih berdasarkan kecocokan proyekmu — bukan skor tertinggi semata</p>
+                <h2 className="font-sora font-bold text-xl mb-1" style={{ color: BLUE }}>
+                  {isRealUmkm ? 'Talent Asli yang Cocok Untukmu' : '3 Talent Paling Cocok Untukmu'}
+                </h2>
+                <p className="text-sm font-inter font-medium" style={{ color: BLUE }}>
+                  {isRealUmkm ? 'Talent WADAH yang sudah certified untuk skill ini — pilih satu buat mulai chat' : 'Dipilih berdasarkan kecocokan proyekmu — bukan skor tertinggi semata'}
+                </p>
               </div>
 
               {postError && (
@@ -325,61 +366,119 @@ export default function JasaFlow() {
                   {postError}
                 </div>
               )}
+              {pickError && (
+                <div className="rounded-xl p-3 text-sm font-inter font-semibold text-center" style={{ background: '#fdecec', color: '#e5484d' }}>
+                  {pickError}
+                </div>
+              )}
 
-              <div className="flex flex-col gap-4">
-                {CURATED_TALENTS_DISPLAY.map((talent, i) => (
-                  <motion.div
-                    key={talent.slug}
-                    initial={{ opacity: 0, y: 16 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.15, duration: 0.35 }}
-                    onClick={() => navigate(`/portfolio/${talent.slug}`)}
-                    className="relative bg-white border-2 rounded-2xl p-5 cursor-pointer transition-all hover:shadow-md"
-                    style={{ borderColor: BLUE }}
-                  >
-                    <span
-                      className="absolute top-4 right-4 text-[10px] font-bold px-2 py-1 rounded-full font-inter border"
-                      style={{ color: GREEN, borderColor: GREEN, background: '#e3faf0' }}
-                    >
-                      ✓ AI Verified
-                    </span>
-
-                    <div className="rounded-xl p-4 mb-4 border-2" style={{ background: '#eef2fe', borderColor: BLUE }}>
-                      <div className="text-[10px] font-bold font-inter uppercase tracking-wide mb-1.5" style={{ color: BLUE }}>Cocok Karena</div>
-                      <p className="text-sm font-inter leading-relaxed" style={{ color: '#1a1a1a' }}>{talent.matchReason}</p>
+              {isRealUmkm ? (
+                <div className="flex flex-col gap-4">
+                  {realMatches.length === 0 && (
+                    <div className="rounded-2xl border-2 border-dashed p-8 text-center" style={{ borderColor: '#c9d3e0' }}>
+                      <p className="text-sm font-inter text-gray-500">Belum ada talent asli yang certified untuk skill ini. Proyekmu tetap tersimpan — cek lagi nanti dari dashboard.</p>
                     </div>
-
-                    <div className="flex items-center gap-3 mb-2">
-                      {talent.avatarImg ? (
-                        <img src={talent.avatarImg} alt={talent.name} className="w-10 h-10 rounded-full object-cover shrink-0" />
-                      ) : (
-                        <div
-                          className="w-10 h-10 rounded-full flex items-center justify-center text-white font-sora font-bold text-xs shrink-0"
-                          style={{ background: talent.avatarBg }}
+                  )}
+                  {realMatches.map((talent, i) => {
+                    const meta = getSkillMeta(talent.skill);
+                    return (
+                      <motion.div
+                        key={talent.id}
+                        initial={{ opacity: 0, y: 16 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: i * 0.15, duration: 0.35 }}
+                        className="relative bg-white border-2 rounded-2xl p-5 transition-all"
+                        style={{ borderColor: BLUE }}
+                      >
+                        <span
+                          className="absolute top-4 right-4 text-[10px] font-bold px-2 py-1 rounded-full font-inter border"
+                          style={{ color: ORANGE, borderColor: ORANGE, background: '#fff7ee' }}
                         >
-                          {talent.initials}
+                          <i className="fa-solid fa-graduation-cap"></i> Certified
+                        </span>
+
+                        <div className="flex items-center gap-3 mb-4">
+                          {talent.avatar_url ? (
+                            <img src={talent.avatar_url} alt={talent.name} className="w-10 h-10 rounded-full object-cover shrink-0" />
+                          ) : (
+                            <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-sora font-bold text-xs shrink-0" style={{ background: BLUE }}>
+                              {initialsOf(talent.name)}
+                            </div>
+                          )}
+                          <div>
+                            <div className="font-sora font-bold text-sm" style={{ color: '#1a1a1a' }}>{talent.name}</div>
+                            <div className="text-xs font-inter text-gray-500">{meta.emoji} {meta.label}</div>
+                          </div>
                         </div>
-                      )}
-                      <div>
-                        <div className="font-sora font-bold text-sm" style={{ color: '#1a1a1a' }}>{talent.name}</div>
-                        <div className="text-xs font-inter text-gray-500">{talent.role}</div>
-                      </div>
-                    </div>
 
-                    <div className="text-xs font-inter mb-4" style={{ color: ORANGE }}>
-                      Skor: {talent.score}/10 · {talent.matchPct}% cocok
-                    </div>
-
-                    <button
-                      onClick={e => { e.stopPropagation(); navigate(`/portfolio/${talent.slug}`); }}
-                      className="w-full text-sm font-semibold py-2.5 rounded-full transition-colors font-inter bg-transparent cursor-pointer border-2"
-                      style={{ borderColor: BLUE, color: BLUE }}
+                        <button
+                          onClick={() => handlePickRealTalent(talent)}
+                          disabled={pickingId === talent.id}
+                          className="w-full text-white font-bold py-2.5 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110 disabled:opacity-60 disabled:cursor-not-allowed"
+                          style={{ background: GREEN }}
+                        >
+                          {pickingId === talent.id ? 'Memilih...' : 'Pilih & Mulai Chat'}
+                        </button>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="flex flex-col gap-4">
+                  {CURATED_TALENTS_DISPLAY.map((talent, i) => (
+                    <motion.div
+                      key={talent.slug}
+                      initial={{ opacity: 0, y: 16 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.15, duration: 0.35 }}
+                      onClick={() => navigate(`/portfolio/${talent.slug}`)}
+                      className="relative bg-white border-2 rounded-2xl p-5 cursor-pointer transition-all hover:shadow-md"
+                      style={{ borderColor: BLUE }}
                     >
-                      Lihat Portfolio Lengkap
-                    </button>
-                  </motion.div>
-                ))}
-              </div>
+                      <span
+                        className="absolute top-4 right-4 text-[10px] font-bold px-2 py-1 rounded-full font-inter border"
+                        style={{ color: GREEN, borderColor: GREEN, background: '#e3faf0' }}
+                      >
+                        ✓ AI Verified
+                      </span>
+
+                      <div className="rounded-xl p-4 mb-4 border-2" style={{ background: '#eef2fe', borderColor: BLUE }}>
+                        <div className="text-[10px] font-bold font-inter uppercase tracking-wide mb-1.5" style={{ color: BLUE }}>Cocok Karena</div>
+                        <p className="text-sm font-inter leading-relaxed" style={{ color: '#1a1a1a' }}>{talent.matchReason}</p>
+                      </div>
+
+                      <div className="flex items-center gap-3 mb-2">
+                        {talent.avatarImg ? (
+                          <img src={talent.avatarImg} alt={talent.name} className="w-10 h-10 rounded-full object-cover shrink-0" />
+                        ) : (
+                          <div
+                            className="w-10 h-10 rounded-full flex items-center justify-center text-white font-sora font-bold text-xs shrink-0"
+                            style={{ background: talent.avatarBg }}
+                          >
+                            {talent.initials}
+                          </div>
+                        )}
+                        <div>
+                          <div className="font-sora font-bold text-sm" style={{ color: '#1a1a1a' }}>{talent.name}</div>
+                          <div className="text-xs font-inter text-gray-500">{talent.role}</div>
+                        </div>
+                      </div>
+
+                      <div className="text-xs font-inter mb-4" style={{ color: ORANGE }}>
+                        Skor: {talent.score}/10 · {talent.matchPct}% cocok
+                      </div>
+
+                      <button
+                        onClick={e => { e.stopPropagation(); navigate(`/portfolio/${talent.slug}`); }}
+                        className="w-full text-sm font-semibold py-2.5 rounded-full transition-colors font-inter bg-transparent cursor-pointer border-2"
+                        style={{ borderColor: BLUE, color: BLUE }}
+                      >
+                        Lihat Portfolio Lengkap
+                      </button>
+                    </motion.div>
+                  ))}
+                </div>
+              )}
 
               <div className="rounded-xl p-4" style={{ background: '#eef2fe' }}>
                 <p className="text-xs font-inter leading-relaxed" style={{ color: BLUE }}>
