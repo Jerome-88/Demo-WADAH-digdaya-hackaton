@@ -73,7 +73,7 @@ const strengths = [
 
 export default function LandingPage() {
   const navigate = useNavigate();
-  const { resetDemo, mode, authUser } = useApp();
+  const { resetDemo, mode, authUser, onboardingComplete, signOutReal } = useApp();
   const isLoggedIn = mode === 'real' && !!authUser;
   const [wadyMsgIndex, setWadyMsgIndex] = useState(0);
 
@@ -132,6 +132,29 @@ export default function LandingPage() {
             >
               Login
             </button>
+          )}
+
+          {/* Logged in as either a talent or a UMKM account — the button
+              used to just disappear here with nothing replacing it, which
+              looked like a bug rather than "you're already signed in". */}
+          {isLoggedIn && (
+            <div className="flex items-center gap-3 flex-shrink-0">
+              <button
+                onClick={() => navigate(onboardingComplete ? '/rina/task' : '/jasa')}
+                className="text-white font-bold px-6 py-2 rounded-full text-sm font-inter"
+                style={{ background: ORANGE }}
+              >
+                Dashboard
+              </button>
+              <button
+                onClick={() => {
+                  if (window.confirm('Keluar dari akun?')) signOutReal();
+                }}
+                className="text-gray-500 hover:text-[#1a1a1a] text-sm font-inter bg-transparent border-0 cursor-pointer"
+              >
+                Keluar
+              </button>
+            </div>
           )}
         </div>
       </header>
