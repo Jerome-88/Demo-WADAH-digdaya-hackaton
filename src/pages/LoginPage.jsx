@@ -16,7 +16,7 @@ const OTP_LENGTH = 6;
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const { setMode, hydrateFromBackend, onboardingComplete, mode, authUser } = useApp();
+  const { setMode, hydrateFromBackend, hydrateUmkmFromBackend, onboardingComplete, umkmProfile, mode, authUser } = useApp();
 
   const [step, setStep] = useState(0); // 0 = email, 1 = OTP
   const [email, setEmail] = useState('');
@@ -44,7 +44,7 @@ export default function LoginPage() {
       setStep(1);
     } catch (err) {
       setSendError(err.message?.includes('Signups not allowed')
-        ? 'Email ini belum terdaftar. Daftar dulu lewat "Register as Talent".'
+        ? 'Email ini belum terdaftar. Daftar dulu lewat "Daftar sebagai Talent" atau "Daftar sebagai UMKM" di bawah.'
         : err.message || 'Gagal mengirim kode OTP');
     } finally {
       setSendingOtp(false);
@@ -60,14 +60,26 @@ export default function LoginPage() {
       if (error) throw error;
 
       setMode('real');
+      // One shared login for both sides — try the talent profile first,
+      // then the UMKM one, and route wherever the match actually is. Same
+      // "frontend tries both, no way to know the role up front" reasoning
+      // as AppContext's own session-bootstrap effect.
       try {
         await hydrateFromBackend();
         navigate('/rina/task');
+        return;
       } catch {
-        // Session exists but no `users` row yet — onboarding was started but
-        // never finished. Send them to finish it instead of dead-ending here.
-        navigate('/talenta');
+        // Not a talent account (or onboarding unfinished) — try UMKM next.
       }
+      try {
+        await hydrateUmkmFromBackend();
+        navigate('/jasa');
+        return;
+      } catch {
+        // Neither profile exists — onboarding was started but never
+        // finished on either side. No way to tell which one from here.
+      }
+      setOtpError('Akun belum terdaftar penuh. Lanjutkan pendaftaran lewat "Daftar sebagai Talent" atau "Daftar sebagai UMKM" di bawah.');
     } catch (err) {
       setOtpError(err.message || 'Kode OTP salah atau kedaluwarsa');
     } finally {
@@ -103,8 +115,10 @@ export default function LoginPage() {
     return () => clearTimeout(t);
   }, [step, resendCooldown]);
 
-  // Already signed in this session — skip straight past the login form.
+  // Already signed in this session — skip straight past the login form,
+  // whichever side this account turned out to be.
   if (mode === 'real' && authUser && onboardingComplete) return <Navigate to="/rina/task" replace />;
+  if (mode === 'real' && authUser && umkmProfile) return <Navigate to="/jasa" replace />;
 
   return (
     <div className="min-h-screen bg-bg flex flex-col">
@@ -167,6 +181,8 @@ export default function LoginPage() {
               <p className="text-center text-sm font-inter" style={{ color: '#797d85' }}>
                 Belum punya akun?{' '}
                 <Link to="/talenta" className="font-bold hover:underline" style={{ color: '#f27418' }}>Daftar sebagai Talent</Link>
+                {' '}atau{' '}
+                <Link to="/jasa/daftar" className="font-bold hover:underline" style={{ color: BLUE_STRONG }}>Daftar sebagai UMKM</Link>
               </p>
             </form>
           )}
