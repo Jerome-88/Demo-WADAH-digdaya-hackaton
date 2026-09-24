@@ -73,8 +73,11 @@ const strengths = [
 
 export default function LandingPage() {
   const navigate = useNavigate();
-  const { resetDemo, mode, authUser } = useApp();
-  const isLoggedIn = mode === 'real' && !!authUser;
+  const { resetDemo, mode, authUser, onboardingComplete, umkmProfile } = useApp();
+  // Not just mode/authUser — those already flip true right after OTP verify,
+  // before onboarding (talent or UMKM) actually finishes, which hid the
+  // Login button with no way back for anyone stuck mid-registration.
+  const isLoggedIn = mode === 'real' && !!authUser && (onboardingComplete || !!umkmProfile);
   const [wadyMsgIndex, setWadyMsgIndex] = useState(0);
 
   useEffect(() => {
