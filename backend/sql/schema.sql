@@ -83,8 +83,18 @@ create table messages (
   umkm_name   text not null,
   talent_name text not null,
   sender_role text not null check (sender_role in ('umkm', 'talent')),
-  text        text not null,
-  created_at  timestamptz default now()
+  text        text,
+  -- Optional file/image (ChatThread's 📎) — a path in the private
+  -- `chat-media` bucket, always under this thread's own
+  -- <umkm_id>/<talent_id>/ folder; served via signed URL.
+  attachment_path text,
+  attachment_name text,
+  attachment_type text,
+  attachment_size int,
+  created_at  timestamptz default now(),
+  constraint messages_text_or_attachment check (text is not null or attachment_path is not null),
+  constraint messages_attachment_in_thread
+    check (attachment_path is null or attachment_path like umkm_id::text || '/' || talent_id::text || '/%')
 );
 create index messages_umkm_idx on messages(umkm_id, created_at);
 create index messages_talent_idx on messages(talent_id, created_at);
@@ -291,6 +301,34 @@ create policy "Thread participants insert own messages" on messages for insert
       select 1 from projects p
       where p.umkm_id = messages.umkm_id
         and p.talent_id = messages.talent_id
+        and p.status = 'matched'
+    )
+  );
+
+-- ── chat-media bucket ──────────────────────────────────────────────────
+-- Private, 10 MB per file. Object path: <umkm_id>/<talent_id>/<ts>-<name>.
+-- Same access model as `messages`: either side of the thread can read,
+-- and uploading needs an accepted (matched) brief between the two.
+insert into storage.buckets (id, name, public, file_size_limit)
+values ('chat-media', 'chat-media', false, 10485760)
+on conflict (id) do nothing;
+
+create policy "Chat participants read media" on storage.objects for select to authenticated
+  using (
+    bucket_id = 'chat-media' and (
+      auth.uid()::text = (storage.foldername(name))[1] or
+      auth.uid()::text = (storage.foldername(name))[2]
+    )
+  );
+create policy "Chat participants upload media" on storage.objects for insert to authenticated
+  with check (
+    bucket_id = 'chat-media' and (
+      auth.uid()::text = (storage.foldername(name))[1] or
+      auth.uid()::text = (storage.foldername(name))[2]
+    ) and exists (
+      select 1 from public.projects p
+      where p.umkm_id::text = (storage.foldername(name))[1]
+        and p.talent_id::text = (storage.foldername(name))[2]
         and p.status = 'matched'
     )
   );
