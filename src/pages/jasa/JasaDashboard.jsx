@@ -16,7 +16,9 @@ function initialsOf(name) {
 
 export default function JasaDashboard() {
   const navigate = useNavigate();
-  const { activeProject, mode, umkmProfile, signOutReal } = useApp();
+  const { activeProject, mode, umkmProfile, signOutReal, hydrateUmkmFromBackend, deleteRealProject } = useApp();
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState(null);
   const [filterSkill, setFilterSkill] = useState('all');
   // Real talents who actually finished the whole journey (passed the
   // skill's certification exam — POST /user/certify) — separate from
@@ -46,6 +48,33 @@ export default function JasaDashboard() {
     }).catch(() => {});
     return () => { cancelled = true; };
   }, [activeProject?.realTalentId]);
+
+  // While a sent brief is waiting on the talent, re-read the project every
+  // few seconds so an accept (→ matched) or decline (→ talent_id cleared)
+  // shows up here without a manual reload.
+  const awaitingTalent = activeProject?.status === 'open' && !!activeProject.realTalentId;
+  useEffect(() => {
+    if (!awaitingTalent) return;
+    const t = setInterval(() => { hydrateUmkmFromBackend().catch(() => {}); }, 5000);
+    return () => clearInterval(t);
+  }, [awaitingTalent]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Only a real, persisted project can be deleted — demo mode's
+  // activeProject is local-only state with nothing to delete.
+  const canDeleteProject = mode === 'real' && !!umkmProfile && !!activeProject?.status;
+
+  async function handleDeleteProject() {
+    if (!window.confirm(`Hapus proyek "${activeProject.umkm}"? Brief yang sudah terkirim ke talent ikut batal.`)) return;
+    setDeleting(true);
+    setDeleteError(null);
+    try {
+      await deleteRealProject();
+    } catch (err) {
+      setDeleteError(err.message || 'Gagal menghapus proyek');
+    } finally {
+      setDeleting(false);
+    }
+  }
 
   const matchedTalent = activeProject?.talentSlug ? getTalentBySlug(activeProject.talentSlug) : null;
   // A signed-in real UMKM browses the real talent pool only — the curated
@@ -124,17 +153,11 @@ export default function JasaDashboard() {
               {activeProject.realTalentId ? (
                 <>
                   <span className="inline-block text-[11px] font-bold px-2.5 py-1 rounded-full font-inter border-2 mb-3" style={{ color: ORANGE, borderColor: ORANGE, background: '#fff' }}>
-                    Dipilih oleh {realMatchedName ?? 'Talent'}
+                    Brief terkirim ke {realMatchedName ?? 'Talent'}
                   </span>
                   <div className="font-sora font-bold text-lg mb-1" style={{ color: '#1a1a1a' }}>{activeProject.umkm}</div>
-                  <div className="text-sm font-inter text-gray-600 mb-4">{activeProject.skill} · {formatRupiah(activeProject.budgetNegotiated ?? activeProject.budget)}/bulan</div>
-                  <button
-                    onClick={() => navigate(`/jasa/chat/${activeProject.realTalentId}`, { state: { talentName: realMatchedName } })}
-                    className="text-white font-bold py-2.5 px-7 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
-                    style={{ background: GREEN }}
-                  >
-                    Buka Chat
-                  </button>
+                  <div className="text-sm font-inter text-gray-600 mb-1">{activeProject.skill} · {formatRupiah(activeProject.budgetNegotiated ?? activeProject.budget)}/bulan</div>
+                  <p className="text-sm font-inter text-gray-500">Menunggu talent menerima brief-mu. Chat kebuka otomatis begitu dia terima.</p>
                 </>
               ) : activeProject.talentSlug ? (
                 <>
@@ -171,7 +194,24 @@ export default function JasaDashboard() {
             </div>
           )}
 
-          {activeProject?.status === 'matched' && (
+          {activeProject?.status === 'matched' && activeProject.realTalentId && (
+            <div className="rounded-2xl border-2 p-6" style={{ borderColor: GREEN, background: '#e3faf0' }}>
+              <span className="inline-block text-[11px] font-bold px-2.5 py-1 rounded-full font-inter border-2 mb-3" style={{ color: GREEN, borderColor: GREEN, background: '#fff' }}>
+                ✓ Brief diterima {realMatchedName ?? 'Talent'}
+              </span>
+              <div className="font-sora font-bold text-lg mb-1" style={{ color: '#1a1a1a' }}>{activeProject.umkm}</div>
+              <div className="text-sm font-inter text-gray-600 mb-4">{activeProject.skill} · {formatRupiah(activeProject.budgetNegotiated ?? activeProject.budget)}/bulan</div>
+              <button
+                onClick={() => navigate(`/jasa/chat/${activeProject.realTalentId}`, { state: { talentName: realMatchedName } })}
+                className="text-white font-bold py-2.5 px-7 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110"
+                style={{ background: GREEN }}
+              >
+                Buka Chat
+              </button>
+            </div>
+          )}
+
+          {activeProject?.status === 'matched' && !activeProject.realTalentId && (
             <div className="rounded-2xl border-2 p-6" style={{ borderColor: GREEN, background: '#e3faf0' }}>
               <span className="inline-block text-[11px] font-bold px-2.5 py-1 rounded-full font-inter border-2 mb-3" style={{ color: GREEN, borderColor: GREEN, background: '#fff' }}>
                 ✓ Kontrak Aktif
@@ -188,6 +228,20 @@ export default function JasaDashboard() {
                 style={{ background: GREEN }}
               >
                 Buka Chat & Kelola Proyek
+              </button>
+            </div>
+          )}
+
+          {canDeleteProject && (
+            <div className="mt-3 flex items-center justify-end gap-3">
+              {deleteError && <span className="text-xs font-inter font-semibold" style={{ color: '#e5484d' }}>{deleteError}</span>}
+              <button
+                onClick={handleDeleteProject}
+                disabled={deleting}
+                className="text-xs font-bold font-inter bg-transparent border-0 cursor-pointer hover:underline disabled:opacity-60 disabled:cursor-not-allowed inline-flex items-center gap-1.5"
+                style={{ color: '#e5484d' }}
+              >
+                <i className="fa-solid fa-trash-can"></i> {deleting ? 'Menghapus...' : 'Hapus Proyek'}
               </button>
             </div>
           )}

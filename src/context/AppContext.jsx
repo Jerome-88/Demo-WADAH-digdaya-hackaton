@@ -166,6 +166,7 @@ export function AppProvider({ children }) {
     if (match) {
       setActiveProject({
         id: match.id,
+        umkmId: match.umkm_id,
         umkm: match.umkm_name,
         location: 'Indonesia',
         skillId: match.skill,
@@ -177,6 +178,9 @@ export function AppProvider({ children }) {
         scope: match.scope || [],
         status: match.status,
       });
+      // 'matched' = this talent already accepted the brief — SmartMatchPage
+      // goes straight to its accepted state instead of asking again.
+      setProjectAccepted(match.status === 'matched');
     }
   }
 
@@ -213,7 +217,12 @@ export function AppProvider({ children }) {
         desc: row.description,
         scope: row.scope || [],
         status: row.status,
+        realTalentId: row.talent_id,
       });
+    } else {
+      // No projects left (e.g. the last one was just deleted) — back to
+      // "belum ada proyek aktif" instead of keeping a stale card.
+      setActiveProject(DEFAULT_PROJECT);
     }
   }
 
@@ -358,18 +367,44 @@ export function AppProvider({ children }) {
     return data;
   }
 
-  // Called from a real talent's RealTalentProfilePage ("Pilih Talent Ini
-  // untuk Proyek") — assigns activeProject's real row to that talent, which
-  // is what lets the talent's own hydrateFromBackend pick it up as a real
-  // match. Targets activeProject.id, so it only works once a real project
-  // has actually been posted+persisted (createRealProject above).
+  // Called from JasaFlow Step 3 / RealTalentProfilePage — sends
+  // activeProject's brief to that talent (projects.talent_id), which is
+  // what lets the talent's own hydrateFromBackend pick it up. Status stays
+  // 'open' until the talent accepts (respondToRealProject), so no chat yet.
+  // Targets activeProject.id, so it only works once a real project has
+  // actually been posted+persisted (createRealProject above).
   async function chooseRealTalent(talentId) {
-    const supabase = getSupabase();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user || !activeProject?.id) throw new Error('Belum ada proyek yang bisa dipilihkan talent-nya');
-    const { error } = await supabase.from('projects').update({ talent_id: talentId }).eq('id', activeProject.id).eq('umkm_id', user.id);
+    if (!activeProject?.id) throw new Error('Belum ada proyek yang bisa dipilihkan talent-nya');
+    const { error } = await getSupabase().rpc('send_project_brief', { p_project_id: activeProject.id, p_talent_id: talentId });
     if (error) throw error;
     setActiveProject(prev => ({ ...prev, realTalentId: talentId }));
+  }
+
+  // JasaDashboard's "Hapus Proyek" — drops a project that fell through, then
+  // re-hydrates so the dashboard falls back to the next most recent project
+  // (or the empty state) exactly like a fresh login would.
+  async function deleteRealProject() {
+    if (!activeProject?.id) throw new Error('Tidak ada proyek yang bisa dihapus');
+    // .select() so an RLS-blocked delete (0 rows, no error) isn't silently
+    // treated as success.
+    const { data, error } = await getSupabase().from('projects').delete().eq('id', activeProject.id).select('id');
+    if (error) throw error;
+    if (!data?.length) throw new Error('Proyek gagal dihapus');
+    await hydrateUmkmFromBackend();
+  }
+
+  // Talent side of the brief — accept flips the project to 'matched'
+  // (unlocks chat for both sides), decline hands it back to the UMKM.
+  async function respondToRealProject(accept) {
+    if (!activeProject?.id) throw new Error('Tidak ada brief yang menunggu konfirmasi');
+    const { error } = await getSupabase().rpc('respond_to_project', { p_project_id: activeProject.id, p_accept: accept });
+    if (error) throw error;
+    if (accept) {
+      setActiveProject(prev => ({ ...prev, status: 'matched' }));
+      setProjectAccepted(true);
+    } else {
+      setActiveProject(DEFAULT_PROJECT);
+    }
   }
 
   // Full reload (like resetDemo) rather than manually resetting every piece
@@ -463,7 +498,7 @@ export function AppProvider({ children }) {
       openUnit, completeUnit, submitCheckpoint,
       createRealUserRow, refreshUser, refreshSubmissions, signOutReal, hydrateFromBackend,
       // UMKM-side real-backend additions
-      umkmProfile, createRealUmkmProfile, createRealProject, hydrateUmkmFromBackend, chooseRealTalent,
+      umkmProfile, createRealUmkmProfile, createRealProject, hydrateUmkmFromBackend, chooseRealTalent, respondToRealProject, deleteRealProject,
     }}>
       {children}
     </AppContext.Provider>

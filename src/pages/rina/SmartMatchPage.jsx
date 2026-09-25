@@ -27,7 +27,10 @@ const UMKM_OWNER = {
 
 export default function SmartMatchPage() {
   const navigate = useNavigate();
-  const { activeProject, setProjectAccepted, projectAccepted, selectedSkill } = useApp();
+  const { activeProject, setProjectAccepted, projectAccepted, selectedSkill, mode, respondToRealProject } = useApp();
+  const isReal = mode === 'real';
+  const [responding, setResponding] = useState(false);
+  const [respondError, setRespondError] = useState(null);
   // Seeded from context (not always false) so revisiting this page — it's
   // reachable any time now via TopBar's briefcase icon, not just once right
   // after accepting — goes straight to the accepted summary instead of
@@ -53,11 +56,33 @@ export default function SmartMatchPage() {
     'Checkpoint skill map terverifikasi menunjukkan track record relevan',
   ];
 
+  // Real accounts answer an actual UMKM's brief — accept unlocks chat on
+  // both sides, "Tolak" hands the project back so the UMKM can brief
+  // someone else. Demo mode keeps the local-only accept.
+  async function handleRespond(accept) {
+    if (!isReal) {
+      if (accept) { setAccepted(true); setProjectAccepted(true); } else navigate('/rina/profile');
+      return;
+    }
+    setResponding(true);
+    setRespondError(null);
+    try {
+      await respondToRealProject(accept);
+      if (accept) setAccepted(true); else navigate('/rina/profile');
+    } catch (err) {
+      setRespondError(err.message || 'Gagal mengirim jawaban');
+    } finally {
+      setResponding(false);
+    }
+  }
+
+  const budgetLabel = isReal && activeProject?.budget ? formatRupiah(activeProject.budget) : 'Rp 500.000';
+
   const projectDetails = [
     ['Klien',     umkmName],
     ['Kategori',  `UMKM ${skillMeta.label}`],
     ['Output',    skillMap.nodes.find(n => n.type === 'checkpoint')?.title || 'Deliverable sesuai brief'],
-    ['Budget',    'Rp 500.000'],
+    ['Budget',    budgetLabel],
     ['Deadline',  '2 minggu'],
     ['Reward',    'Dibayar setelah verifikasi WADAH'],
   ];
@@ -253,18 +278,23 @@ export default function SmartMatchPage() {
           </div>
 
           {/* Action buttons */}
+          {respondError && (
+            <p className="text-sm font-inter font-semibold text-center mb-3" style={{ color: '#e5484d' }}>{respondError}</p>
+          )}
           <div className="flex gap-3">
             <button
-              onClick={() => navigate('/rina/profile')}
-              className="flex-1 border-2 border-gray-200 text-gray-600 font-semibold py-3.5 rounded-xl hover:bg-gray-50 transition-colors font-inter"
+              onClick={() => handleRespond(false)}
+              disabled={responding}
+              className="flex-1 border-2 border-gray-200 text-gray-600 font-semibold py-3.5 rounded-xl hover:bg-gray-50 transition-colors font-inter disabled:opacity-60"
             >
-              Lewati
+              {isReal ? 'Tolak' : 'Lewati'}
             </button>
             <button
-              onClick={() => { setAccepted(true); setProjectAccepted(true); }}
-              className="flex-1 bg-green text-white font-bold py-3.5 rounded-xl hover:bg-green-600 transition-all active:scale-95 font-inter text-sm"
+              onClick={() => handleRespond(true)}
+              disabled={responding}
+              className="flex-1 bg-green text-white font-bold py-3.5 rounded-xl hover:bg-green-600 transition-all active:scale-95 font-inter text-sm disabled:opacity-60"
             >
-              🎉 Terima Proyek!
+              {responding ? 'Mengirim...' : '🎉 Terima Proyek!'}
             </button>
           </div>
         </>
@@ -275,7 +305,7 @@ export default function SmartMatchPage() {
           <div>
             <h1 className="font-sora font-extrabold text-deep text-3xl mb-2">Selamat!</h1>
             <h2 className="font-sora font-bold text-deep text-xl mb-1">Proyek Pertamamu Berhasil!</h2>
-            <p className="text-gray-500 font-inter">Klien akan dihubungi oleh sistem WADAH dalam 30 menit</p>
+            <p className="text-gray-500 font-inter">{isReal ? 'Chat dengan klien sekarang sudah kebuka' : 'Klien akan dihubungi oleh sistem WADAH dalam 30 menit'}</p>
           </div>
 
           {/* Confetti effect (CSS-based) */}
@@ -292,7 +322,7 @@ export default function SmartMatchPage() {
               {[
                 ['Klien',   umkmName],
                 ['Proyek',  skillMap.nodes.find(n => n.type === 'checkpoint')?.title || 'Deliverable sesuai brief'],
-                ['Budget',  'Rp 500.000'],
+                ['Budget',  budgetLabel],
                 ['Deadline','2 minggu'],
                 ['Match',   '87% compatibility'],
               ].map(([k, v]) => (
@@ -310,6 +340,7 @@ export default function SmartMatchPage() {
 
           <div className="flex flex-col sm:flex-row gap-3">
             <button
+              onClick={() => { if (isReal) navigate(`/rina/pesan/${activeProject.umkmId}`, { state: { umkmName } }); }}
               className="flex-1 bg-indigo text-white font-bold py-3.5 rounded-xl hover:bg-indigo-dark transition-all active:scale-95 font-inter"
             >
               Buka Pesan Klien 💬

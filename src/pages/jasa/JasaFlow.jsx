@@ -57,15 +57,15 @@ export default function JasaFlow() {
     return () => { cancelled = true; };
   }, [step, isRealUmkm, selectedSkill]);
 
-  // Picking a real talent is both "match" and "start talking" in one move —
-  // assigns activeProject.talent_id (chooseRealTalent) then drops straight
-  // into the real chat thread with them.
+  // Picking a real talent only sends them the brief (chooseRealTalent) —
+  // chat unlocks once they accept it, so the UMKM goes back to the
+  // dashboard's "menunggu konfirmasi" card instead of straight into chat.
   async function handlePickRealTalent(talent) {
     setPickingId(talent.id);
     setPickError(null);
     try {
       await chooseRealTalent(talent.id);
-      navigate(`/jasa/chat/${talent.id}`, { state: { talentName: talent.name } });
+      navigate('/jasa');
     } catch (err) {
       setPickError(err.message || 'Gagal memilih talent ini');
     } finally {
@@ -357,7 +357,7 @@ export default function JasaFlow() {
                   {isRealUmkm ? 'Talent Asli yang Cocok Untukmu' : '3 Talent Paling Cocok Untukmu'}
                 </h2>
                 <p className="text-sm font-inter font-medium" style={{ color: BLUE }}>
-                  {isRealUmkm ? 'Talent WADAH yang sudah certified untuk skill ini — pilih satu buat mulai chat' : 'Dipilih berdasarkan kecocokan proyekmu — bukan skor tertinggi semata'}
+                  {isRealUmkm ? 'Talent WADAH yang sudah certified untuk skill ini — kirim brief ke satu talent, chat kebuka setelah dia terima' : 'Dipilih berdasarkan kecocokan proyekmu — bukan skor tertinggi semata'}
                 </p>
               </div>
 
@@ -417,7 +417,7 @@ export default function JasaFlow() {
                           className="w-full text-white font-bold py-2.5 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110 disabled:opacity-60 disabled:cursor-not-allowed"
                           style={{ background: GREEN }}
                         >
-                          {pickingId === talent.id ? 'Memilih...' : 'Pilih & Mulai Chat'}
+                          {pickingId === talent.id ? 'Mengirim...' : 'Kirim Brief ke Talent Ini'}
                         </button>
                       </motion.div>
                     );

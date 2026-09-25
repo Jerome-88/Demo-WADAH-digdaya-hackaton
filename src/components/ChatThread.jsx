@@ -58,7 +58,8 @@ export default function ChatThread({ role, myId, myName, partnerId, partnerName 
     try {
       await sendMessage({ umkmId, talentId, umkmName: role === 'umkm' ? myName : partnerName, talentName: role === 'talent' ? myName : partnerName, senderRole: role, text: trimmed });
     } catch (err) {
-      setError(err.message || 'Pesan gagal dikirim');
+      // 42501 = messages RLS: no brief between these two has been accepted yet.
+      setError(err.code === '42501' ? 'Chat kebuka setelah talent menerima brief proyekmu' : (err.message || 'Pesan gagal dikirim'));
       setMessages(prev => prev.filter(m => m.id !== optimistic.id));
       setText(trimmed);
     } finally {

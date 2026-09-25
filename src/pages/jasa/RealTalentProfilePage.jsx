@@ -49,6 +49,8 @@ export default function RealTalentProfilePage() {
 
   const canChoose = mode === 'real' && umkmProfile && activeProject?.status === 'open' && !activeProject.realTalentId;
   const alreadyChosen = activeProject?.realTalentId === userId || chosen;
+  // Chat only unlocks once this talent accepted the brief (status 'matched').
+  const accepted = activeProject?.realTalentId === userId && activeProject.status === 'matched';
 
   async function handleChoose() {
     setChoosing(true);
@@ -93,17 +95,19 @@ export default function RealTalentProfilePage() {
         <p className="text-sm mb-6 text-gray-500 font-inter">{meta.emoji} {meta.label}</p>
 
         <div className="flex flex-wrap items-center justify-center gap-2.5">
-          <button
-            onClick={() => navigate(`/jasa/chat/${userId}`, { state: { talentName: user.name } })}
-            className="text-white font-bold py-3 px-8 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110 inline-flex items-center gap-2"
-            style={{ background: GREEN }}
-          >
-            <i className="fa-solid fa-comment-dots"></i> Chat dengan Talent Ini
-          </button>
+          {accepted && (
+            <button
+              onClick={() => navigate(`/jasa/chat/${userId}`, { state: { talentName: user.name } })}
+              className="text-white font-bold py-3 px-8 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110 inline-flex items-center gap-2"
+              style={{ background: GREEN }}
+            >
+              <i className="fa-solid fa-comment-dots"></i> Chat dengan Talent Ini
+            </button>
+          )}
 
-          {alreadyChosen && (
-            <span className="text-white font-bold py-3 px-8 rounded-full text-sm inline-flex items-center gap-2" style={{ background: BLUE }}>
-              <i className="fa-solid fa-circle-check"></i> Talent Terpilih
+          {alreadyChosen && !accepted && (
+            <span className="text-white font-bold py-3 px-8 rounded-full text-sm inline-flex items-center gap-2" style={{ background: ORANGE }}>
+              <i className="fa-solid fa-hourglass-half"></i> Brief Terkirim — Menunggu Konfirmasi
             </span>
           )}
 
@@ -114,7 +118,7 @@ export default function RealTalentProfilePage() {
               className="text-white font-bold py-3 px-8 rounded-full transition-all text-sm cursor-pointer border-0 hover:brightness-110 disabled:opacity-60 disabled:cursor-not-allowed inline-flex items-center gap-2"
               style={{ background: BLUE }}
             >
-              {choosing ? 'Memilih...' : (<><i className="fa-solid fa-handshake"></i> Pilih Talent Ini untuk Proyek</>)}
+              {choosing ? 'Mengirim...' : (<><i className="fa-solid fa-paper-plane"></i> Kirim Brief ke Talent Ini</>)}
             </button>
           )}
         </div>
